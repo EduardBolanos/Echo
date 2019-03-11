@@ -4,7 +4,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 
-public class NewGameActivity extends AppCompatActivity {
+public class NewGame extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -12,7 +12,7 @@ public class NewGameActivity extends AppCompatActivity {
         setContentView(R.layout.activity_new_game);
     }
 
-    public void btnGoMain(View view){
+    public void btnGoMain (View view){
         this.finish();
     }
 }
