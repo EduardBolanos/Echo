@@ -20,4 +20,24 @@ public class MainActivity extends AppCompatActivity {
         startActivity(new Intent(this, NewGame.class));
     }
 
+    float x1, x2, y1, y2;
+    public boolean onTouchEvent(MotionEvent event){
+        switch(event.getAction()){
+            case MotionEvent.ACTION_DOWN:
+                x1 = event.getX();
+                y1 = event.getY();
+                break;
+
+            case MotionEvent.ACTION_UP:
+                x2 = event.getX();
+                y2 = event.getY();
+                if(x1 > x2){
+                    Intent i = new Intent(MainActivity.this, NewGame.class);
+                    startActivity(i);
+                }
+                break;
+        }
+        return false;
+    }
+
 }
