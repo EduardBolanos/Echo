@@ -11,8 +11,4 @@ public class NewGame extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_game);
     }
-
-    public void btnGoMain (View view){
-        this.finish();
-    }
 }
