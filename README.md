@@ -6,6 +6,6 @@ Versioning will be placed within folders.
 
 ## Authors
 * **Eduard Bolanos** - *Developer*
-* **Tyler Hasty** - *Developer*
 * **Charles Pelton** - *Developer*
+* **Tyler Hasty** - *Developer*
 * **Timothy Iseri** - *Developer*
