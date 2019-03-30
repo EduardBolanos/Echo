@@ -1,12 +1,14 @@
 package com.example.eduardbolanos642.echoprototype;
 
-public class ItemNode {
+public class ItemNode implements Comparable{
     private ItemNode next;
     private ItemNode previous;
-    //DATA GOES HERE
-    public ItemNode(int data, ItemNode nextNode, ItemNode previousNode){
+    private Item me;
+    //DATA GOES HERE TIM, DO YOUR THING
+    public ItemNode(Item data, ItemNode nextNode, ItemNode previousNode){
         next = nextNode;
         previous = previousNode;
+        me = data;
     }
     public void setNext(ItemNode node){
         next = node;
@@ -20,9 +22,19 @@ public class ItemNode {
     public ItemNode getPrevious(){
         return previous;
     }
-    public void setData(int data){
+    public void setData(Item data){
+        me = data;
     }
-    public int getData(){
-        return 0;
+    public Item getData(){
+        return me;
     }
+
+    @Override
+    public int compareTo(Object o) {
+        //some compare about data
+        if (((ItemNode)o).getData().name == this.getData().name){
+            return 0; // we found it Tim
+        }
+        return -1; // not found
+        }
 }

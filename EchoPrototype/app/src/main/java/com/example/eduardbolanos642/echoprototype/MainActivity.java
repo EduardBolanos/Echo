@@ -13,9 +13,10 @@ public class MainActivity extends AppCompatActivity {
     TextView menuText;
     int currentSelect; //Counter
     int currentMenuContext; //Selected Menu
-    int contextSelect; //Location in arrays, ex
-    countState doubleTapState = new countState(-1);
+    int contextSelect; //Location in arrays
     boolean gameState = true; //new and continue
+
+
     MediaPlayer mediaPlayer;
     MediaPlayer beat;
     float x1, x2, y1, y2;
@@ -26,6 +27,7 @@ public class MainActivity extends AppCompatActivity {
             "newgame", "continuegame","yes", "no"};
     int menuSize[] = {2, 4, 2, 2};
     int loc;
+
     // Make sure to replace package string if changed : /*IMPORTANT*/
     String primer = ("android.resource://" + "com.example.eduardbolanos642.echoprototype" + "/raw/");
     Uri hammer;
@@ -34,12 +36,14 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         mediaPlayer = MediaPlayer.create(MainActivity.this, R.raw.intro);
         mediaPlayer.start();
+        /*IMPORTANT*/
         beat = MediaPlayer.create(MainActivity.this, R.raw.beatingitup); //We needed this song in our app
         beat.setLooping(true);
         beat.start();
 
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        /*IMPORTANT*/
+        setContentView(R.layout.activity_main); // RE-ADD VISUAL INSTRUCTIONS TO THE MENU, Like Arrows.
 
         //gives memes
         menuText = (TextView) findViewById(R.id.textView);
@@ -98,6 +102,8 @@ public class MainActivity extends AppCompatActivity {
                         case 1:
                         case 2:
                             currentMenuContext = 0;
+                            currentSelect = 0;
+                            contextSelect = 0;
                             mediaPlayer = MediaPlayer.create(MainActivity.this, R.raw.start);
                             menuText.setText((String) omegaMenu[0]);
                             break;
@@ -107,15 +113,14 @@ public class MainActivity extends AppCompatActivity {
                          */
                         case 3:
                             currentMenuContext = 2;
+                            currentSelect = 0;
+                            contextSelect = 0;
                             mediaPlayer = MediaPlayer.create(MainActivity.this, R.raw.newgame);
                             menuText.setText((String) omegaMenu[6]);
                             break;
                     }
-                    currentSelect = 0;
-                    contextSelect = 0;
                 }
-                else if (((Math.abs(x1 - x2) < 50) && (Math.abs(y1 - y2) < 50))
-                        || ((y1 > y2) && (Math.abs(y1 - y2) > 400))){
+                else if (((Math.abs(x1 - x2) < 50) && (Math.abs(y1 - y2) < 50))){
                         switch (loc + contextSelect) {
                             case 0:
                                 mediaPlayer = MediaPlayer.create(MainActivity.this, R.raw.newgame);
