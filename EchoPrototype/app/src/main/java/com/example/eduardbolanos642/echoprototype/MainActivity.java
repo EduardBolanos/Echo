@@ -16,7 +16,7 @@ public class MainActivity extends AppCompatActivity {
     int contextSelect; //Location in arrays
     boolean gameState = true; //new and continue
 
-
+    Intent i;
     MediaPlayer mediaPlayer;
     MediaPlayer beat;
     float x1, x2, y1, y2;
@@ -34,6 +34,7 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        i = new Intent(this, InGameMenu.class);
         mediaPlayer = MediaPlayer.create(MainActivity.this, R.raw.intro);
         mediaPlayer.start();
         /*IMPORTANT*/
@@ -154,8 +155,10 @@ public class MainActivity extends AppCompatActivity {
                                 break;
                             case 8:
                                 beat.stop();
-                                beat.release();
-                                Intent i = new Intent(MainActivity.this, TestGameplay.class);
+                                currentMenuContext = 0;
+                                currentSelect = 0;
+                                contextSelect = 0;
+                                menuText.setText((String) omegaMenu[0]);
                                 startActivity(i);
                                 break;
                             case 9:

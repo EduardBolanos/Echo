@@ -1,6 +1,5 @@
 package com.example.eduardbolanos642.echoprototype;
 
-import android.content.Intent;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
@@ -9,9 +8,9 @@ import android.view.MotionEvent;
 import android.widget.TextView;
 
 public class InGameMenu extends AppCompatActivity {
-    int currentSelect; //Counter
-    int currentMenuContext; //Selected Menu
-    int contextSelect; //Location in arrays, ex
+    int currentSelectIG; //Counter
+    int currentMenuContextIG; //Selected Menu
+    int contextSelectIG; //Location in arrays, ex
     //Omega String
     String omegaMenu[] = {"Inventory", "Settings and Navigation", "Sound FX Volume", "Voice Volume", "Ambiance & Music",
             "Vibration Level", "Return to Menu", "Instructions"};
@@ -23,7 +22,7 @@ public class InGameMenu extends AppCompatActivity {
     int loc;
     MediaPlayer mediaPlayer;
     MediaPlayer ambiance; // WE ARE APPARENTLY BRITISH DEVELOPERS
-    int nodeSize = 0;
+    int nodeSize;
     ItemNode fatherNode;
     ItemNode childNode;
     ItemNode currentNode;
@@ -32,14 +31,16 @@ public class InGameMenu extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main); // CHANGE MENU ACTIVITY TO NEW ONE , BLACK BACKGROUND, WHITE TEXT /*IMPORTANT*/
+        setContentView(R.layout.ingamemenu); // CHANGE MENU ACTIVITY TO NEW ONE , BLACK BACKGROUND, WHITE TEXT /*IMPORTANT*/
 
         //gives memes /*IMPORTANT*/
         menuText = (TextView) findViewById(R.id.textView); // Make sure to change this to new activity counterpart, unless same
-        currentSelect = 0;
-        currentMenuContext = 0;
+        currentSelectIG = 0;
+        currentMenuContextIG = 0;
+        contextSelectIG = 0;
+        nodeSize = 0;
         menuText.setText((String) omegaMenu[0]);
+        super.onCreate(savedInstanceState);
     }
 
 
@@ -78,6 +79,7 @@ public class InGameMenu extends AppCompatActivity {
                 temp.getPrevious().setNext(temp.getNext());
                 temp.getNext().setPrevious(temp.getPrevious());
                 nodeSize--;
+                temp = null;
                 Runtime r = Runtime.getRuntime();
                 r.gc();
                 return true;
@@ -102,55 +104,55 @@ public class InGameMenu extends AppCompatActivity {
                 y2 = event.getY();
                 //OMEGA CODE BLOCK
                 loc = 0;
-                for(int x = 0; x < currentMenuContext; x++){
+                for(int x = 0; x < currentMenuContextIG; x++){
                     loc = (loc + menuSize[x]);
                 }
                 if ((x1 < x2) && (Math.abs(x1 - x2) > 400)) {
-                    if(currentMenuContext == 2 && nodeSize != 0){
+                    if(currentMenuContextIG == 2 && nodeSize != 0){
                         currentNode = currentNode.getPrevious();
-                        hammer = Uri.parse((primer + currentNode.getData().getAudio()));
-                        mediaPlayer = MediaPlayer.create(InGameMenu.this, hammer);
+                        //hammer = Uri.parse((primer + currentNode.getData().getAudio()));
+                     //   mediaPlayer = MediaPlayer.create(InGameMenu.this, hammer);
                         menuText.setText((String) currentNode.getData().getName());
                     }
-                    else if(nodeSize == 0){
-                        currentMenuContext = 0;
-                        mediaPlayer = MediaPlayer.create(InGameMenu.this, R.raw.start); // Replace with no Item /*IMPORTANT*/
+                    else if(currentMenuContextIG == 2 && nodeSize == 0){
+                        currentMenuContextIG = 0;
+                       // mediaPlayer = MediaPlayer.create(InGameMenu.this, R.raw.start); // Replace with no Item /*IMPORTANT*/
                         menuText.setText((String) omegaMenu[0]);
-                        currentSelect = 0;
-                        contextSelect = 0;
+                        currentSelectIG = 0;
+                        contextSelectIG = 0;
                     }
                     else {
-                        contextSelect = Math.abs((currentSelect - 1) % menuSize[currentMenuContext]);
-                        hammer = Uri.parse((primer + omegaMenuVoice[contextSelect + loc]));
-                        mediaPlayer = MediaPlayer.create(InGameMenu.this, hammer);
-                        menuText.setText((String) omegaMenu[loc + contextSelect]);
-                        currentSelect--;
+                        contextSelectIG = Math.abs((currentSelectIG - 1) % menuSize[currentMenuContextIG]);
+                       // hammer = Uri.parse((primer + omegaMenuVoice[contextSelect + loc]));
+                        //mediaPlayer = MediaPlayer.create(InGameMenu.this, hammer);
+                        menuText.setText((String) omegaMenu[loc + contextSelectIG]);
+                        currentSelectIG--;
                     }
                 }
                 else if ((x1 > x2) && (Math.abs(x1 - x2) > 400)){
-                    if(currentMenuContext == 2 && nodeSize != 0){
+                    if(currentMenuContextIG == 2 && nodeSize != 0){
                         currentNode = currentNode.getNext();
-                        hammer = Uri.parse((primer + currentNode.getData().getAudio()));
-                        mediaPlayer = MediaPlayer.create(InGameMenu.this, hammer);
+                        //hammer = Uri.parse((primer + currentNode.getData().getAudio()));
+                        //mediaPlayer = MediaPlayer.create(InGameMenu.this, hammer);
                         menuText.setText((String) currentNode.getData().getName());
                     }
-                    else if(nodeSize == 0){
-                        currentMenuContext = 0;
-                        mediaPlayer = MediaPlayer.create(InGameMenu.this, R.raw.start);
+                    else if(currentMenuContextIG == 2 && nodeSize == 0){
+                        currentMenuContextIG = 0;
+                        //mediaPlayer = MediaPlayer.create(InGameMenu.this, R.raw.start);
                         menuText.setText((String) omegaMenu[0]);
-                        currentSelect = 0;
-                        contextSelect = 0;
+                        currentSelectIG = 0;
+                        contextSelectIG = 0;
                     }
                     else {
-                        contextSelect = Math.abs((currentSelect + 1) % menuSize[currentMenuContext]);
-                        hammer = Uri.parse((primer + omegaMenuVoice[contextSelect + loc]));
-                        mediaPlayer = MediaPlayer.create(InGameMenu.this, hammer);
-                        menuText.setText((String) omegaMenu[loc + contextSelect]);
-                        currentSelect++;
+                        contextSelectIG = Math.abs((currentSelectIG + 1) % menuSize[currentMenuContextIG]);
+                        //hammer = Uri.parse((primer + omegaMenuVoice[contextSelect + loc]));
+                        //mediaPlayer = MediaPlayer.create(InGameMenu.this, hammer);
+                        menuText.setText((String) omegaMenu[loc + contextSelectIG]);
+                        currentSelectIG++;
                     }
 
                 } else if ((y1 > y2) && (Math.abs(y1 - y2) > 400)) {
-                    switch (currentMenuContext) {
+                    switch (currentMenuContextIG) {
                         /**
                          * Case 0 is the menu, we leave to go back to the game
                          */
@@ -163,27 +165,33 @@ public class InGameMenu extends AppCompatActivity {
                          */
                         case 1:
                         case 2:
-                            currentMenuContext = 0;
-                            mediaPlayer = MediaPlayer.create(InGameMenu.this, R.raw.start);
+                            currentMenuContextIG = 0;
+                           // mediaPlayer = MediaPlayer.create(InGameMenu.this, R.raw.start);
                             menuText.setText((String) omegaMenu[0]);
-                            currentSelect = 0;
-                            contextSelect = 0;
+                            currentSelectIG = 0;
+                            contextSelectIG = 0;
                     }
                 } else if (((Math.abs(x1 - x2) < 50) && (Math.abs(y1 - y2) < 50))) {
-                    if (currentMenuContext == 3){
+                    if (currentMenuContextIG == 3){
                        // goto previous and send back data
                         finish();
                     }
                     else{
-                        switch (loc + contextSelect) {
+                        switch (loc + contextSelectIG) {
                             case 0:
-                                currentMenuContext = 2;
-                                hammer = Uri.parse((primer + currentNode.getData().getAudio()));
-                                mediaPlayer = MediaPlayer.create(InGameMenu.this, hammer);
-                                menuText.setText((String) currentNode.getData().getName());
+
+                                if(nodeSize != 0) {
+                                    currentMenuContextIG = 2;
+                                    //hammer = Uri.parse((primer + currentNode.getData().getAudio()));
+                                    //      mediaPlayer = MediaPlayer.create(InGameMenu.this, hammer);
+                                    menuText.setText((String) currentNode.getData().getName());
+                                }
+                                else{
+                                    // Do something with no items here.
+                                }
                                 break;
                             case 1:
-                                currentMenuContext = 1;
+                                currentMenuContextIG = 1;
                                 mediaPlayer = MediaPlayer.create(InGameMenu.this, R.raw.soundfx);
                                 menuText.setText(omegaMenu[2]);
                                 break;
@@ -196,12 +204,10 @@ public class InGameMenu extends AppCompatActivity {
                             case 5:
                                 break;
                             case 6:
-                                break;
-                            case 7:
                                 // invokes save state in game, invokes finish state in game to go back to main menu
                                 finish();
                                 break;
-                            case 8:
+                            case 7:
                                 break;
                         }
                     }
