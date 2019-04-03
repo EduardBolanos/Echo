@@ -54,6 +54,22 @@ public class MainActivity extends AppCompatActivity {
 
 
     }
+    @Override
+    protected void onPause(){
+        beat.stop();
+        super.onPause();
+
+    }
+    @Override
+    protected void onResume(){
+        beat.start();
+        currentMenuContext = 0;
+        currentSelect = 0;
+        contextSelect = 0;
+        menuText.setText((String) omegaMenu[0]);
+        super.onResume();
+
+    }
 
     public boolean onTouchEvent(MotionEvent event) {
         /**
@@ -154,11 +170,6 @@ public class MainActivity extends AppCompatActivity {
                                 gameState = false;
                                 break;
                             case 8:
-                                beat.stop();
-                                currentMenuContext = 0;
-                                currentSelect = 0;
-                                contextSelect = 0;
-                                menuText.setText((String) omegaMenu[0]);
                                 startActivity(i);
                                 break;
                             case 9:

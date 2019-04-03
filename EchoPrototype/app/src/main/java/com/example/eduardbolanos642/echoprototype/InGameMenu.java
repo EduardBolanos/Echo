@@ -28,7 +28,13 @@ public class InGameMenu extends AppCompatActivity {
     ItemNode currentNode;
     float x1, x2, y1, y2;
     TextView menuText;
-
+    //TEST
+    Item one = new Item(1, "Rusty Key", "boi", 1);
+    Item two = new Item(1, "Not a Rusty Key", "boi", 1);
+    Item three = new Item(1, "Wooden Key", "boi", 1);
+    ItemNode oneadd = new ItemNode(one, null, null);
+    ItemNode twoadd = new ItemNode(two, null, null);
+    ItemNode threeadd = new ItemNode(three, null, null);
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         setContentView(R.layout.ingamemenu); // CHANGE MENU ACTIVITY TO NEW ONE , BLACK BACKGROUND, WHITE TEXT /*IMPORTANT*/
@@ -39,12 +45,35 @@ public class InGameMenu extends AppCompatActivity {
         currentMenuContextIG = 0;
         contextSelectIG = 0;
         nodeSize = 0;
+        //TEST
+        this.addItem(oneadd);
+        this.addItem(twoadd);
+        this.addItem(threeadd);
+        this.removeItem(twoadd);
+        this.addItem(twoadd);
+        this.removeItem(oneadd);
+        this.addItem(oneadd);
+        this.removeItem(oneadd);
+        this.addItem(oneadd);
         menuText.setText((String) omegaMenu[0]);
         super.onCreate(savedInstanceState);
     }
+    @Override
+    protected void onPause(){
+        super.onPause();
 
+    }
+    @Override
+    protected void onResume(){
+        super.onResume();
 
-    public void addItem(ItemNode attach){
+    }
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+    }
+
+        public void addItem(ItemNode attach){
         if(nodeSize == 0){
             attach.setNext(attach);
             attach.setPrevious(attach);
