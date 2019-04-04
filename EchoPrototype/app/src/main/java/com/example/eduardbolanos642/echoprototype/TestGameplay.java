@@ -9,7 +9,9 @@ import android.view.MotionEvent;
 public class TestGameplay extends AppCompatActivity {
 
     float x1, x2, y1, y2;
-    int countStep = 6; //To be increased/decreased later on
+    char map[][];
+
+
     MediaPlayer mediaPlayer;
 
     @Override
