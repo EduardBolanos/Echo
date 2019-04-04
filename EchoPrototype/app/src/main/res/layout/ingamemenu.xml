@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity">
+    tools:context=".InGameMenu"
+    android:background="#4a4c4f">
 
 
     <TextView
@@ -14,8 +15,8 @@
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
-        android:fontFamily="@font/quantico_bold_italic"
-        android:text="START"
+        android:fontFamily="sans-serif-black"
+        android:text="INVENTORY"
         android:textAlignment="center"
         android:textColor="#000000"
         android:textSize="60sp"
