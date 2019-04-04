@@ -1,4 +1,4 @@
-package com.example.eduardbolanos642.echoprototype;
+package com.example.echo.echoprototype;
 
 public class ItemNode implements Comparable{
     private ItemNode next;

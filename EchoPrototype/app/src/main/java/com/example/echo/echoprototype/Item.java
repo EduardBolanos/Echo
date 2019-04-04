@@ -1,4 +1,4 @@
-package com.example.eduardbolanos642.echoprototype;
+package com.example.echo.echoprototype;
 
 public class Item {
     int vibration;

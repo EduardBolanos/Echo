@@ -1,4 +1,4 @@
-package com.example.eduardbolanos642.echoprototype;
+package com.example.echo.echoprototype;
 
 import android.media.MediaPlayer;
 import android.support.v7.app.AppCompatActivity;
