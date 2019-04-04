@@ -4,18 +4,21 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".InGameMenu">
+    tools:context=".InGameMenu"
+    android:background="#4a4c4f">
 
 
     <TextView
         android:id="@+id/textView"
         android:layout_width="359dp"
         android:layout_height="174dp"
-        android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
-        android:text="START"
+        android:layout_marginEnd="8dp"
+        android:fontFamily="sans-serif-black"
+        android:text="INVENTORY"
         android:textAlignment="center"
+        android:textColor="#000000"
         android:textSize="60sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
