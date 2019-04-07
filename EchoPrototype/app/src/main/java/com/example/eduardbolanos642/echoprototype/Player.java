@@ -14,7 +14,7 @@ public class Player
     private int[] position = new int[2];
     private int orientation;//0 North, 1 East, 2 South, 3 West
 
-    Player()
+    public Player()
     {
         position[0] = 0;
         position[1] = 0;

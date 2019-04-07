@@ -16,6 +16,11 @@ public class Tile
     private int mAuditoryId;
     private int mFootstepSFX;
 
+    public Tile(char type)
+    {
+        mType = type;
+    }
+
     public Item getItem() {
         return mItem;
     }

@@ -18,6 +18,37 @@ public class Level
     private int mPlayerSpawnPoint[];
     private int mEndPoint[];
 
+    public Level(int id, int[] endPoint)
+    {
+        mId = id;
+        mMap = new Tile[10][10];
+        Tile wall = new Tile('w');
+        Tile floor = new Tile('f');
+        Tile end = new Tile('e');
+
+        mMap[endPoint[0]][endPoint[1]] = end;
+        mMap[0][0] = floor;
+        mMap[0][1] = floor;
+        mMap[0][2] = floor;
+        mMap[0][3] = floor;
+        mMap[1][3] = floor;
+        mMap[2][3] = floor;
+        mMap[3][3] = floor;
+        mMap[3][4] = floor;
+        mMap[3][5] = floor;
+
+        for(int x = 0; x < mMap.length; x++)
+        {
+            for(int y = 0; y < mMap[x].length; y++)
+            {
+                if(mMap[x][y] == null)
+                {
+                    mMap[x][y] = wall;
+                }
+            }
+        }
+
+    }
 
     public int getId()
     {

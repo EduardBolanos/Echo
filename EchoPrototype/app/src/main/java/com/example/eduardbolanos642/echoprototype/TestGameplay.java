@@ -11,7 +11,8 @@ public class TestGameplay extends AppCompatActivity {
 
     private Context context = TestGameplay.this;
     float x1, x2, y1, y2;
-    Level level;
+    int endPoint[] = {3,6};
+    Level level = new Level(1, endPoint);
     Player player = new Player();
     //
 
