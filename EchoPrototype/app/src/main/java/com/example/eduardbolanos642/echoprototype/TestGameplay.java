@@ -1,5 +1,6 @@
 package com.example.eduardbolanos642.echoprototype;
 
+import android.content.Context;
 import android.media.MediaPlayer;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -8,11 +9,10 @@ import android.view.MotionEvent;
 
 public class TestGameplay extends AppCompatActivity {
 
+    private Context context = TestGameplay.this;
     float x1, x2, y1, y2;
-    char map[][];
-    int countStep =0;
-    //current map
-    //new player
+    Level level;
+    Player player = new Player();
     //
 
 
@@ -40,7 +40,7 @@ public class TestGameplay extends AppCompatActivity {
                  */
             }
                 if (x1 == x2) {
-                    //Player.echolocate(getContext());
+                    player.echolocate(context, level);
                 }
 
 
@@ -49,13 +49,13 @@ public class TestGameplay extends AppCompatActivity {
                  * reach the end. It also plays a good song created by Nick.
                  */
                 else if ((y1 > y2) && (Math.abs(y1 - y2) > 400)) {
-                    //Player.attemptMoveForward(getContext());
+                    player.attemptMoveForward(context, level);
                     }
                     else if((x1 > x2) && (Math.abs(x1 - x2) > 400)){
-                        //Player.turnLeft(getContext)
+                        player.turnLeft(context);
                 }
                 else if ((x2 > x1) && (Math.abs(x2 - x1) > 400)){
-                    //Player.turnRight(getContext);
+                    player.turnRight(context);
                 }
                 else if ((y2 > y1) && (Math.abs(y2 - y1) > 400)) {
                     //enter in gameMenu;

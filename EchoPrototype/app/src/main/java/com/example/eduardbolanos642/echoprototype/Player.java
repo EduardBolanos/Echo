@@ -13,7 +13,6 @@ public class Player
 {
     private int[] position = new int[2];
     private int orientation;//0 North, 1 East, 2 South, 3 West
-    //Map currentMap = getMap();
 
     Player()
     {
@@ -39,7 +38,7 @@ public class Player
             orientation--;
         }
         //play turn
-        turn = MediaPlayer.create(context, R.raw.echolocate);
+        turn = MediaPlayer.create(context, R.raw.genericfootsteps);
         turn.start();
 
     }
@@ -56,7 +55,7 @@ public class Player
             orientation++;
         }
         //play turn
-        turn = MediaPlayer.create(context, R.raw.echolocate);
+        turn = MediaPlayer.create(context, R.raw.genericfootsteps);
         turn.start();
     }
 
@@ -65,7 +64,7 @@ public class Player
         return orientation;
     }
 
-    public void attemptMoveForward(Context context) {
+    public void attemptMoveForward(Context context, Level level) {
         MediaPlayer moveForward;
         int[] newPosition = new int[2];
         switch (orientation) {
@@ -82,7 +81,7 @@ public class Player
                 newPosition[0] = position[0] - 1;
                 newPosition[1] = position[1];
     }
-    if(iSLegal(newPosition))
+    if(level.isLegal(newPosition))
     {
         position[0] = newPosition[0];
         position[1] = newPosition[1];
@@ -99,12 +98,14 @@ public class Player
     }
     }
 
-    public void echolocate(Context context)
+    public void echolocate(Context context, Level level)
     {
         MediaPlayer echo;
         MediaPlayer collision;
-        MediaPlayer leftTile;
-        MediaPlayer rightTile;
+        MediaPlayer leftSound;
+        MediaPlayer rightSound;
+        char leftTile;
+        char rightTile;
         echo = MediaPlayer.create(context, R.raw.echolocate);
 
         int[] newPosition = new int[2];
@@ -125,7 +126,7 @@ public class Player
                 newPosition[1] = position[1];
         }
 
-        while(isLegal(newPosition))//is legal?
+        while(level.isLegal(newPosition))//is legal?
         {
             //play distance ping(tile sound)
             echo.start();
@@ -137,14 +138,16 @@ public class Player
             } catch (InterruptedException ex) {
                 Thread.currentThread().interrupt();
             }
-            //if currentMap.TileatCoord(newPosition) == e;
-            //MediaPlayer passing;
-            //passing = MediaPlayer.create(context, R.raw.goalResponse);
-            //            try {
-            //                Thread.sleep(500);
-            //            } catch (InterruptedException ex) {
-            //                Thread.currentThread().interrupt();
-            //            }
+            if (level.getTileAtCoord(newPosition).getType() == 'e') {
+                MediaPlayer passing;
+                passing = MediaPlayer.create(context, R.raw.goalResponse);
+                passing.start();
+                try {
+                    Thread.sleep(500);
+                } catch (InterruptedException ex) {
+                    Thread.currentThread().interrupt();
+                }
+            }
             switch (orientation) {
                 case 0:
                     newPosition[1] = newPosition[1] + 1;
@@ -191,21 +194,26 @@ public class Player
             case 3:
                 newPosition[0] = newPosition[0] - 1;
         }
-        //char leftTile = currentMap.TileatCoord(newPosition);
-        //if (leftTile == e);
-        //leftSound = MediaPlayer.create(context, R.raw.goalResponse);
-        //            try {
-        //                Thread.sleep(500);
-        //            } catch (InterruptedException ex) {
-        //                Thread.currentThread().interrupt();
-        //            }
-        //else if leftTile == w);
-        //leftSound = MediaPlayer.create(context, R.raw.Wall_Left);
-        //left.start()
-        //else if leftTile == f
-        //leftSound = MediaPlayer.create(context, R.raw.Empty_space_left);
-        //leftSound.start()
-        //stop playing leftSound
+        leftTile = level.getTileAtCoord(newPosition).getType();
+        if (leftTile == 'e') {
+            leftSound = MediaPlayer.create(context, R.raw.goalResponse);
+            leftSound.start();
+            try {
+                Thread.sleep(500);
+            } catch (InterruptedException ex) {
+                Thread.currentThread().interrupt();
+            }
+        }
+        else if (leftTile == 'w')
+        {
+        leftSound = MediaPlayer.create(context, R.raw.Wall_Left);
+        leftSound.start();
+        }
+        else if (leftTile == 'f') {
+            leftSound = MediaPlayer.create(context, R.raw.Empty_space_left);
+            leftSound.start();
+            //stop playing leftSound
+        }
         try {
             Thread.sleep(1000);
         } catch (InterruptedException ex) {
@@ -223,22 +231,25 @@ public class Player
             case 3:
                 newPosition[0] = newPosition[0] + 1;
         }
-        //char rightTile = currentMap.TileatCoord(newPosition);
-        //if (rightTile == e);
-        //rightSound = MediaPlayer.create(context, R.raw.goalResponse);
-        //            try {
-        //                Thread.sleep(500);
-        //            } catch (InterruptedException ex) {
-        //                Thread.currentThread().interrupt();
-        //            }
-        //else if rightTile == w);
-        //rightSound = MediaPlayer.create(context, R.raw.Wall_Right);
-        //left.start()
-        //else if rightTile == f
-        //rightSound = MediaPlayer.create(context, R.raw.Empty_space_right);
-        //rightSound.start()
-        //stop playing rightSound
-
+        rightTile = level.getTileAtCoord(newPosition).getType();
+        if (rightTile == 'e') {
+            rightSound = MediaPlayer.create(context, R.raw.goalResponse);
+            rightSound.start();
+            try {
+                Thread.sleep(500);
+            } catch (InterruptedException ex) {
+                Thread.currentThread().interrupt();
+            }
+        }
+        else if (rightTile == 'w') {
+            rightSound = MediaPlayer.create(context, R.raw.Wall_Right);
+            rightSound.start();
+        }
+        else if (rightTile == 'f') {
+            rightSound = MediaPlayer.create(context, R.raw.Empty_space_right);
+            rightSound.start();
+            //stop playing rightSound
+        }
     }
 
 
