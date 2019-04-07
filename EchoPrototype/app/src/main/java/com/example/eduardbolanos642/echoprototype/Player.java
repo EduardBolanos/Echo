@@ -129,6 +129,7 @@ public class Player
         while(level.isLegal(newPosition))//is legal?
         {
             //play distance ping(tile sound)
+            echo.stop();
             echo.start();
             //TODO decrement volume of ping each time
             //TODO add logic to play sound of object it passed
@@ -139,14 +140,16 @@ public class Player
                 Thread.currentThread().interrupt();
             }
             if (level.getTileAtCoord(newPosition).getType() == 'e') {
+                echo.stop();
                 MediaPlayer passing;
                 passing = MediaPlayer.create(context, R.raw.goalResponse);
                 passing.start();
                 try {
-                    Thread.sleep(500);
+                    Thread.sleep(2000);
                 } catch (InterruptedException ex) {
                     Thread.currentThread().interrupt();
                 }
+                passing.stop();
             }
             switch (orientation) {
                 case 0:
@@ -183,7 +186,7 @@ public class Player
             case 3:
                 newPosition[0] = newPosition[0] + 1;
         }
-        //play left
+        //play sounds to identify left
         switch (orientation) {
             case 0:
                 newPosition[1] = newPosition[1] - 1;
@@ -199,7 +202,7 @@ public class Player
             leftSound = MediaPlayer.create(context, R.raw.goalResponse);
             leftSound.start();
             try {
-                Thread.sleep(500);
+                Thread.sleep(2000);
             } catch (InterruptedException ex) {
                 Thread.currentThread().interrupt();
             }
@@ -213,14 +216,20 @@ public class Player
             leftSound = MediaPlayer.create(context, R.raw.Empty_space_left);
             leftSound.start();
             //stop playing leftSound
+            try {
+                Thread.sleep(500);
+            } catch (InterruptedException ex) {
+                Thread.currentThread().interrupt();
+            }
+            leftSound.stop();
         }
         try {
             Thread.sleep(1000);
         } catch (InterruptedException ex) {
             Thread.currentThread().interrupt();
         }
-        //play right
 
+        //play sounds to identify right
         switch (orientation) {
             case 0:
                 newPosition[1] = newPosition[1] + 1;
@@ -236,7 +245,7 @@ public class Player
             rightSound = MediaPlayer.create(context, R.raw.goalResponse);
             rightSound.start();
             try {
-                Thread.sleep(500);
+                Thread.sleep(2000);
             } catch (InterruptedException ex) {
                 Thread.currentThread().interrupt();
             }
@@ -248,6 +257,12 @@ public class Player
         else if (rightTile == 'f') {
             rightSound = MediaPlayer.create(context, R.raw.Empty_space_right);
             rightSound.start();
+            try {
+                Thread.sleep(500);
+            } catch (InterruptedException ex) {
+                Thread.currentThread().interrupt();
+            }
+            rightSound.stop();
             //stop playing rightSound
         }
     }
