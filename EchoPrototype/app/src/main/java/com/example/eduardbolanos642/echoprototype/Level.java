@@ -9,10 +9,10 @@ import android.widget.TextView;
 
 public class Level
 {
-    Tile[5][5] layout;
+    Tile layout[5][5];
 
 
-    boolean isLegal(int[2] position);
+    boolean isLegal(int position[2])
     {
         char location = layout[position[0]][position[1]];
         switch (location) {
@@ -24,6 +24,7 @@ public class Level
                 //exit level progress to next
                 return true;
         }
+        return false;
     }
 
 
