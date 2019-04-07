@@ -7,72 +7,78 @@ import android.os.Bundle;
 import android.view.MotionEvent;
 import android.widget.TextView;
 
+import java.util.ArrayList;
+
 public class Player
 {
-    int[2] position = {0,0};
-    int orientation = 0;//0 North, 1 East, 2 South, 3 West
+    private int mPosition[];
+    private int mOrientation = 0;//0 North, 1 East, 2 South, 3 West
+    private int mEchoSFX;
+    private ArrayList<Item> mInventory;
 
-    public int[] getPosition()
+    public int[] getmPosition()
     {
-        return position;
+        return mPosition;
+    }
+    public int getOrientation()
+    {
+        return mOrientation;
     }
 
     public void turnLeft()
     {
-        if(orientation == 0)
+        if(mOrientation == 0)
         {
-            orienation = 3;
+            mOrientation = 3;
         }
         else
         {
-            orientation--;
+            mOrientation--;
         }
     }
 
     public void turnRight()
     {
-        if(orientation == 3)
+        if(mOrientation == 3)
         {
-            orienation = 0;
+            mOrientation = 0;
         }
         else
         {
-            orientation++;
+            mOrientation++;
         }
     }
 
-    public int getOrientation()
-    {
-        return orientation;
-    }
-    public void attemptMoveForward() {
-        int[2]newPosition;
-        switch (orientation) {
+
+    public void attemptMoveForward(Level level) {
+        int newPosition[] = {0,0};
+
+        switch (mOrientation) {
             case 0:
-                newPosition[0] = position[0];
-                newposition[1] = position[1] + 1;
+                newPosition[0] = mPosition[0];
+                newPosition[1] = mPosition[1] + 1;
             case 1:
-                newPosition[0] = position[0] + 1;
-                newposition[1] = position[1];
+                newPosition[0] = mPosition[0] + 1;
+                newPosition[1] = mPosition[1];
             case 2:
-                newPosition[0] = position[0];
-                newposition[1] = position[1] - 1;
+                newPosition[0] = mPosition[0];
+                newPosition[1] = mPosition[1] - 1;
             case 3:
-                newPosition[0] = position[0] - 1;
-                newposition[1] = position[1];
+                newPosition[0] = mPosition[0] - 1;
+                newPosition[1] = mPosition[1];
     }
-    if(iSLegal(newpPosition))
-    {
-        position[0] = newPosition[0];
-        position[1] = newPosition[1];
-        //play footstep
-    }
-    else
-    {
-        //play wall hit
-    }
-        //if(Map.isLegal(newPosition)) == false  dont move forward play tileSound
-        //if true position = newPosition play footstep
+        if(level.isLegal(newPosition))
+        {
+            mPosition[0] = newPosition[0];
+            mPosition[1] = newPosition[1];
+            //play footstep
+        }
+        else
+        {
+            //play wall hit
+        }
+        //if(Map.isLegal(newmPosition)) == false  dont move forward play tileSound
+        //if true mPosition = newmPosition play footstep
 
 
     }

@@ -7,14 +7,61 @@ import android.os.Bundle;
 import android.view.MotionEvent;
 import android.widget.TextView;
 
+import java.util.ArrayList;
+
 public class Level
 {
-    Tile[5][5] layout;
+    private int mId;
+    private ArrayList<Item> mItemCoordPair;
+    private Tile mMap[][];
+    private int mAmbientSFX;
+    private int mPlayerSpawnPoint[];
+    private int mEndPoint[];
 
 
-    boolean isLegal(int[2] position);
+    public int getId()
     {
-        char location = layout[position[0]][position[1]];
+        return mId;
+    }
+    public void setId(int id)
+    {
+        mId=id;
+    }
+
+    public Tile getTileAtCoord(int coord[])
+    {
+        return mMap[coord[0]][coord[1]];
+    }
+    public int getPlayerSpawnPointX()
+    {
+        return mPlayerSpawnPoint[0];
+    }
+    public int getPlayerSpawnPointY()
+    {
+        return mPlayerSpawnPoint[1];
+    }
+    public void setPlayerSpawnPoint(int position[])
+    {
+        mPlayerSpawnPoint=position;
+    }
+
+    public void setAmbientSFX(int ambientSFX)
+    {
+        mAmbientSFX=ambientSFX;
+    }
+    public int getAmbientSFX()
+    {
+        return mAmbientSFX;
+    }
+
+    public void addUnspawnedItem(Item item, int position[])
+    {
+
+    }
+
+    public boolean isLegal(int position[])
+    {
+        char location = mMap[position[0]][position[1]].getType();
         switch (location) {
             case 'w':
                 return false;
@@ -23,6 +70,10 @@ public class Level
             case 'e':
                 //exit level progress to next
                 return true;
+
+                default:
+                    return false;
+
         }
     }
 
