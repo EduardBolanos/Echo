@@ -10,11 +10,10 @@ import android.view.MotionEvent;
 
 public class TestGameplay extends AppCompatActivity {
 
-    private Context context = TestGameplay.this;
     float x1, x2, y1, y2;
     int endPoint[] = {3,6};
     Level level = new Level(1, endPoint);
-    Player player = new Player();
+    Player player = new Player(TestGameplay.this);
     Intent i;
     //
 
@@ -75,15 +74,15 @@ public class TestGameplay extends AppCompatActivity {
                  * reach the end. It also plays a good song created by Nick.
                  */
                 if ((y1 > y2) && (Math.abs(y1 - y2) > 400)) {
-                   player.attemptMoveForward(context, level);
+                   player.attemptMoveForward(level);
                 } else if ((x1 > x2) && (Math.abs(x1 - x2) > 400)) {
-                   player.turnLeft(context);
+                   player.turnLeft();
                 } else if ((x2 > x1) && (Math.abs(x2 - x1) > 400)) {
-                   player.turnRight(context);
+                   player.turnRight();
                 } else if ((y2 > y1) && (Math.abs(y2 - y1) > 400)) {
                     startActivityForResult(i, 1234);
                 } else if (((Math.abs(x1 - x2) < 50) && (Math.abs(y1 - y2) < 50))) {
-                  player.echolocate(context, level);
+                  player.echolocate(level);
                 }
         }
         return false;
