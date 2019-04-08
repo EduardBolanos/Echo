@@ -99,7 +99,6 @@ public class Level
             case 'f':
                 return true;
             case 'e':
-                //exit level progress to next
                 return true;
 
                 default:

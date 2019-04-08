@@ -13,7 +13,6 @@ import android.widget.TextView;
 public class MainActivity extends AppCompatActivity {
     ImageView onClick;
     TextView menuText;
-    int overAlpha;
     int currentSelect; //Counter
     int currentMenuContext; //Selected Menu
     int contextSelect; //Location in arrays
@@ -154,12 +153,6 @@ public class MainActivity extends AppCompatActivity {
                 }
                 else if (((Math.abs(x1 - x2) < 50) && (Math.abs(y1 - y2) < 50))){
                     context.start();
-                    //TEST FOR VISUALS
-                    overAlpha = 127;
-                    onClick.setY(y2+20);
-                    onClick.setX(x2+20);
-                    onClick.setAlpha(overAlpha);
-                    onClick.setVisibility(View.VISIBLE);
                         switch (loc + contextSelect) {
                             case 0:
                                 mediaPlayer = MediaPlayer.create(MainActivity.this, R.raw.newgame);
@@ -204,17 +197,6 @@ public class MainActivity extends AppCompatActivity {
                                 break;
                         }
                     }
-                    //TEST FOR VISUALS
-                    while(overAlpha != 0) {
-                        try {
-                            Thread.sleep(4);
-                        } catch (InterruptedException ex) {
-                            Thread.currentThread().interrupt();
-                        }
-                        overAlpha--;
-                        onClick.setAlpha(overAlpha);
-                    }
-                    onClick.setVisibility(View.INVISIBLE);
                 mediaPlayer.start();
                 break;
         }
