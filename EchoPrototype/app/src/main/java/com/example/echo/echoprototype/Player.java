@@ -282,7 +282,7 @@ public class Player
                 Thread.currentThread().interrupt();
             }
             rightSound.stop();
-            //stop playing rightSound 
+            //stop playing rightSound
         }
     }
 

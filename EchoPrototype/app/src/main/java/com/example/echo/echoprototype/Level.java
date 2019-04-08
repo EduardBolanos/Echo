@@ -17,6 +17,7 @@ public class Level
     private int mAmbientSFX;
     private int mPlayerSpawnPoint[];
     private int mEndPoint[];
+    //
 
     public Level(int id, int[] endPoint)
     {

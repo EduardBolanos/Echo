@@ -15,7 +15,7 @@ public class TestGameplay extends AppCompatActivity {
     Level level = new Level(1, endPoint);
     Player player = new Player(TestGameplay.this);
     Intent i;
-    //
+
 
 
     MediaPlayer mediaPlayer;

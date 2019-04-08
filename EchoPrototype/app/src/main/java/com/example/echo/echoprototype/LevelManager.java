@@ -35,7 +35,7 @@ public class LevelManager {
     public void initializeLevel()
     {
         // contains important initialization logic, including item spawning, player spawn configuration,
-        // map configuration, etc
+        // map configuration, etc.
     }
 
 
