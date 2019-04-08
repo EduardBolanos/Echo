@@ -18,7 +18,9 @@
         </activity>
         <activity
             android:name="com.example.echo.echoprototype.InGameMenu">
-            android:label="EchoPrototype2">
+        </activity>
+        <activity
+            android:name="com.example.echo.echoprototype.TestGameplay">">
         </activity>
 
         <meta-data

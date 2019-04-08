@@ -15,27 +15,30 @@ public class MainActivity extends AppCompatActivity {
     int currentMenuContext; //Selected Menu
     int contextSelect; //Location in arrays
     boolean gameState = true; //new and continue
-
     Intent i;
     MediaPlayer mediaPlayer;
+    MediaPlayer slide;
+    MediaPlayer context;
     MediaPlayer beat;
     float x1, x2, y1, y2;
     //Omega String
-    String omegaMenu[] = {"Start", "Settings", "Sound FX Volume", "Voice Volume", "Ambiance & Music",
+    String omegaMenu[] = {"Start", "Instructions", "Settings", "Sound FX Volume", "Voice Volume", "Ambiance & Music",
             "Vibration Level", "New Game", "Continue", "Yes", "No"};
-    String omegaMenuVoice[] = {"start", "settings","soundfx","voicefx","amfx","vibration",
+    String omegaMenuVoice[] = {"start", "help", "settings","soundfx","voicefx","amfx","vibration",
             "newgame", "continuegame","yes", "no"};
-    int menuSize[] = {2, 4, 2, 2};
+    int menuSize[] = {3, 4, 2, 2};
     int loc;
 
     // Make sure to replace package string if changed : /*IMPORTANT*/
-    String primer = ("android.resource://" + "com.example.eduardbolanos642.echoprototype" + "/raw/");
+    String primer = ("android.resource://" + "com.example.echo.echoprototype" + "/raw/");
     Uri hammer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        i = new Intent(this, InGameMenu.class);
+        i = new Intent(this, TestGameplay.class);
         mediaPlayer = MediaPlayer.create(MainActivity.this, R.raw.intro);
+        slide = MediaPlayer.create(MainActivity.this, R.raw.slide);
+        context = MediaPlayer.create(MainActivity.this,R.raw.change);
         mediaPlayer.start();
         /*IMPORTANT*/
         beat = MediaPlayer.create(MainActivity.this, R.raw.beatingitup); //We needed this song in our app
@@ -50,6 +53,7 @@ public class MainActivity extends AppCompatActivity {
         menuText = (TextView) findViewById(R.id.textView);
         currentSelect = 0;
         currentMenuContext = 0;
+        contextSelect = 0;
         menuText.setText((String) omegaMenu[0]);
 
 
@@ -92,6 +96,7 @@ public class MainActivity extends AppCompatActivity {
                     loc = (loc + menuSize[x]);
                 }
                 if ((x1 < x2) && (Math.abs(x1 - x2) > 400)) {
+                    slide.start();
                     contextSelect = Math.abs((currentSelect - 1) % menuSize[currentMenuContext]);
                     hammer = Uri.parse((primer + omegaMenuVoice[contextSelect + loc]));
                     mediaPlayer = MediaPlayer.create(MainActivity.this, hammer);
@@ -99,6 +104,7 @@ public class MainActivity extends AppCompatActivity {
                     currentSelect--;
                 }
                 else if ((x1 > x2) && (Math.abs(x1 - x2) > 400)){
+                    slide.start();
                     contextSelect = Math.abs((currentSelect + 1) % menuSize[currentMenuContext]);
                     hammer = Uri.parse((primer + omegaMenuVoice[contextSelect + loc]));
                     mediaPlayer = MediaPlayer.create(MainActivity.this, hammer);
@@ -118,6 +124,7 @@ public class MainActivity extends AppCompatActivity {
                          */
                         case 1:
                         case 2:
+                            context.start();
                             currentMenuContext = 0;
                             currentSelect = 0;
                             contextSelect = 0;
@@ -129,27 +136,32 @@ public class MainActivity extends AppCompatActivity {
                          * game selection screen.
                          */
                         case 3:
+                            context.start();
                             currentMenuContext = 2;
                             currentSelect = 0;
                             contextSelect = 0;
                             mediaPlayer = MediaPlayer.create(MainActivity.this, R.raw.newgame);
-                            menuText.setText((String) omegaMenu[6]);
+                            menuText.setText((String) omegaMenu[7]);
                             break;
                     }
                 }
+                else if ((y1 < y2) && (Math.abs(y1 - y2) > 400)) {
+                    mediaPlayer.start();
+                }
                 else if (((Math.abs(x1 - x2) < 50) && (Math.abs(y1 - y2) < 50))){
+                    context.start();
                         switch (loc + contextSelect) {
                             case 0:
                                 mediaPlayer = MediaPlayer.create(MainActivity.this, R.raw.newgame);
                                 currentMenuContext = 2;
-                                menuText.setText((String) omegaMenu[6]);
+                                menuText.setText((String) omegaMenu[7]);
                                 break;
                             case 1:
+                                mediaPlayer = MediaPlayer.create(MainActivity.this, R.raw.instructions);
+                            case 2:
                                 mediaPlayer = MediaPlayer.create(MainActivity.this, R.raw.soundfx);
                                 currentMenuContext = 1;
-                                menuText.setText((String) omegaMenu[2]);
-                                break;
-                            case 2:
+                                menuText.setText((String) omegaMenu[3]);
                                 break;
                             case 3:
                                 break;
@@ -158,24 +170,26 @@ public class MainActivity extends AppCompatActivity {
                             case 5:
                                 break;
                             case 6:
-                                mediaPlayer = MediaPlayer.create(MainActivity.this, R.raw.yes);
-                                currentMenuContext = 3;
-                                menuText.setText((String) omegaMenu[8]);
-                                gameState = true;
                                 break;
                             case 7:
                                 mediaPlayer = MediaPlayer.create(MainActivity.this, R.raw.yes);
                                 currentMenuContext = 3;
-                                menuText.setText((String) omegaMenu[8]);
-                                gameState = false;
+                                menuText.setText((String) omegaMenu[9]);
+                                gameState = true;
                                 break;
                             case 8:
-                                startActivity(i);
+                                mediaPlayer = MediaPlayer.create(MainActivity.this, R.raw.yes);
+                                currentMenuContext = 3;
+                                menuText.setText((String) omegaMenu[9]);
+                                gameState = false;
                                 break;
                             case 9:
+                                startActivity(i);
+                                break;
+                            case 10:
                                 mediaPlayer = MediaPlayer.create(MainActivity.this, R.raw.newgame);
                                 currentMenuContext = 2;
-                                menuText.setText((String) omegaMenu[6]);
+                                menuText.setText((String) omegaMenu[7]);
                                 break;
                         }
                     }
