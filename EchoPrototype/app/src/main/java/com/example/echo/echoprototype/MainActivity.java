@@ -6,10 +6,10 @@ import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.MotionEvent;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 public class MainActivity extends AppCompatActivity {
-
     TextView menuText;
     int currentSelect; //Counter
     int currentMenuContext; //Selected Menu
@@ -24,7 +24,7 @@ public class MainActivity extends AppCompatActivity {
     //Omega String
     String omegaMenu[] = {"Start", "Instructions", "Settings", "Sound FX Volume", "Voice Volume", "Ambiance & Music",
             "Vibration Level", "New Game", "Continue", "Yes", "No"};
-    String omegaMenuVoice[] = {"start", "help", "settings","soundfx","voicefx","amfx","vibration",
+    String omegaMenuVoice[] = {"start", "hel", "settings","soundfx","voicefx","amfx","vibration",
             "newgame", "continuegame","yes", "no"};
     int menuSize[] = {3, 4, 2, 2};
     int loc;
@@ -44,10 +44,9 @@ public class MainActivity extends AppCompatActivity {
         beat = MediaPlayer.create(MainActivity.this, R.raw.beatingitup); //We needed this song in our app
         beat.setLooping(true);
         beat.start();
-
         super.onCreate(savedInstanceState);
         /*IMPORTANT*/
-        setContentView(R.layout.activity_main); // RE-ADD VISUAL INSTRUCTIONS TO THE MENU, Like Arrows.
+        setContentView(R.layout.activity_main);
 
         //gives memes
         menuText = (TextView) findViewById(R.id.textView);
@@ -70,6 +69,7 @@ public class MainActivity extends AppCompatActivity {
         currentMenuContext = 0;
         currentSelect = 0;
         contextSelect = 0;
+        mediaPlayer = MediaPlayer.create(MainActivity.this, R.raw.start);
         menuText.setText((String) omegaMenu[0]);
         super.onResume();
 
@@ -158,6 +158,7 @@ public class MainActivity extends AppCompatActivity {
                                 break;
                             case 1:
                                 mediaPlayer = MediaPlayer.create(MainActivity.this, R.raw.instructions);
+                                break;
                             case 2:
                                 mediaPlayer = MediaPlayer.create(MainActivity.this, R.raw.soundfx);
                                 currentMenuContext = 1;
