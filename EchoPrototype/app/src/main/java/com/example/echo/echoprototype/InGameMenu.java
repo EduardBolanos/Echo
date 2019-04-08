@@ -16,7 +16,7 @@ public class InGameMenu extends AppCompatActivity {
     String omegaMenu[] = {"Inventory", "Settings and Navigation", "Sound FX Volume", "Voice Volume", "Ambiance & Music",
             "Vibration Level", "Return to Menu", "Instructions"};
     // create these voice files
-    String omegaMenuVoice[] = {"inventory", "explain", "soundfx", "voicefx", "amfx", "vibration", "return", "help"};
+    String omegaMenuVoice[] = {"inventory", "explain", "soundfx", "voicefx", "amfx", "vibration", "returntomenu", "help"};
     int menuSize[] = {2, 6};
     String primer = ("android.resource://" + "com.example.echo.echoprototype" + "/raw/");
     Uri hammer;
