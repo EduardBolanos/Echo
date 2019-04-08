@@ -1,5 +1,6 @@
 package com.example.echo.echoprototype;
 
+import android.content.Context;
 import android.media.MediaPlayer;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -8,8 +9,14 @@ import android.view.MotionEvent;
 
 public class TestGameplay extends AppCompatActivity {
 
+    private Context context = TestGameplay.this;
     float x1, x2, y1, y2;
-    int countStep = 6; //To be increased/decreased later on
+    int endPoint[] = {3,6};
+    Level level = new Level(1, endPoint);
+    Player player = new Player();
+    //
+
+
     MediaPlayer mediaPlayer;
 
     @Override
@@ -32,52 +39,30 @@ public class TestGameplay extends AppCompatActivity {
                  * The echolocate capability as explained in the SRS documentation
                  * NOTE: Not fully implemented, this is only the prototype v1.0.0
                  */
+            }
                 if (x1 == x2) {
-                    mediaPlayer = MediaPlayer.create(TestGameplay.this, R.raw.echolocate);
-                    mediaPlayer.start();
-                    try {
-                        Thread.sleep(2000);
-                    } catch (InterruptedException ex) {
-                        Thread.currentThread().interrupt();
-                    }
-                    mediaPlayer = MediaPlayer.create(TestGameplay.this, R.raw.goalreponse);
-                    mediaPlayer.start();
+                    player.echolocate(context, level);
+                }
 
-                }/**
+
+                /**
                  * You move forward by swiping up, it plays your "footsteps", and when you
                  * reach the end. It also plays a good song created by Nick.
                  */
                 else if ((y1 > y2) && (Math.abs(y1 - y2) > 400)) {
-                    countStep--;
-                    if (countStep >= 0) {
-                        mediaPlayer = MediaPlayer.create(TestGameplay.this, R.raw.genericfootsteps); //Pretty good footsteps
-                        mediaPlayer.start();
-                        try {
-                            Thread.sleep(1000);
-                        } catch (InterruptedException ex) {
-                            Thread.currentThread().interrupt();
-                        }
+                    player.attemptMoveForward(context, level);
                     }
-                    if (countStep == 0) {
-                        mediaPlayer = MediaPlayer.create(TestGameplay.this, R.raw.goalreponse); //Yeah you did it, you still suck at video games
-                        mediaPlayer.start();                                                            //RNC FLEEEX
-                        try {
-                            Thread.sleep(2000);
-                        } catch (InterruptedException ex) {
-                            Thread.currentThread().interrupt();
-                        }
-                        mediaPlayer = MediaPlayer.create(TestGameplay.this, R.raw.darknesh); //Cringiest thing of all time
-                        mediaPlayer.start();
-                        try {
-                            Thread.sleep(13000);
-                        } catch (InterruptedException ex) {
-                            Thread.currentThread().interrupt();
-                        }
-                        mediaPlayer = MediaPlayer.create(TestGameplay.this, R.raw.my_jam);
-                        mediaPlayer.start();
-                        mediaPlayer.setLooping(true); //looping my_jam, greatest song of March 2019
-                    }
+                    else if((x1 > x2) && (Math.abs(x1 - x2) > 400)){
+                        player.turnLeft(context);
                 }
+                else if ((x2 > x1) && (Math.abs(x2 - x1) > 400)){
+                    player.turnRight(context);
+                }
+                else if ((y2 > y1) && (Math.abs(y2 - y1) > 400)) {
+                    //enter in gameMenu;
+                }
+        {
+
         }
         return false;
     }
