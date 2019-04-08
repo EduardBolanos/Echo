@@ -11,7 +11,7 @@ import android.view.MotionEvent;
 public class TestGameplay extends AppCompatActivity {
 
     float x1, x2, y1, y2;
-    int endPoint[] = {3,6};
+    int endPoint[] = {4,7};
     Level level = new Level(1, endPoint);
     Player player = new Player(TestGameplay.this);
     Intent i;

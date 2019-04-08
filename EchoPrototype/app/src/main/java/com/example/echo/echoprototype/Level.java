@@ -27,15 +27,15 @@ public class Level
         Tile end = new Tile('e');
 
         mMap[endPoint[0]][endPoint[1]] = end;
-        mMap[0][0] = floor;
-        mMap[0][1] = floor;
-        mMap[0][2] = floor;
-        mMap[0][3] = floor;
+        mMap[1][1] = floor;
+        mMap[1][2] = floor;
         mMap[1][3] = floor;
-        mMap[2][3] = floor;
-        mMap[3][3] = floor;
+        mMap[1][4] = floor;
+        mMap[2][4] = floor;
         mMap[3][4] = floor;
-        mMap[3][5] = floor;
+        mMap[4][4] = floor;
+        mMap[4][5] = floor;
+        mMap[4][6] = floor;
 
         for(int x = 0; x < mMap.length; x++)
         {
