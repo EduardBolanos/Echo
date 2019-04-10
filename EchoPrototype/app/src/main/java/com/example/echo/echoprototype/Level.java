@@ -55,10 +55,10 @@ public class Level
                 data = asset.read();
             }catch(java.io.IOException e){
             }
-            if((char)data != '\n' && ((char)data > 31 || data == 13)) {
+            if(((char)data != '\n' && ((char)data > 31)) || data == 13 || data == 10) {
                 switch (state) {
                     case 0:
-                        if (data != 13) {
+                        if (data != 13 && data != 10) {
                             concatinator = concatinator + ((char) data);
                         } else {
                             mId = Integer.parseInt(concatinator);
@@ -67,7 +67,7 @@ public class Level
                         }
                         break;
                     case 1:
-                        if (data != 13) {
+                        if (data != 13 && data != 10) {
                             if (bypass == 1) {
                                 concatinator = concatinator + ((char) data);
                             }
@@ -83,12 +83,13 @@ public class Level
                         } else {
                             sizeY = Integer.parseInt(concatinator);
                             mMap = new Tile[sizeX][sizeY];
+                            locY = sizeY - 1;
                             concatinator = "";
                             state = 2;
                         }
                         break;
                     case 2:
-                        if (data != 13) {
+                        if (data != 13 && data != 10) {
                             switch (data) {
                                 case 102:
                                     mMap[locX][locY] = floor;
@@ -109,10 +110,10 @@ public class Level
                             }
                             locX++;
                         } else {
-                            locY++;
+                            locY--;
                             locX = 0;
                         }
-                        if (sizeY == locY) {
+                        if (locY < 0) {
                             state = 3;
                         }
                         break;
