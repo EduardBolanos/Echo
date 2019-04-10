@@ -31,7 +31,7 @@ public class MainActivity extends AppCompatActivity {
     int menuSize[] = {3, 4, 2, 2};
     int loc;
 
-    // Make sure to replace package string if changed : /* VERY IMPORTANT*/
+    // Make sure to replace package string if changed : /*IMPORTANT*/
     String primer = ("android.resource://" + "com.example.echo.echoprototype" + "/raw/");
     Uri hammer;
 

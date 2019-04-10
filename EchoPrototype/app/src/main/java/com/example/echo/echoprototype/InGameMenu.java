@@ -11,7 +11,7 @@ import android.widget.TextView;
 public class InGameMenu extends AppCompatActivity {
     int currentSelectIG; //Counter
     int currentMenuContextIG; //Selected Menu
-    int contextSelectIG; //Location in arrays
+    int contextSelectIG; //Location in arrays, ex
     //Omega String
     String omegaMenu[] = {"Inventory", "Settings and Navigation", "Sound FX Volume", "Voice Volume", "Ambiance & Music",
             "Vibration Level", "Return to Menu", "Instructions"};
