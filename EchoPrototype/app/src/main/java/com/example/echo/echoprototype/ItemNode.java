@@ -33,7 +33,7 @@ public class ItemNode implements Comparable{
     public int compareTo(Object o) {
         //some compare about data
         if (((ItemNode)o).getData().name == this.getData().name){
-            return 0; // we found it Tim nice
+            return 0; // we found it Tim
         }
         return -1; // not found
         }

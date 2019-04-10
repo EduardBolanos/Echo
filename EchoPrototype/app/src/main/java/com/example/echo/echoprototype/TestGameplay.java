@@ -11,11 +11,11 @@ import android.view.MotionEvent;
 public class TestGameplay extends AppCompatActivity {
 
     float x1, x2, y1, y2;
-    int endPoint[] = {3,6};
-    Level level = new Level(1, endPoint);
+    int endPoint[] = {4,7};
+    Level level = new Level(this);
     Player player = new Player(TestGameplay.this);
     Intent i;
-
+    //
 
 
     MediaPlayer mediaPlayer;
@@ -40,6 +40,9 @@ public class TestGameplay extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_test_gameplay);
+        level.loadLevel("level" + 1 + ".txt" ); // stub
+        player.setOrientation(level.getStartOrientation());
+        player.setPosition(level.getPlayerSpawnPoint());
         i = new Intent(this, InGameMenu.class);
     }
 

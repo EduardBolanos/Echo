@@ -11,9 +11,13 @@ public class Player
     public Player(Context context)
     {
         mContext = context;
-        position[0] = 0;
-        position[1] = 0;
-        orientation = 0;
+    }
+    public void setOrientation(int ori){
+        orientation = ori;
+    }
+
+    public void setPosition(int[] position) {
+        this.position = position;
     }
 
     public int[] getPosition()
@@ -23,6 +27,8 @@ public class Player
 
     public void turnLeft()
     {
+        Runtime r = Runtime.getRuntime();
+        r.gc();
         MediaPlayer turn;
         if(orientation == 0)
         {
@@ -40,6 +46,8 @@ public class Player
 
     public void turnRight()
     {
+        Runtime r = Runtime.getRuntime();
+        r.gc();
         MediaPlayer turn;
         if(orientation == 3)
         {
@@ -60,6 +68,8 @@ public class Player
     }
 
     public void attemptMoveForward(Level level) {
+        Runtime r = Runtime.getRuntime();
+        r.gc();
         MediaPlayer moveForward;
         int[] newPosition = new int[2];
         switch (orientation) {
@@ -87,6 +97,12 @@ public class Player
         //play footstep
         moveForward = MediaPlayer.create(mContext, R.raw.genericfootsteps);
         moveForward.start();
+        if(level.getTileAtCoord(position).getType() == 'e')
+        {
+            MediaPlayer ending;
+            ending = MediaPlayer.create(mContext, R.raw.my_jam);
+            ending.start();
+        }
         //if tile is item get item, if tile is end play end
     }
     else {
@@ -99,6 +115,8 @@ public class Player
 
     public void echolocate(Level level)
     {
+        Runtime r = Runtime.getRuntime();
+        r.gc();
         MediaPlayer echo;
         MediaPlayer collision;
         MediaPlayer leftSound;
@@ -132,18 +150,18 @@ public class Player
         while(level.isLegal(newPosition))//is legal?
         {
             //play distance ping(tile sound)
-            echo.stop();
+//            echo.stop();
             echo.start();
             //TODO decrement volume of ping each time
             //TODO add logic to play sound of object it passed
             //echo.setVolume(volume - 10);
             try {
-                Thread.sleep(500);
+                Thread.sleep(600);
             } catch (InterruptedException ex) {
                 Thread.currentThread().interrupt();
             }
             if (level.getTileAtCoord(newPosition).getType() == 'e') {
-                echo.stop();
+//                echo.stop();
                 MediaPlayer passing;
                 passing = MediaPlayer.create(mContext, R.raw.goalresponse);
                 passing.start();
@@ -169,8 +187,10 @@ public class Player
                     break;
             }
         }
+        echo = MediaPlayer.create(mContext, R.raw.echolocate);
+        echo.start();
         try {
-            Thread.sleep(500);
+            Thread.sleep(600);
         } catch (InterruptedException ex) {
             Thread.currentThread().interrupt();
         }
@@ -200,19 +220,33 @@ public class Player
         //play sounds to identify left
         switch (orientation) {
             case 0:
-                newPosition[1] = newPosition[1] - 1;
+                newPosition[0] = newPosition[0] - 1;
                 break;
             case 1:
-                newPosition[0] = newPosition[0] + 1;
-                break;
-            case 2:
                 newPosition[1] = newPosition[1] + 1;
                 break;
+            case 2:
+                newPosition[0] = newPosition[0] + 1;
+                break;
             case 3:
-                newPosition[0] = newPosition[0] - 1;
+                newPosition[1] = newPosition[1] - 1;
                 break;
         }
         leftTile = level.getTileAtCoord(newPosition).getType();
+        switch (orientation) {
+            case 0:
+                newPosition[0] = newPosition[0] + 1;
+                break;
+            case 1:
+                newPosition[1] = newPosition[1] - 1;
+                break;
+            case 2:
+                newPosition[0] = newPosition[0] - 1;
+                break;
+            case 3:
+                newPosition[1] = newPosition[1] + 1;
+                break;
+        }
         if (leftTile == 'e') {
             leftSound = MediaPlayer.create(mContext, R.raw.goalresponse);
             leftSound.start();
@@ -226,40 +260,53 @@ public class Player
         {
         leftSound = MediaPlayer.create(mContext, R.raw.wall_left);
         leftSound.start();
+            try{
+                Thread.sleep(600);
+            } catch (InterruptedException ex) {
+                Thread.currentThread().interrupt();
+            }
         }
         else if (leftTile == 'f') {
             leftSound = MediaPlayer.create(mContext, R.raw.empty_space_left);
             leftSound.start();
             //stop playing leftSound
             try {
-                Thread.sleep(500);
+                Thread.sleep(300);
             } catch (InterruptedException ex) {
                 Thread.currentThread().interrupt();
             }
-            leftSound.stop();
-        }
-        try {
-            Thread.sleep(1000);
-        } catch (InterruptedException ex) {
-            Thread.currentThread().interrupt();
         }
 
         //play sounds to identify right
         switch (orientation) {
             case 0:
-                newPosition[1] = newPosition[1] + 1;
+                newPosition[0] = newPosition[0] + 1;
                 break;
             case 1:
-                newPosition[0] = newPosition[0] - 1;
-                break;
-            case 2:
                 newPosition[1] = newPosition[1] - 1;
                 break;
+            case 2:
+                newPosition[0] = newPosition[0] - 1;
+                break;
             case 3:
-                newPosition[0] = newPosition[0] + 1;
+                newPosition[1] = newPosition[1] + 1;
                 break;
         }
         rightTile = level.getTileAtCoord(newPosition).getType();
+        switch (orientation) {
+            case 0:
+                newPosition[0] = newPosition[0] - 1;
+                break;
+            case 1:
+                newPosition[1] = newPosition[1] + 1;
+                break;
+            case 2:
+                newPosition[0] = newPosition[0] + 1;
+                break;
+            case 3:
+                newPosition[1] = newPosition[1] - 1;
+                break;
+        }
         if (rightTile == 'e') {
             rightSound = MediaPlayer.create(mContext, R.raw.goalresponse);
             rightSound.start();
@@ -272,16 +319,20 @@ public class Player
         else if (rightTile == 'w') {
             rightSound = MediaPlayer.create(mContext, R.raw.wall_right);
             rightSound.start();
+            try{
+                Thread.sleep(600);
+            } catch (InterruptedException ex) {
+                Thread.currentThread().interrupt();
+            }
         }
         else if (rightTile == 'f') {
             rightSound = MediaPlayer.create(mContext, R.raw.empty_space_right);
             rightSound.start();
             try {
-                Thread.sleep(500);
+                Thread.sleep(300);
             } catch (InterruptedException ex) {
                 Thread.currentThread().interrupt();
             }
-            rightSound.stop();
             //stop playing rightSound
         }
     }

@@ -22,6 +22,7 @@ public class MainActivity extends AppCompatActivity {
     MediaPlayer slide;
     MediaPlayer context;
     MediaPlayer beat;
+    Level testLevel;
     float x1, x2, y1, y2;
     //Omega String
     String omegaMenu[] = {"Start", "Instructions", "Settings", "Sound FX Volume", "Voice Volume", "Ambiance & Music",
@@ -31,7 +32,7 @@ public class MainActivity extends AppCompatActivity {
     int menuSize[] = {3, 4, 2, 2};
     int loc;
 
-    // Make sure to replace package string if changed : /* VERY IMPORTANT*/
+    // Make sure to replace package string if changed : /*IMPORTANT*/
     String primer = ("android.resource://" + "com.example.echo.echoprototype" + "/raw/");
     Uri hammer;
 
