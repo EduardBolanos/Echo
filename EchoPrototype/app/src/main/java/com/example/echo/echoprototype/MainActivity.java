@@ -22,6 +22,7 @@ public class MainActivity extends AppCompatActivity {
     MediaPlayer slide;
     MediaPlayer context;
     MediaPlayer beat;
+    Level testLevel;
     float x1, x2, y1, y2;
     //Omega String
     String omegaMenu[] = {"Start", "Instructions", "Settings", "Sound FX Volume", "Voice Volume", "Ambiance & Music",
