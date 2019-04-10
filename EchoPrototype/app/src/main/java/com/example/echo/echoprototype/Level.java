@@ -22,11 +22,12 @@ public class Level
     private int mStartOrientation;
     private int mEndPoint[];
     private Context context;
+    private Tile wall,floor,end;
     public Level(Context that)
     {
-        Tile wall = new Tile('w');
-        Tile floor = new Tile('f');
-        Tile end = new Tile('e');
+        wall = new Tile('w');
+        floor = new Tile('f');
+        end = new Tile('e');
         context = that;
 
     }
@@ -54,7 +55,7 @@ public class Level
                 data = asset.read();
             }catch(java.io.IOException e){
             }
-            if((char)data != '\n') {
+            if((char)data != '\n' && ((char)data > 31 || data == 13)) {
                 switch (state) {
                     case 0:
                         if (data != 13) {
@@ -88,15 +89,25 @@ public class Level
                         break;
                     case 2:
                         if (data != 13) {
-                            if (data != 50) {
-                                mMap[locX][locY] = new Tile((char) data);
-                                locX++;
-                            } else {
-                                mMap[locX][locY] = new Tile('f');
-                                int[] playerPos = {locX, locY};
-                                setPlayerSpawnPoint(playerPos);
-                                locX++;
+                            switch (data) {
+                                case 102:
+                                    mMap[locX][locY] = floor;
+                                    break;
+                                case 101:
+                                    mMap[locX][locY] = end;
+                                    int[] ep = {locX, locY};
+                                    mEndPoint = ep;
+                                    break;
+                                case 119:
+                                    mMap[locX][locY] = wall;
+                                    break;
+                                case 50:
+                                    mMap[locX][locY] = floor;
+                                    int[] playerPos = {locX, locY};
+                                    setPlayerSpawnPoint(playerPos);
+                                    break;
                             }
+                            locX++;
                         } else {
                             locY++;
                             locX = 0;
@@ -109,7 +120,11 @@ public class Level
                         concatinator = "";
                         concatinator = concatinator + ((char) data);
                         mStartOrientation = Integer.parseInt(concatinator);
+                        asset = null;
+                        Runtime r = Runtime.getRuntime();
+                        r.gc();
                         data = -1;
+
                         break;
                 }
             }
