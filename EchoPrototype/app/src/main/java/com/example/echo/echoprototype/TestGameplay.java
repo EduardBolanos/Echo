@@ -42,6 +42,7 @@ public class TestGameplay extends AppCompatActivity {
         setContentView(R.layout.activity_test_gameplay);
         level.loadLevel("level" + 1 + ".txt" ); // stub
         player.setOrientation(level.getStartOrientation());
+        player.setPosition(level.getPlayerSpawnPoint());
         i = new Intent(this, InGameMenu.class);
     }
 

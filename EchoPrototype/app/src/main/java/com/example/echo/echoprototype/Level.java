@@ -101,7 +101,7 @@ public class Level
                                 case 119:
                                     mMap[locX][locY] = wall;
                                     break;
-                                case 50:
+                                case 80:
                                     mMap[locX][locY] = floor;
                                     int[] playerPos = {locX, locY};
                                     setPlayerSpawnPoint(playerPos);
@@ -155,6 +155,9 @@ public class Level
     public int getPlayerSpawnPointY()
     {
         return mPlayerSpawnPoint[1];
+    }
+    public int[] getPlayerSpawnPoint(){
+        return mPlayerSpawnPoint;
     }
     public void setPlayerSpawnPoint(int position[])
     {
