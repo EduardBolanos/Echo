@@ -11,9 +11,13 @@ public class Player
     public Player(Context context)
     {
         mContext = context;
-        position[0] = 1;
-        position[1] = 1;
-        orientation = 0;
+    }
+    public void setOrientation(int ori){
+        orientation = ori;
+    }
+
+    public void setPosition(int[] position) {
+        this.position = position;
     }
 
     public int[] getPosition()
