@@ -1,12 +1,15 @@
 package com.example.echo.echoprototype;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.res.AssetManager;
 import android.media.MediaPlayer;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.MotionEvent;
 import android.widget.TextView;
 
+import java.io.InputStream;
 import java.util.ArrayList;
 
 public class Level
@@ -16,41 +19,107 @@ public class Level
     private Tile mMap[][];
     private int mAmbientSFX;
     private int mPlayerSpawnPoint[];
+    private int mStartOrientation;
     private int mEndPoint[];
-    Intent i;
-
-    public Level(int id, int[] endPoint)
+    private Context context;
+    public Level(Context that)
     {
-        mId = id;
-        mMap = new Tile[10][10];
         Tile wall = new Tile('w');
         Tile floor = new Tile('f');
         Tile end = new Tile('e');
+        context = that;
 
-        mMap[endPoint[0]][endPoint[1]] = end;
-        mMap[0][0] = floor;
-        mMap[0][1] = floor;
-        mMap[0][2] = floor;
-        mMap[0][3] = floor;
-        mMap[1][3] = floor;
-        mMap[2][3] = floor;
-        mMap[3][3] = floor;
-        mMap[3][4] = floor;
-        mMap[3][5] = floor;
-
-        for(int x = 0; x < mMap.length; x++)
-        {
-            for(int y = 0; y < mMap[x].length; y++)
-            {
-                if(mMap[x][y] == null)
-                {
-                    mMap[x][y] = wall;
+    }
+    public boolean loadLevel(String fileName){
+        InputStream asset;
+        int data = 0;
+        String concatinator = "";
+        int state = 0;
+        int sizeX = 0;
+        int sizeY = 0;
+        int locX = 0;
+        int locY = 0;
+        int bypass = 0;
+        try{
+            asset = context.getAssets().open(fileName);
+            // add tiles
+            // add id
+            // add end
+            // set spawn
+        }catch (java.io.IOException e){
+            return false;
+        }
+        while(data != -1) {
+            try {
+                data = asset.read();
+            }catch(java.io.IOException e){
+            }
+            if((char)data != '\n') {
+                switch (state) {
+                    case 0:
+                        if (data != 13) {
+                            concatinator = concatinator + ((char) data);
+                        } else {
+                            mId = Integer.parseInt(concatinator);
+                            concatinator = "";
+                            state = 1;
+                        }
+                        break;
+                    case 1:
+                        if (data != 13) {
+                            if (bypass == 1) {
+                                concatinator = concatinator + ((char) data);
+                            }
+                            else {
+                                if (data != 32 && bypass == 0) {
+                                    concatinator = concatinator + ((char) data);
+                                } else {
+                                    sizeX = Integer.parseInt(concatinator);
+                                    concatinator = "";
+                                    bypass = 1;
+                                }
+                            }
+                        } else {
+                            sizeY = Integer.parseInt(concatinator);
+                            mMap = new Tile[sizeX][sizeY];
+                            concatinator = "";
+                            state = 2;
+                        }
+                        break;
+                    case 2:
+                        if (data != 13) {
+                            if (data != 50) {
+                                mMap[locX][locY] = new Tile((char) data);
+                                locX++;
+                            } else {
+                                mMap[locX][locY] = new Tile('f');
+                                int[] playerPos = {locX, locY};
+                                setPlayerSpawnPoint(playerPos);
+                                locX++;
+                            }
+                        } else {
+                            locY++;
+                            locX = 0;
+                        }
+                        if (sizeY == locY) {
+                            state = 3;
+                        }
+                        break;
+                    case 3:
+                        concatinator = "";
+                        concatinator = concatinator + ((char) data);
+                        mStartOrientation = Integer.parseInt(concatinator);
+                        data = -1;
+                        break;
                 }
             }
         }
 
+        return true;
     }
-
+    public int getStartOrientation(){
+        return mStartOrientation;
+}
     public int getId()
     {
         return mId;
@@ -100,7 +169,6 @@ public class Level
             case 'f':
                 return true;
             case 'e':
-                //exit level progress to next
                 return true;
 
                 default:
