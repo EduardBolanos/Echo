@@ -26,6 +26,12 @@ You are now able to swipe left or right in the test gameplay area to change the 
 ###### In Game Menu
 Similar to the main menu you have the same methods of interaction. You can swipe left or right to change between options, tap once or click to confirmed the option you have selected. To return to a previous option you swipe up.
 
+Usage:
+You swipe left or right to change between options, tap once or click to confirmed the option you have selected. To return to a previous option, you swipe up. In addition to swiping up, in the in game menu if you are currently selection screen of 'inventory' or 'settings/navigation', swiping up will bring you back into the game. To replay the audio that was previously said you swipe down.
+
+LATEST PATCHES:
+Added an inventory system, (which can only delete, add and move between items at this time). The items in 'inventory' are just placeholders for later implementation. Added one more option in 'settings' which allows you to return to the main menu.
+
 
 ## Authors
 * **Charles Pelton** - *Developer*
