@@ -1,4 +1,4 @@
-package com.example.eduardbolanos642.echoprototype;
+package com.example.echo.echoprototype;
 
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;
