@@ -10,6 +10,7 @@ public class GameplayActivity extends AppCompatActivity {
     LevelManager levelManager;
     Player player;
     float initialInputCoordinate_X, initialInputCoordinate_Y, finalInputCoordinate_X, finalInputCoordinate_Y;
+    Intent navigateToInGameMenu;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -18,6 +19,7 @@ public class GameplayActivity extends AppCompatActivity {
 
         levelManager = LevelManager.get(this);
         player = new Player(this);
+        navigateToInGameMenu = new Intent(this, InGameMenu.class);
 
         if (savedInstanceState != null)
         {
@@ -66,21 +68,20 @@ public class GameplayActivity extends AppCompatActivity {
                  * NOTE: Not fully implemented, this is only the prototype v1.0.1
                  */
 
-
                 /**
                  * You move forward by swiping up, it plays your "footsteps", and when you
                  * reach the end. It also plays a good song created by Nick.
                  */
                 if ((initialInputCoordinate_Y > finalInputCoordinate_Y) && (Math.abs(initialInputCoordinate_Y - finalInputCoordinate_Y) > 400)) {
-                    //player.attemptMoveForward(level);
+                    attemptMoveForward();
                 } else if ((initialInputCoordinate_X > finalInputCoordinate_X) && (Math.abs(initialInputCoordinate_X - finalInputCoordinate_X) > 400)) {
-                    //player.turnLeft();
+                    turnLeft();
                 } else if ((finalInputCoordinate_X > initialInputCoordinate_X) && (Math.abs(finalInputCoordinate_X - initialInputCoordinate_X) > 400)) {
-                    //player.turnRight();
+                    turnRight();
                 } else if ((finalInputCoordinate_Y > initialInputCoordinate_Y) && (Math.abs(finalInputCoordinate_Y - initialInputCoordinate_Y) > 400)) {
-                    //startActivityForResult(i, 1234);
+                    startActivityForResult(navigateToInGameMenu, 1234);
                 } else if (((Math.abs(initialInputCoordinate_X - finalInputCoordinate_X) < 50) && (Math.abs(initialInputCoordinate_Y - finalInputCoordinate_Y) < 50))) {
-                    //player.echolocate(level);
+                    echolocate();
                 }
         }
         return false;
@@ -89,31 +90,52 @@ public class GameplayActivity extends AppCompatActivity {
 
     public void turnLeft()
     {
-
+        // logic from player.turnLeft() should be transferred to here
+        //TODO: Tim put your code here
     }
 
     public void turnRight()
     {
-
+        // logic from player.turnRight() should be transferred to here
+        //TODO: Tim put your code here
     }
 
     public void attemptMoveForward()
     {
-
+        // logic from player.attemptMoveForward() should be transferred to here
+        //TODO: Tim put your code here
     }
 
     public void echolocate()
     {
-
+        // logic from player.echolocate() should be transferred to here
+        //TODO: Tim put your code here
     }
 
     public void initializeCurrentLevel()
     {
+        // generate the current level and its items from the corresponding text config file
+        ///generateLevelFromConfigFile();
+
+        // start playing the ambient sfx for the current level
+        // TODO logic here
+
+
 
     }
 
     public void completedCurrentLevel()
     {
+        // play goal narration
+
+
+    }
+
+    public void generateLevelFromConfigFile()
+    {
+        // logic from level.loadLevel() should be transferred here.
+        // must be modified to include item generation for the level
+        //TODO: Charles put your code here
 
     }
 
