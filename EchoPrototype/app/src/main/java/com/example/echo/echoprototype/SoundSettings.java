@@ -1,0 +1,55 @@
+package com.example.echo.echoprototype;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.InputStream;
+
+public class SoundSettings {
+    public float soundFX;
+    public float voiceFX;
+    public float ambianceFX;
+    public float vibrationIntensity;
+    public SoundSettings(){
+
+    }
+    public void loadSettings(FileInputStream settings){
+        int data = 0;
+        String settingValue = "";
+        int state = 0;
+        while (true) {
+            try {
+                data = settings.read();
+            } catch (java.io.IOException e) {
+            }
+            if(data > 31){
+                if(data != '#'){
+                    settingValue = settingValue + ((char)data);
+                }
+                else if(state == 0){
+                    soundFX = Float.parseFloat(settingValue);
+                    settingValue = "";
+                    state++;
+                }
+                else if(state == 1){
+                    voiceFX = Float.parseFloat(settingValue);
+                    settingValue = "";
+                    state++;
+                }
+                else if(state == 2){
+                    ambianceFX = Float.parseFloat(settingValue);
+                    settingValue = "";
+                    state++;
+                }
+                else if(state == 3){
+                    vibrationIntensity = Float.parseFloat(settingValue);
+                    settingValue = "";
+                    state++;
+                }
+            }
+            if(state == 4){
+                break;
+            }
+        }
+
+    }
+}

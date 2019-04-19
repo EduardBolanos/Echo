@@ -5,89 +5,80 @@
     build-mode="COLD"
     density="420dpi"
     format="10"
-    ir-eligibility="METHOD_DELETED"
+    ir-eligibility="FIELD_TYPE_CHANGE"
     plugin-version="3.1.4"
-    timestamp="1555559067719"
+    timestamp="1555657090884"
     token="-7735554218245729229"
     verifier="COLD_SWAP_REQUESTED" >
 
     <task
         name="javac"
-        duration="312" />
+        duration="0" />
     <task
         name="instant-run-dex"
         duration="0" />
     <task
         name="instant-run-transform"
-        duration="37" />
+        duration="232" />
     <task
         name="verifier"
-        duration="4" />
+        duration="42" />
 
+    <artifact
+        location="C:\Users\C.Pelton\Desktop\Echo\EchoPrototype\app\build\intermediates\split-apk\debug\dep\dependencies.apk"
+        type="SPLIT" />
+    <artifact
+        location="C:\Users\C.Pelton\Desktop\Echo\EchoPrototype\app\build\intermediates\split-apk\debug\slices\slice_1.apk"
+        type="SPLIT" />
+    <artifact
+        location="C:\Users\C.Pelton\Desktop\Echo\EchoPrototype\app\build\intermediates\split-apk\debug\slices\slice_2.apk"
+        type="SPLIT" />
+    <artifact
+        location="C:\Users\C.Pelton\Desktop\Echo\EchoPrototype\app\build\intermediates\split-apk\debug\slices\slice_0.apk"
+        type="SPLIT" />
+    <artifact
+        location="C:\Users\C.Pelton\Desktop\Echo\EchoPrototype\app\build\intermediates\split-apk\debug\slices\slice_4.apk"
+        type="SPLIT" />
+    <artifact
+        location="C:\Users\C.Pelton\Desktop\Echo\EchoPrototype\app\build\intermediates\split-apk\debug\slices\slice_3.apk"
+        type="SPLIT" />
     <artifact
         location="C:\Users\C.Pelton\Desktop\Echo\EchoPrototype\app\build\intermediates\split-apk\debug\slices\slice_5.apk"
         type="SPLIT" />
+    <artifact
+        location="C:\Users\C.Pelton\Desktop\Echo\EchoPrototype\app\build\intermediates\split-apk\debug\slices\slice_9.apk"
+        type="SPLIT" />
+    <artifact
+        location="C:\Users\C.Pelton\Desktop\Echo\EchoPrototype\app\build\intermediates\split-apk\debug\slices\slice_6.apk"
+        type="SPLIT" />
+    <artifact
+        location="C:\Users\C.Pelton\Desktop\Echo\EchoPrototype\app\build\intermediates\split-apk\debug\slices\slice_7.apk"
+        type="SPLIT" />
+    <artifact
+        location="C:\Users\C.Pelton\Desktop\Echo\EchoPrototype\app\build\intermediates\split-apk\debug\slices\slice_8.apk"
+        type="SPLIT" />
+    <artifact
+        location="C:\Users\C.Pelton\Desktop\Echo\EchoPrototype\app\build\intermediates\instant-run-apk\debug\app-debug.apk"
+        type="SPLIT_MAIN" />
 
     <build
         build-mode="FULL"
-        timestamp="1555542809847"
+        timestamp="1555630831179"
         verifier="FULL_BUILD_REQUESTED" >
-        <artifact
-            location="C:\Users\C.Pelton\Desktop\Echo\EchoPrototype\app\build\intermediates\split-apk\debug\slices\slice_2.apk"
-            type="SPLIT" />
-        <artifact
-            location="C:\Users\C.Pelton\Desktop\Echo\EchoPrototype\app\build\intermediates\split-apk\debug\dep\dependencies.apk"
-            type="SPLIT" />
-        <artifact
-            location="C:\Users\C.Pelton\Desktop\Echo\EchoPrototype\app\build\intermediates\split-apk\debug\slices\slice_3.apk"
-            type="SPLIT" />
-        <artifact
-            location="C:\Users\C.Pelton\Desktop\Echo\EchoPrototype\app\build\intermediates\split-apk\debug\slices\slice_1.apk"
-            type="SPLIT" />
         <artifact
             location="C:\Users\C.Pelton\Desktop\Echo\EchoPrototype\app\build\intermediates\resources\instant-run\debug\resources-debug.apk"
             type="SPLIT" />
         <artifact
-            location="C:\Users\C.Pelton\Desktop\Echo\EchoPrototype\app\build\intermediates\split-apk\debug\slices\slice_0.apk"
-            type="SPLIT" />
-        <artifact
-            location="C:\Users\C.Pelton\Desktop\Echo\EchoPrototype\app\build\intermediates\split-apk\debug\slices\slice_6.apk"
-            type="SPLIT" />
-        <artifact
-            location="C:\Users\C.Pelton\Desktop\Echo\EchoPrototype\app\build\intermediates\split-apk\debug\slices\slice_5.apk"
-            type="SPLIT" />
-        <artifact
-            location="C:\Users\C.Pelton\Desktop\Echo\EchoPrototype\app\build\intermediates\split-apk\debug\slices\slice_4.apk"
-            type="SPLIT" />
-        <artifact
-            location="C:\Users\C.Pelton\Desktop\Echo\EchoPrototype\app\build\intermediates\split-apk\debug\slices\slice_7.apk"
-            type="SPLIT" />
-        <artifact
-            location="C:\Users\C.Pelton\Desktop\Echo\EchoPrototype\app\build\intermediates\split-apk\debug\slices\slice_9.apk"
-            type="SPLIT" />
-        <artifact
-            location="C:\Users\C.Pelton\Desktop\Echo\EchoPrototype\app\build\intermediates\split-apk\debug\slices\slice_8.apk"
-            type="SPLIT" />
-        <artifact
-            location="C:\Users\C.Pelton\Desktop\Echo\EchoPrototype\app\build\intermediates\instant-run-apk\debug\app-debug.apk"
-            type="SPLIT_MAIN" />
-    </build>
-    <build
-        build-mode="COLD"
-        ir-eligibility="COMPATIBLE"
-        timestamp="1555557996062"
-        verifier="COLD_SWAP_REQUESTED" >
-        <artifact
             location="C:\Users\C.Pelton\Desktop\Echo\EchoPrototype\app\build\intermediates\split-apk\debug\dep\dependencies.apk"
             type="SPLIT" />
         <artifact
-            location="C:\Users\C.Pelton\Desktop\Echo\EchoPrototype\app\build\intermediates\split-apk\debug\slices\slice_0.apk"
+            location="C:\Users\C.Pelton\Desktop\Echo\EchoPrototype\app\build\intermediates\split-apk\debug\slices\slice_1.apk"
             type="SPLIT" />
         <artifact
             location="C:\Users\C.Pelton\Desktop\Echo\EchoPrototype\app\build\intermediates\split-apk\debug\slices\slice_2.apk"
             type="SPLIT" />
         <artifact
-            location="C:\Users\C.Pelton\Desktop\Echo\EchoPrototype\app\build\intermediates\split-apk\debug\slices\slice_1.apk"
+            location="C:\Users\C.Pelton\Desktop\Echo\EchoPrototype\app\build\intermediates\split-apk\debug\slices\slice_0.apk"
             type="SPLIT" />
         <artifact
             location="C:\Users\C.Pelton\Desktop\Echo\EchoPrototype\app\build\intermediates\split-apk\debug\slices\slice_3.apk"
@@ -96,6 +87,9 @@
             location="C:\Users\C.Pelton\Desktop\Echo\EchoPrototype\app\build\intermediates\split-apk\debug\slices\slice_4.apk"
             type="SPLIT" />
         <artifact
+            location="C:\Users\C.Pelton\Desktop\Echo\EchoPrototype\app\build\intermediates\split-apk\debug\slices\slice_5.apk"
+            type="SPLIT" />
+        <artifact
             location="C:\Users\C.Pelton\Desktop\Echo\EchoPrototype\app\build\intermediates\split-apk\debug\slices\slice_6.apk"
             type="SPLIT" />
         <artifact
@@ -113,12 +107,45 @@
     </build>
     <build
         build-mode="COLD"
-        ir-eligibility="METHOD_DELETED"
-        timestamp="1555559067719"
+        ir-eligibility="FIELD_TYPE_CHANGE"
+        timestamp="1555657090884"
         verifier="COLD_SWAP_REQUESTED" >
+        <artifact
+            location="C:\Users\C.Pelton\Desktop\Echo\EchoPrototype\app\build\intermediates\split-apk\debug\dep\dependencies.apk"
+            type="SPLIT" />
+        <artifact
+            location="C:\Users\C.Pelton\Desktop\Echo\EchoPrototype\app\build\intermediates\split-apk\debug\slices\slice_1.apk"
+            type="SPLIT" />
+        <artifact
+            location="C:\Users\C.Pelton\Desktop\Echo\EchoPrototype\app\build\intermediates\split-apk\debug\slices\slice_2.apk"
+            type="SPLIT" />
+        <artifact
+            location="C:\Users\C.Pelton\Desktop\Echo\EchoPrototype\app\build\intermediates\split-apk\debug\slices\slice_0.apk"
+            type="SPLIT" />
+        <artifact
+            location="C:\Users\C.Pelton\Desktop\Echo\EchoPrototype\app\build\intermediates\split-apk\debug\slices\slice_4.apk"
+            type="SPLIT" />
+        <artifact
+            location="C:\Users\C.Pelton\Desktop\Echo\EchoPrototype\app\build\intermediates\split-apk\debug\slices\slice_3.apk"
+            type="SPLIT" />
         <artifact
             location="C:\Users\C.Pelton\Desktop\Echo\EchoPrototype\app\build\intermediates\split-apk\debug\slices\slice_5.apk"
             type="SPLIT" />
+        <artifact
+            location="C:\Users\C.Pelton\Desktop\Echo\EchoPrototype\app\build\intermediates\split-apk\debug\slices\slice_9.apk"
+            type="SPLIT" />
+        <artifact
+            location="C:\Users\C.Pelton\Desktop\Echo\EchoPrototype\app\build\intermediates\split-apk\debug\slices\slice_6.apk"
+            type="SPLIT" />
+        <artifact
+            location="C:\Users\C.Pelton\Desktop\Echo\EchoPrototype\app\build\intermediates\split-apk\debug\slices\slice_7.apk"
+            type="SPLIT" />
+        <artifact
+            location="C:\Users\C.Pelton\Desktop\Echo\EchoPrototype\app\build\intermediates\split-apk\debug\slices\slice_8.apk"
+            type="SPLIT" />
+        <artifact
+            location="C:\Users\C.Pelton\Desktop\Echo\EchoPrototype\app\build\intermediates\instant-run-apk\debug\app-debug.apk"
+            type="SPLIT_MAIN" />
     </build>
 
 </instant-run>

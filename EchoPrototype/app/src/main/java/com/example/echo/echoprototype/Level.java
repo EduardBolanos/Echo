@@ -9,11 +9,7 @@ import android.os.Bundle;
 import android.view.MotionEvent;
 import android.widget.TextView;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileWriter;
 import java.io.InputStream;
-import java.io.PrintWriter;
 import java.util.ArrayList;
 
 public class Level
@@ -26,10 +22,7 @@ public class Level
     private int mStartOrientation;
     private int mEndPoint[];
     private Context context;
-    private InputStream asset;
     private Tile wall,floor,end;
-    int sizeX;
-    int sizeY;
     public Level(Context that)
     {
         wall = new Tile('w');
@@ -38,141 +31,108 @@ public class Level
         context = that;
 
     }
-    public boolean loadLevel(String fileName, InputStream save){ // save determines if in asset or file
+    public boolean loadLevel(String fileName){
+        InputStream asset;
         int data = 0;
         String concatinator = "";
         int state = 0;
+        int sizeX = 0;
+        int sizeY = 0;
         int locX = 0;
         int locY = 0;
         int bypass = 0;
-        if(save == null) {
-            try {
-                asset = context.getAssets().open(fileName);
-                // add tiles
-                // add id
-                // add end
-                // set spawn
-            } catch (java.io.IOException e) {
-                return false;
-            }
+        try{
+            asset = context.getAssets().open(fileName);
+            // add tiles
+            // add id
+            // add end
+            // set spawn
+        }catch (java.io.IOException e){
+            return false;
         }
-            while (data != -1) {
-                if(save == null) {
-                    try {
-                        data = asset.read();
-                    } catch (java.io.IOException e) {
-                    }
-                }
-                  else if(save != null){
-                    try {
-                        data = save.read();
-                    } catch (java.io.IOException e) {
-                    }
-                }
-                if (((char) data != '\n' && ((char) data > 31))) {
-                    switch (state) {
-                        case 0:
-                            if (data != 35) {
+        while(data != -1) {
+            try {
+                data = asset.read();
+            }catch(java.io.IOException e){
+            }
+            if(((char)data != '\n' && ((char)data > 31)) || data == 13 || data == 10) {
+                switch (state) {
+                    case 0:
+                        if (data != 13 && data != 10) {
+                            concatinator = concatinator + ((char) data);
+                        } else {
+                            mId = Integer.parseInt(concatinator);
+                            concatinator = "";
+                            state = 1;
+                        }
+                        break;
+                    case 1:
+                        if (data != 13 && data != 10) {
+                            if (bypass == 1) {
                                 concatinator = concatinator + ((char) data);
-                            } else {
-                                mId = Integer.parseInt(concatinator);
-                                concatinator = "";
-                                state = 1;
                             }
-                            break;
-                        case 1:
-                            if (data != 35) {
-                                if (bypass == 1) {
+                            else {
+                                if (data != 32 && bypass == 0) {
                                     concatinator = concatinator + ((char) data);
                                 } else {
-                                    if (data != 32 && bypass == 0) {
-                                        concatinator = concatinator + ((char) data);
-                                    } else {
-                                        sizeX = Integer.parseInt(concatinator);
-                                        concatinator = "";
-                                        bypass = 1;
-                                    }
+                                    sizeX = Integer.parseInt(concatinator);
+                                    concatinator = "";
+                                    bypass = 1;
                                 }
-                            } else {
-                                sizeY = Integer.parseInt(concatinator);
-                                mMap = new Tile[sizeX][sizeY];
-                                locY = sizeY - 1;
-                                concatinator = "";
-                                state = 2;
                             }
-                            break;
-                        case 2:
-                            if (data != 35) {
-                                switch (data) {
-                                    case 102:
-                                        mMap[locX][locY] = floor;
-                                        break;
-                                    case 101:
-                                        mMap[locX][locY] = end;
-                                        int[] ep = {locX, locY};
-                                        mEndPoint = ep;
-                                        break;
-                                    case 119:
-                                        mMap[locX][locY] = wall;
-                                        break;
-                                    case 80:
-                                        mMap[locX][locY] = floor;
-                                        int[] playerPos = {locX, locY};
-                                        setPlayerSpawnPoint(playerPos);
-                                        break;
-                                }
-                                locX++;
-                            } else {
-                                locY--;
-                                locX = 0;
-                            }
-                            if (locY < 0) {
-                                state = 3;
-                            }
-                            break;
-                        case 3:
+                        } else {
+                            sizeY = Integer.parseInt(concatinator);
+                            mMap = new Tile[sizeX][sizeY];
+                            locY = sizeY - 1;
                             concatinator = "";
-                            concatinator = concatinator + ((char) data);
-                            mStartOrientation = Integer.parseInt(concatinator);
-                            asset = null;
-                            Runtime r = Runtime.getRuntime();
-                            r.gc();
-                            data = -1;
+                            state = 2;
+                        }
+                        break;
+                    case 2:
+                        if (data != 13 && data != 10) {
+                            switch (data) {
+                                case 102:
+                                    mMap[locX][locY] = floor;
+                                    break;
+                                case 101:
+                                    mMap[locX][locY] = end;
+                                    int[] ep = {locX, locY};
+                                    mEndPoint = ep;
+                                    break;
+                                case 119:
+                                    mMap[locX][locY] = wall;
+                                    break;
+                                case 80:
+                                    mMap[locX][locY] = floor;
+                                    int[] playerPos = {locX, locY};
+                                    setPlayerSpawnPoint(playerPos);
+                                    break;
+                            }
+                            locX++;
+                        } else {
+                            locY--;
+                            locX = 0;
+                        }
+                        if (locY < 0) {
+                            state = 3;
+                        }
+                        break;
+                    case 3:
+                        concatinator = "";
+                        concatinator = concatinator + ((char) data);
+                        mStartOrientation = Integer.parseInt(concatinator);
+                        asset = null;
+                        Runtime r = Runtime.getRuntime();
+                        r.gc();
+                        data = -1;
 
-                            break;
-                    }
+                        break;
                 }
             }
+        }
 
         return true;
     }
-    public void saveGame(File saveFile){
-        try {
-            FileWriter fileWriter = new FileWriter(saveFile);
-            PrintWriter printWriter = new PrintWriter(fileWriter);
-            printWriter.printf(mId + "#" + sizeX + " " + sizeY + "#");
-            for(int x = 0; x < sizeX; x++){
-                for(int y = 0; y < sizeY; y++){
-                    if(mEndPoint[0] == x && mEndPoint[1] == y){
-                        printWriter.append('e');
-                    }
-                    else if(mPlayerSpawnPoint[0] == x && mPlayerSpawnPoint[1] == y){
-                        printWriter.append('P');
-                    }
-                    else {
-                        printWriter.append(mMap[x][y].getType());
-                    }
-                }
-                printWriter.printf("#");
-            }
-            printWriter.printf("0#"); // STUB, when hooking to level manager, please use player method to get orientation
-            printWriter.close();
-            fileWriter.close();
-        }
-        catch(java.io.IOException e){
-        }
-    }
-
     public int getStartOrientation(){
         return mStartOrientation;
 }
@@ -225,8 +185,13 @@ public class Level
         switch (location) {
             case 'w':
                 return false;
+            case 'f':
+                return true;
+            case 'e':
+                return true;
+
                 default:
-                    return true;
+                    return false;
 
         }
     }

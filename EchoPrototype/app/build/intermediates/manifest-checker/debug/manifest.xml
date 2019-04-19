@@ -25,10 +25,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name="com.example.echo.echoprototype.InGameMenu" >
-        </activity>
-        <activity android:name="com.example.echo.echoprototype.TestGameplay" >
-">
+        <activity android:name="com.example.echo.echoprototype.InGameMenu" />
+        <activity android:name="com.example.echo.echoprototype.GameplayActivity" >
         </activity>
 
         <meta-data
