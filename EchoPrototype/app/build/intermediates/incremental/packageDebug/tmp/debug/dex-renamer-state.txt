@@ -1,0 +1,13 @@
+#Wed Apr 17 20:26:47 PDT 2019
+path.3=classes.dex
+path.2=classes.dex
+path.1=classes.dex
+path.0=classes.dex
+renamed.3=classes4.dex
+renamed.2=classes3.dex
+renamed.1=classes2.dex
+renamed.0=classes.dex
+base.3=C\:\\Users\\C.Pelton\\Desktop\\Echo\\EchoPrototype\\app\\build\\intermediates\\transforms\\dexMerger\\debug\\99
+base.2=C\:\\Users\\C.Pelton\\Desktop\\Echo\\EchoPrototype\\app\\build\\intermediates\\transforms\\dexMerger\\debug\\96
+base.1=C\:\\Users\\C.Pelton\\Desktop\\Echo\\EchoPrototype\\app\\build\\intermediates\\transforms\\dexMerger\\debug\\98
+base.0=C\:\\Users\\C.Pelton\\Desktop\\Echo\\EchoPrototype\\app\\build\\intermediates\\transforms\\dexMerger\\debug\\97
