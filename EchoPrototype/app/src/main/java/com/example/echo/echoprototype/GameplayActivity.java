@@ -13,20 +13,20 @@ import java.io.InputStream;
 
 public class GameplayActivity extends AppCompatActivity {
 
-    LevelManager levelManager;
-    SoundSettings volumeControl;
-    MediaPlayer turn;
-    MediaPlayer moveForward;
-    MediaPlayer ending;
-    MediaPlayer hitWall;
-    MediaPlayer leftSideWallTap;
-    MediaPlayer rightSideWallTap;
-    MediaPlayer[] echo;
-    MediaPlayer emptySpaceLeft;
-    MediaPlayer emptySpaceRight;
-    MediaPlayer emptySpaceBack;
-    MediaPlayer passing;
-    Player player;
+   private LevelManager levelManager;
+   private SoundSettings volumeControl;
+   private MediaPlayer turn;
+   private MediaPlayer moveForward;
+   private MediaPlayer ending;
+   private MediaPlayer hitWall;
+   private MediaPlayer leftSideWallTap;
+   private MediaPlayer rightSideWallTap;
+   private MediaPlayer[] echo;
+   private MediaPlayer emptySpaceLeft;
+   private MediaPlayer emptySpaceRight;
+   private MediaPlayer emptySpaceBack;
+   private MediaPlayer passing;
+   private Player player;
     float initialInputCoordinate_X, initialInputCoordinate_Y, finalInputCoordinate_X, finalInputCoordinate_Y;
     Intent navigateToInGameMenu;
 
@@ -79,7 +79,13 @@ public class GameplayActivity extends AppCompatActivity {
 
         levelManager = LevelManager.get(this);
         player = new Player(this);
-        generateLevelFromConfigFile();
+        String newGameState = getIntent().getExtras().getString("gameState");
+        if(newGameState.equals("yes")){
+        generateLevelFromConfigFile("level1.txt", false);
+        }
+        else if(newGameState.equals("no")){
+            generateLevelFromConfigFile("saveGame", true);
+        }
         player.setOrientation(levelManager.getPlayerSpawnOrientation());
         player.setPosition(levelManager.getPlayerSpawnPosition());
         navigateToInGameMenu = new Intent(this, InGameMenu.class);
@@ -93,34 +99,7 @@ public class GameplayActivity extends AppCompatActivity {
 
     @Override
     protected void onPause(){
-        FileOutputStream saveSettings;
-        String parser;
-        try {
-            saveSettings = openFileOutput("settings", this.MODE_PRIVATE);
-            parser = Float.toString(volumeControl.soundFX);
-            saveSettings.write(parser.charAt(0));
-            saveSettings.write(parser.charAt(1));
-            saveSettings.write(parser.charAt(2));
-            saveSettings.write('#');
-            parser = Float.toString(volumeControl.voiceFX);
-            saveSettings.write(parser.charAt(0));
-            saveSettings.write(parser.charAt(1));
-            saveSettings.write(parser.charAt(2));
-            saveSettings.write('#');
-            parser = Float.toString(volumeControl.ambianceFX);
-            saveSettings.write(parser.charAt(0));
-            saveSettings.write(parser.charAt(1));
-            saveSettings.write(parser.charAt(2));
-            saveSettings.write('#');
-            parser = Float.toString(volumeControl.vibrationIntensity);
-            saveSettings.write(parser.charAt(0));
-            saveSettings.write(parser.charAt(1));
-            saveSettings.write(parser.charAt(2));
-            saveSettings.write('#');
-            saveSettings.close();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        this.saveGame();
         super.onPause();
 
         // WE SHOULD HAVE SOME TEXT TO SPEECH NARRATION THAT INFORMS THE PLAYER THE APP IS PAUSING
@@ -128,17 +107,6 @@ public class GameplayActivity extends AppCompatActivity {
     }
     @Override
     protected void onResume() {
-        FileInputStream settings;
-        try {
-            settings = openFileInput("settings");
-            volumeControl.loadSettings(settings);
-            settings.close();
-        } catch (Exception e) {
-            volumeControl.soundFX = 0.6f;
-            volumeControl.voiceFX = 1.0f;
-            volumeControl.ambianceFX = 0.3f;
-            volumeControl.vibrationIntensity = 0.6f;
-        }
         super.onResume();
 
         // WE SHOULD HAVE SOME TEXT TO SPEECH NARRATION THAT INFORMS THE PLAYER THE APP IS RESUMING
@@ -147,6 +115,18 @@ public class GameplayActivity extends AppCompatActivity {
 
         @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+            FileInputStream settings;
+            try {
+                settings = openFileInput("settings");
+                volumeControl.loadSettings(settings);
+                settings.close();
+            } catch (Exception e) {
+                volumeControl.soundFX = 0.6f;
+                volumeControl.voiceFX = 1.0f;
+                volumeControl.ambianceFX = 0.3f;
+                volumeControl.vibrationIntensity = 0.6f;
+            }
+            this.generateLevelFromConfigFile("saveGame",true);
         if (requestCode == 1234 && resultCode == RESULT_OK && data != null) {
             boolean test = data.getBooleanExtra("ShutOffState", false);
             if(test){
@@ -237,6 +217,7 @@ public class GameplayActivity extends AppCompatActivity {
         {
             //play footstep
             moveForward.start();
+            player.setPosition(newPosition);
             if(levelManager.getTileAtCoord(newPosition).getType() == 'e')
             {
                 ending.start();
@@ -250,52 +231,42 @@ public class GameplayActivity extends AppCompatActivity {
         }
     }
 
-    public void echolocate()
-    {
+    public void echolocate() {
         // logic from player.echolocate() should be transferred to here
-            Runtime r = Runtime.getRuntime();
-            r.gc();
-            char leftTile;
-            char rightTile;
-            int echoTurnState = 0;
-            int[] newPosition;
-            int[] leftPosition;
-            int[] rightPosition;
-            int[] backPosition;
-            int[] position = player.getPosition();
-            int orientation = player.getOrientation();
-            newPosition = moveFromPosition(orientation,position);
-            int leftOrientation;
-        if(orientation == 0)
-        {
+        Runtime r = Runtime.getRuntime();
+        r.gc();
+        char leftTile;
+        char rightTile;
+        int echoTurnState = 0;
+        int[] newPosition;
+        int[] leftPosition;
+        int[] rightPosition;
+        int[] backPosition;
+        int[] position = player.getPosition();
+        int orientation = player.getOrientation();
+        newPosition = moveFromPosition(orientation, position);
+        int leftOrientation;
+        if (orientation == 0) {
             leftOrientation = 3;
-        }
-        else
-        {
+        } else {
             leftOrientation = orientation - 1;
         }
         leftPosition = moveFromPosition(leftOrientation, position);
-            int rightOrientation;
-        if(orientation == 3)
-        {
+        int rightOrientation;
+        if (orientation == 3) {
             rightOrientation = 0;
-        }
-        else
-        {
+        } else {
             rightOrientation = orientation + 1;
         }
         rightPosition = moveFromPosition(rightOrientation, position);
-            int backOrientation;
-        if(rightOrientation == 3)
-        {
+        int backOrientation;
+        if (rightOrientation == 3) {
             backOrientation = 0;
-        }
-        else
-        {
+        } else {
             backOrientation = orientation + 1;
         }
         backPosition = moveFromPosition(backOrientation, position);
-        leftTile = levelManager.getTileAtCoord(leftPosition).getType();
+        leftTile = levelManager.getTileAtCoord(leftPosition).getType(); // What is near player's left side?
         if (leftTile == 'e') {
             // TODO play goal sound near
             try {
@@ -303,17 +274,14 @@ public class GameplayActivity extends AppCompatActivity {
             } catch (InterruptedException ex) {
                 Thread.currentThread().interrupt();
             }
-        }
-        else if (leftTile == 'w')
-        {
+        } else if (leftTile == 'w') {
             // TODO play wall left sound near
-            try{
+            try {
                 Thread.sleep(300);
             } catch (InterruptedException ex) {
                 Thread.currentThread().interrupt();
             }
-        }
-        else if (leftTile == 'f') {
+        } else if (leftTile == 'f') {
             // TODO play wind sound near
             //stop playing leftSound
             try {
@@ -322,7 +290,7 @@ public class GameplayActivity extends AppCompatActivity {
                 Thread.currentThread().interrupt();
             }
         }
-        rightTile = levelManager.getTileAtCoord(rightPosition).getType();
+        rightTile = levelManager.getTileAtCoord(rightPosition).getType(); // What is near the players' right side?
         if (rightTile == 'e') {
             // TODO play goal sound near
             try {
@@ -330,16 +298,14 @@ public class GameplayActivity extends AppCompatActivity {
             } catch (InterruptedException ex) {
                 Thread.currentThread().interrupt();
             }
-        }
-        else if (rightTile == 'w') {
+        } else if (rightTile == 'w') {
             // TODO play wall sound near
-            try{
+            try {
                 Thread.sleep(300);
             } catch (InterruptedException ex) {
                 Thread.currentThread().interrupt();
             }
-        }
-        else if (rightTile == 'f') {
+        } else if (rightTile == 'f') {
             // TODO play floor sound near
             try {
                 Thread.sleep(500);
@@ -348,7 +314,7 @@ public class GameplayActivity extends AppCompatActivity {
             }
             //stop playing rightSound
         }
-        char backTile =  levelManager.getTileAtCoord(backPosition).getType();
+        char backTile = levelManager.getTileAtCoord(backPosition).getType(); // what is near the player's back?
         if (backTile == 'e') {
             // TODO play goal sound near
             try {
@@ -356,16 +322,14 @@ public class GameplayActivity extends AppCompatActivity {
             } catch (InterruptedException ex) {
                 Thread.currentThread().interrupt();
             }
-        }
-        else if (backTile == 'w') {
+        } else if (backTile == 'w') {
             // TODO play wall sound near
-            try{
+            try {
                 Thread.sleep(300);
             } catch (InterruptedException ex) {
                 Thread.currentThread().interrupt();
             }
-        }
-        else if (backTile == 'f') {
+        } else if (backTile == 'f') {
             // TODO play floor sound near
             try {
                 Thread.sleep(500);
@@ -376,105 +340,72 @@ public class GameplayActivity extends AppCompatActivity {
         }
         int playOnce = 0;
         int volumePower = 100;
-        echo[0].setVolume(volumeControl.soundFX, volumeControl.soundFX);
+        echo[0].setVolume(volumeControl.soundFX, volumeControl.soundFX); // volume defaults
         echo[1].setVolume(volumeControl.soundFX, volumeControl.soundFX);
         echo[2].setVolume(volumeControl.soundFX, volumeControl.soundFX);
-            while(levelManager.isLegal(newPosition)) //is legal?
-            {
-                if(playOnce == 1){
-                    leftPosition = moveFromPosition(leftOrientation, newPosition);
-                    leftTile = levelManager.getTileAtCoord(leftPosition).getType();
-                    if (leftTile == 'e') {
-                        // TODO play goal sound
-                        try {
-                            Thread.sleep(1000);
-                        } catch (InterruptedException ex) {
-                            Thread.currentThread().interrupt();
-                        }
-                    }
-                    else if (leftTile == 'w')
-                    {
-                        // TODO play wall left sound
-                        try{
-                            Thread.sleep(100);
-                        } catch (InterruptedException ex) {
-                            Thread.currentThread().interrupt();
-                        }
-                    }
-                    else if (leftTile == 'f') {
-                        // TODO play wind sound
-                        //stop playing leftSound
-                        try {
-                            Thread.sleep(300);
-                        } catch (InterruptedException ex) {
-                            Thread.currentThread().interrupt();
-                        }
-                    }
-                    rightPosition = moveFromPosition(rightOrientation,newPosition);
-                    rightTile = levelManager.getTileAtCoord(rightPosition).getType();
-                    if (rightTile == 'e') {
-                        // TODO play goal sound
-                        try {
-                            Thread.sleep(1000);
-                        } catch (InterruptedException ex) {
-                            Thread.currentThread().interrupt();
-                        }
-                    }
-                    else if (rightTile == 'w') {
-                        // TODO play wall sound
-                        try{
-                            Thread.sleep(100);
-                        } catch (InterruptedException ex) {
-                            Thread.currentThread().interrupt();
-                        }
-                    }
-                    else if (rightTile == 'f') {
-                        // TODO play floor sound
-                        try {
-                            Thread.sleep(300);
-                        } catch (InterruptedException ex) {
-                            Thread.currentThread().interrupt();
-                        }
-                        //stop playing rightSound
-                    }
-                }
-                else{
-                    playOnce = 1;
-                }
-                //play distance ping(tile sound)
-//            echo.stop();
-                if(echoTurnState == 3){
-                    echoTurnState = 0;
-                }
-                echo[echoTurnState].start();
-                if(volumePower > 25) {
-                    volumePower = volumePower - 5;
-                    echo[0].setVolume((volumeControl.soundFX * volumePower) / 100, (volumeControl.soundFX * volumePower) / 100);
-                    echo[1].setVolume((volumeControl.soundFX * volumePower) / 100, (volumeControl.soundFX * volumePower) / 100);
-                    echo[2].setVolume((volumeControl.soundFX * volumePower) / 100, (volumeControl.soundFX * volumePower) / 100);
-                }
-                echoTurnState++;
-                try {
-                    Thread.sleep(200);
-                } catch (InterruptedException ex) {
-                    Thread.currentThread().interrupt();
-                }if (levelManager.getTileAtCoord(newPosition).getType() == 'e') {
-//                echo.stop();
-                    passing.start();
+        while (levelManager.isLegal(newPosition)) //is legal?
+        {
+            if (playOnce == 1) { // prevents sound from player left and right
+                leftPosition = moveFromPosition(leftOrientation, newPosition);
+                leftTile = levelManager.getTileAtCoord(leftPosition).getType(); // checks left area
+                if (leftTile == 'e') {
+                    // TODO play goal sound
                     try {
                         Thread.sleep(1000);
                     } catch (InterruptedException ex) {
                         Thread.currentThread().interrupt();
                     }
-                    passing.stop();
+                } else if (leftTile == 'w') {
+                    // TODO play wall left sound
+                    try {
+                        Thread.sleep(100);
+                    } catch (InterruptedException ex) {
+                        Thread.currentThread().interrupt();
+                    }
+                } else if (leftTile == 'f') {
+                    // TODO play wind sound
+                    //stop playing leftSound
+                    try {
+                        Thread.sleep(300);
+                    } catch (InterruptedException ex) {
+                        Thread.currentThread().interrupt();
+                    }
                 }
-                newPosition = moveFromPosition(orientation, newPosition);
+                rightPosition = moveFromPosition(rightOrientation, newPosition);
+                rightTile = levelManager.getTileAtCoord(rightPosition).getType(); // checks right area
+                if (rightTile == 'e') {
+                    // TODO play goal sound
+                    try {
+                        Thread.sleep(1000);
+                    } catch (InterruptedException ex) {
+                        Thread.currentThread().interrupt();
+                    }
+                } else if (rightTile == 'w') {
+                    // TODO play wall sound
+                    try {
+                        Thread.sleep(100);
+                    } catch (InterruptedException ex) {
+                        Thread.currentThread().interrupt();
+                    }
+                } else if (rightTile == 'f') {
+                    // TODO play floor sound
+                    try {
+                        Thread.sleep(300);
+                    } catch (InterruptedException ex) {
+                        Thread.currentThread().interrupt();
+                    }
+                    //stop playing rightSound
+                }
+            } else {
+                playOnce = 1; // now starts checking left and right
             }
-            if(echoTurnState == 3){
-                 echoTurnState = 0;
+            //play distance ping(tile sound)
+//            echo.stop();
+            if (echoTurnState == 3) { // cycles ping sound
+                echoTurnState = 0;
             }
             echo[echoTurnState].start();
-            if(volumePower > 25) {
+            if (volumePower > 25) { //reduce volume
                 volumePower = volumePower - 5;
                 echo[0].setVolume((volumeControl.soundFX * volumePower) / 100, (volumeControl.soundFX * volumePower) / 100);
                 echo[1].setVolume((volumeControl.soundFX * volumePower) / 100, (volumeControl.soundFX * volumePower) / 100);
@@ -486,6 +417,34 @@ public class GameplayActivity extends AppCompatActivity {
             } catch (InterruptedException ex) {
                 Thread.currentThread().interrupt();
             }
+            if (levelManager.getTileAtCoord(newPosition).getType() == 'e') {
+//                echo.stop();
+                passing.start();
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException ex) {
+                    Thread.currentThread().interrupt();
+                }
+                passing.stop();
+            }
+            newPosition = moveFromPosition(orientation, newPosition);
+        }
+        if (echoTurnState == 3) {
+            echoTurnState = 0;
+        }
+        echo[echoTurnState].start();
+        if (volumePower > 25) {
+            volumePower = volumePower - 5;
+            echo[0].setVolume((volumeControl.soundFX * volumePower) / 100, (volumeControl.soundFX * volumePower) / 100);
+            echo[1].setVolume((volumeControl.soundFX * volumePower) / 100, (volumeControl.soundFX * volumePower) / 100);
+            echo[2].setVolume((volumeControl.soundFX * volumePower) / 100, (volumeControl.soundFX * volumePower) / 100);
+        }
+        echoTurnState++;
+        try {
+            Thread.sleep(200);
+        } catch (InterruptedException ex) {
+            Thread.currentThread().interrupt();
+        }
             //play wall
             hitWall.setVolume((volumeControl.soundFX*100)/200, (volumeControl.soundFX*100)/200);
             // 1/2 volume for forward wall
@@ -495,65 +454,62 @@ public class GameplayActivity extends AppCompatActivity {
             } catch (InterruptedException ex) {
                 Thread.currentThread().interrupt();
             }
-            //go back to legal space
-        newPosition = moveFromPosition(backOrientation, newPosition);
-            //play sounds to identify left
-        leftPosition = moveFromPosition(leftOrientation, newPosition);
-        leftTile = levelManager.getTileAtCoord(leftPosition).getType();
-            if (leftTile == 'e') {
-                // TODO play goal sound
-                try {
-                    Thread.sleep(1000);
-                } catch (InterruptedException ex) {
-                    Thread.currentThread().interrupt();
+            if(playOnce == 1) {
+                //go back to legal space
+                newPosition = moveFromPosition(backOrientation, newPosition);
+                //play sounds to identify left
+                leftPosition = moveFromPosition(leftOrientation, newPosition);
+                leftTile = levelManager.getTileAtCoord(leftPosition).getType();
+                if (leftTile == 'e') {
+                    // TODO play goal sound
+                    try {
+                        Thread.sleep(1000);
+                    } catch (InterruptedException ex) {
+                        Thread.currentThread().interrupt();
+                    }
+                } else if (leftTile == 'w') {
+                    // TODO play wall left sound
+                    try {
+                        Thread.sleep(600);
+                    } catch (InterruptedException ex) {
+                        Thread.currentThread().interrupt();
+                    }
+                } else if (leftTile == 'f') {
+                    // TODO play wind sound
+                    //stop playing leftSound
+                    try {
+                        Thread.sleep(300);
+                    } catch (InterruptedException ex) {
+                        Thread.currentThread().interrupt();
+                    }
                 }
-            }
-            else if (leftTile == 'w')
-            {
-                // TODO play wall left sound
-                try{
-                    Thread.sleep(600);
-                } catch (InterruptedException ex) {
-                    Thread.currentThread().interrupt();
-                }
-            }
-            else if (leftTile == 'f') {
-                // TODO play wind sound
-                //stop playing leftSound
-                try {
-                    Thread.sleep(300);
-                } catch (InterruptedException ex) {
-                    Thread.currentThread().interrupt();
-                }
-            }
 
-            //play sounds to identify right
-            rightPosition = moveFromPosition(rightOrientation, newPosition);
-            rightTile = levelManager.getTileAtCoord(rightPosition).getType();
-            if (rightTile == 'e') {
-                // TODO play goal sound
-                try {
-                    Thread.sleep(1000);
-                } catch (InterruptedException ex) {
-                    Thread.currentThread().interrupt();
+                //play sounds to identify right
+                rightPosition = moveFromPosition(rightOrientation, newPosition);
+                rightTile = levelManager.getTileAtCoord(rightPosition).getType();
+                if (rightTile == 'e') {
+                    // TODO play goal sound
+                    try {
+                        Thread.sleep(1000);
+                    } catch (InterruptedException ex) {
+                        Thread.currentThread().interrupt();
+                    }
+                } else if (rightTile == 'w') {
+                    // TODO play wall sound
+                    try {
+                        Thread.sleep(600);
+                    } catch (InterruptedException ex) {
+                        Thread.currentThread().interrupt();
+                    }
+                } else if (rightTile == 'f') {
+                    // TODO play floor sound
+                    try {
+                        Thread.sleep(300);
+                    } catch (InterruptedException ex) {
+                        Thread.currentThread().interrupt();
+                    }
+                    //stop playing rightSound
                 }
-            }
-            else if (rightTile == 'w') {
-               // TODO play wall sound
-                try{
-                    Thread.sleep(600);
-                } catch (InterruptedException ex) {
-                    Thread.currentThread().interrupt();
-                }
-            }
-            else if (rightTile == 'f') {
-                // TODO play floor sound
-                try {
-                    Thread.sleep(300);
-                } catch (InterruptedException ex) {
-                    Thread.currentThread().interrupt();
-                }
-                //stop playing rightSound
             }
         }
 
@@ -598,7 +554,7 @@ public class GameplayActivity extends AppCompatActivity {
 
     }
 
-    public void generateLevelFromConfigFile() {
+    public void generateLevelFromConfigFile(String levelName, boolean saveGame) {
         // logic from level.loadLevel() should be transferred here.
         // save determines if in asset or file
         int data = 0;
@@ -606,24 +562,35 @@ public class GameplayActivity extends AppCompatActivity {
         int state = 0;
         int locX = 0;
         int locY = 0;
-        int sizeX = 0;
-        int sizeY = 0;
         int bypass = 0;
         Tile map[][] = null;
         InputStream asset = null;
-        try {
-            asset = this.getAssets().open("level1.txt");
-            // add tiles
-            // add id
-            // add end
-            // set spawn
-        } catch (java.io.IOException e) {
+        FileInputStream assetTwo = null;
+
+        if(!saveGame) {
+            try {
+                asset = this.getAssets().open(levelName);
+            } catch (java.io.IOException e) {
+            }
+        }else{
+            try {
+                assetTwo = openFileInput(levelName);
+            } catch (java.io.IOException e) {
+            }
         }
-        if (asset != null) {
+
+        if (asset != null || assetTwo != null) {
             while (data != -1) {
-                try {
-                    data = asset.read();
-                } catch (java.io.IOException e) {
+                if(!saveGame) {
+                    try {
+                        data = asset.read();
+                    } catch (java.io.IOException e) {
+                    }
+                }else{
+                    try {
+                        data = assetTwo.read();
+                    } catch (java.io.IOException e) {
+                    }
                 }
                 if (((char) data != '\n' && ((char) data > 31))) {
                     switch (state) {
@@ -644,15 +611,15 @@ public class GameplayActivity extends AppCompatActivity {
                                     if (data != 32 && bypass == 0) {
                                         concatinator = concatinator + ((char) data);
                                     } else {
-                                        sizeX = Integer.parseInt(concatinator);
+                                        levelManager.sizeX = Integer.parseInt(concatinator);
                                         concatinator = "";
                                         bypass = 1;
                                     }
                                 }
                             } else {
-                                sizeY = Integer.parseInt(concatinator);
-                                map = new Tile[sizeX][sizeY];
-                                locY = sizeY - 1;
+                                levelManager.sizeY = Integer.parseInt(concatinator);
+                                map = new Tile[levelManager.sizeX][levelManager.sizeY];
+                                locY = levelManager.sizeY - 1;
                                 concatinator = "";
                                 state = 2;
                             }
@@ -704,7 +671,68 @@ public class GameplayActivity extends AppCompatActivity {
         }
     }
 
-
-
+ public void saveGame(){
+         FileOutputStream saveGame;
+         String parser;
+         int stringSizeTracker = 0;
+         try {
+             saveGame = openFileOutput("saveGame", this.MODE_PRIVATE);
+             parser = Integer.toString(levelManager.getCurrentLevel());
+             while (stringSizeTracker < parser.length()) {
+                 try {
+                     saveGame.write(parser.charAt(stringSizeTracker));
+                     stringSizeTracker++;
+                 } catch (Exception e) {
+                     e.printStackTrace();
+                 }
+             }
+             stringSizeTracker = 0;
+             saveGame.write('#');
+             parser = Integer.toString(levelManager.sizeX);
+             while (stringSizeTracker < parser.length()) {
+                 try {
+                     saveGame.write(parser.charAt(stringSizeTracker));
+                     stringSizeTracker++;
+                 } catch (Exception e) {
+                     e.printStackTrace();
+                 }
+             }
+             stringSizeTracker = 0;
+             saveGame.write(' ');
+             parser = Integer.toString(levelManager.sizeY);
+             while (stringSizeTracker < parser.length()) {
+                 try {
+                     saveGame.write(parser.charAt(stringSizeTracker));
+                     stringSizeTracker++;
+                 } catch (Exception e) {
+                     e.printStackTrace();
+                 }
+             }
+             saveGame.write('#');
+             int mPlayerSpawnPoint[] = player.getPosition();
+             Tile mMap[][] = levelManager.getMap();
+             for(int y = levelManager.sizeY - 1; y >= 0 ; y--){
+                for(int x = 0; x < levelManager.sizeX; x++){
+                    // if(mEndPoint[0] == x && mEndPoint[1] == y){
+                    //     saveGame.write(levelManager.end.getType());
+                   //  }
+                     //else
+                         if(mPlayerSpawnPoint[0] == x && mPlayerSpawnPoint[1] == y){
+                         saveGame.write('P');
+                     }
+                     else {
+                         saveGame.write(mMap[x][y].getType());
+                     }
+                 }
+                 saveGame.write('#');
+             }
+             parser = Integer.toString(player.getOrientation());
+             saveGame.write(parser.charAt(0));
+             saveGame.write('#');
+             saveGame.close();
+         } catch (Exception e) {
+        e.printStackTrace();
+        }
+     }
 
 }

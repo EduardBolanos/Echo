@@ -20,12 +20,15 @@ public class LevelManager {
     private int mGoalPosition[];
     private Context context;
     protected Tile wall,floor,end;
+    protected int sizeX, sizeY;
 
     private ArrayList<Item> mItemsToSpawn;
 
     private LevelManager(Context context)
     {
         mCurrentLevel = 0;
+        sizeX = 0;
+        sizeY = 0;
         wall = new Tile('w');
         floor = new Tile('f');
         end = new Tile('e');

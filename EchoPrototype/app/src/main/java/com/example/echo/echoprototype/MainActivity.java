@@ -13,9 +13,9 @@ import java.io.FileOutputStream;
 
 public class MainActivity extends AppCompatActivity {
     TextView menuText;
-    SoundSettings volumeControl;
-    int currentSelect; //Counter
-    int currentMenuContext; //Selected Menu
+   private SoundSettings volumeControl;
+    private int currentSelect; //Counter
+    private int currentMenuContext; //Selected Menu
     int contextSelect; //Location in arrays
     boolean gameState = true; //new and continue
     Intent gameplayActivity;
@@ -77,34 +77,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onPause(){
         beat.stop();
-        FileOutputStream saveSettings;
-        String parser;
-        try {
-            saveSettings = openFileOutput("settings", this.MODE_PRIVATE);
-            parser = Float.toString(volumeControl.soundFX);
-            saveSettings.write(parser.charAt(0));
-            saveSettings.write(parser.charAt(1));
-            saveSettings.write(parser.charAt(2));
-            saveSettings.write('#');
-            parser = Float.toString(volumeControl.voiceFX);
-            saveSettings.write(parser.charAt(0));
-            saveSettings.write(parser.charAt(1));
-            saveSettings.write(parser.charAt(2));
-            saveSettings.write('#');
-            parser = Float.toString(volumeControl.ambianceFX);
-            saveSettings.write(parser.charAt(0));
-            saveSettings.write(parser.charAt(1));
-            saveSettings.write(parser.charAt(2));
-            saveSettings.write('#');
-            parser = Float.toString(volumeControl.vibrationIntensity);
-            saveSettings.write(parser.charAt(0));
-            saveSettings.write(parser.charAt(1));
-            saveSettings.write(parser.charAt(2));
-            saveSettings.write('#');
-            saveSettings.close();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        this.saveSettings();
         super.onPause();
 
     }
@@ -122,6 +95,8 @@ public class MainActivity extends AppCompatActivity {
             volumeControl.vibrationIntensity = 0.6f;
         }
         beat.setVolume(volumeControl.ambianceFX, volumeControl.ambianceFX);
+        slide.setVolume(volumeControl.soundFX, volumeControl.soundFX);
+        context.setVolume(volumeControl.soundFX, volumeControl.soundFX);
         beat.start();
         currentMenuContext = 0;
         currentSelect = 0;
@@ -205,7 +180,7 @@ public class MainActivity extends AppCompatActivity {
                             contextSelect = 0;
                             mediaPlayer = MediaPlayer.create(MainActivity.this, R.raw.newgame);
                             mediaPlayer.setVolume(volumeControl.voiceFX, volumeControl.voiceFX);
-                            menuText.setText((String) menu[7]);
+                            menuText.setText((String) menu[8]);
                             break;
                     }
                 }
@@ -220,7 +195,7 @@ public class MainActivity extends AppCompatActivity {
                                 mediaPlayer = MediaPlayer.create(MainActivity.this, R.raw.newgame);
                                 currentMenuContext = 2;
                                 contextSelect = 0;
-                                menuText.setText((String) menu[7]);
+                                menuText.setText((String) menu[8]);
                                 break;
                             case 1:
                                 mediaPlayer = MediaPlayer.create(MainActivity.this, R.raw.instructions);
@@ -292,24 +267,35 @@ public class MainActivity extends AppCompatActivity {
                                 mediaPlayer = MediaPlayer.create(MainActivity.this, R.raw.yes);
                                 currentMenuContext = 3;
                                 contextSelect = 0;
-                                menuText.setText((String) menu[9]);
+                                menuText.setText((String) menu[10]);
                                 gameState = true;
                                 break;
                             case 9:
-                                mediaPlayer = MediaPlayer.create(MainActivity.this, R.raw.yes);
-                                currentMenuContext = 3;
-                                contextSelect = 0;
-                                menuText.setText((String) menu[9]);
-                                gameState = false;
+                                try{
+                                    openFileInput("saveGame");
+                                    mediaPlayer = MediaPlayer.create(MainActivity.this, R.raw.yes);
+                                    currentMenuContext = 3;
+                                    contextSelect = 0;
+                                    menuText.setText((String) menu[10]);
+                                    gameState = false;
+                                }catch(Exception e){
+                                    // TODO create error message, stay
+                                }
+                                mediaPlayer = MediaPlayer.create(MainActivity.this, R.raw.yes); // STUB
                                 break;
                             case 10:
                                 mediaPlayer = MediaPlayer.create(MainActivity.this, R.raw.change);
+                                if(gameState) {
+                                    gameplayActivity.putExtra("gameState", "yes");
+                                }else{
+                                    gameplayActivity.putExtra("gameState", "no");
+                                }
                                 startActivity(gameplayActivity);
                                 break;
                             case 11:
                                 mediaPlayer = MediaPlayer.create(MainActivity.this, R.raw.newgame);
                                 currentMenuContext = 2;
-                                menuText.setText((String) menu[7]);
+                                menuText.setText((String) menu[8]);
                                 break;
                         }
                     }
@@ -320,4 +306,34 @@ public class MainActivity extends AppCompatActivity {
         return false;
     }
 
+    public void saveSettings(){
+        FileOutputStream saveSettings;
+        String parser;
+        try {
+            saveSettings = openFileOutput("settings", this.MODE_PRIVATE);
+            parser = Float.toString(volumeControl.soundFX);
+            saveSettings.write(parser.charAt(0));
+            saveSettings.write(parser.charAt(1));
+            saveSettings.write(parser.charAt(2));
+            saveSettings.write('#');
+            parser = Float.toString(volumeControl.voiceFX);
+            saveSettings.write(parser.charAt(0));
+            saveSettings.write(parser.charAt(1));
+            saveSettings.write(parser.charAt(2));
+            saveSettings.write('#');
+            parser = Float.toString(volumeControl.ambianceFX);
+            saveSettings.write(parser.charAt(0));
+            saveSettings.write(parser.charAt(1));
+            saveSettings.write(parser.charAt(2));
+            saveSettings.write('#');
+            parser = Float.toString(volumeControl.vibrationIntensity);
+            saveSettings.write(parser.charAt(0));
+            saveSettings.write(parser.charAt(1));
+            saveSettings.write(parser.charAt(2));
+            saveSettings.write('#');
+            saveSettings.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 }

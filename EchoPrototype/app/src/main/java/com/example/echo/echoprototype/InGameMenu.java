@@ -76,34 +76,7 @@ public class InGameMenu extends AppCompatActivity {
     }
     @Override
     protected void onPause(){
-        FileOutputStream saveSettings;
-        String parser;
-        try {
-            saveSettings = openFileOutput("settings", this.MODE_PRIVATE);
-            parser = Float.toString(volumeControl.soundFX);
-            saveSettings.write(parser.charAt(0));
-            saveSettings.write(parser.charAt(1));
-            saveSettings.write(parser.charAt(2));
-            saveSettings.write('#');
-            parser = Float.toString(volumeControl.voiceFX);
-            saveSettings.write(parser.charAt(0));
-            saveSettings.write(parser.charAt(1));
-            saveSettings.write(parser.charAt(2));
-            saveSettings.write('#');
-            parser = Float.toString(volumeControl.ambianceFX);
-            saveSettings.write(parser.charAt(0));
-            saveSettings.write(parser.charAt(1));
-            saveSettings.write(parser.charAt(2));
-            saveSettings.write('#');
-            parser = Float.toString(volumeControl.vibrationIntensity);
-            saveSettings.write(parser.charAt(0));
-            saveSettings.write(parser.charAt(1));
-            saveSettings.write(parser.charAt(2));
-            saveSettings.write('#');
-            saveSettings.close();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        this.saveSettings();
         super.onPause();
 
     }
@@ -120,6 +93,8 @@ public class InGameMenu extends AppCompatActivity {
             volumeControl.ambianceFX = 0.3f;
             volumeControl.vibrationIntensity = 0.6f;
         }
+        slide.setVolume(volumeControl.soundFX, volumeControl.soundFX);
+        context.setVolume(volumeControl.soundFX, volumeControl.soundFX);
         super.onResume();
 
     }
@@ -356,4 +331,36 @@ public class InGameMenu extends AppCompatActivity {
         }
         return false;
     }
+
+    public void saveSettings(){
+        FileOutputStream saveSettings;
+        String parser;
+        try {
+            saveSettings = openFileOutput("settings", this.MODE_PRIVATE);
+            parser = Float.toString(volumeControl.soundFX);
+            saveSettings.write(parser.charAt(0));
+            saveSettings.write(parser.charAt(1));
+            saveSettings.write(parser.charAt(2));
+            saveSettings.write('#');
+            parser = Float.toString(volumeControl.voiceFX);
+            saveSettings.write(parser.charAt(0));
+            saveSettings.write(parser.charAt(1));
+            saveSettings.write(parser.charAt(2));
+            saveSettings.write('#');
+            parser = Float.toString(volumeControl.ambianceFX);
+            saveSettings.write(parser.charAt(0));
+            saveSettings.write(parser.charAt(1));
+            saveSettings.write(parser.charAt(2));
+            saveSettings.write('#');
+            parser = Float.toString(volumeControl.vibrationIntensity);
+            saveSettings.write(parser.charAt(0));
+            saveSettings.write(parser.charAt(1));
+            saveSettings.write(parser.charAt(2));
+            saveSettings.write('#');
+            saveSettings.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
 }

@@ -5,10 +5,10 @@ import java.io.FileInputStream;
 import java.io.InputStream;
 
 public class SoundSettings {
-    public float soundFX;
-    public float voiceFX;
-    public float ambianceFX;
-    public float vibrationIntensity;
+    protected float soundFX;
+    protected float voiceFX;
+    protected float ambianceFX;
+    protected float vibrationIntensity;
     public SoundSettings(){
 
     }
