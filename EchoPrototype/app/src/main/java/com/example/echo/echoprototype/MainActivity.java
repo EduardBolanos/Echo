@@ -29,8 +29,8 @@ public class MainActivity extends AppCompatActivity {
     //Omega String
     String menu[] = {"Start", "Instructions", "Settings", "Sound FX Volume", "Voice Volume", "Ambiance & Music",
             "Vibration Level", "Reset Volume Values", "New Game", "Continue", "Yes", "No"};
-    int menuVoice[] = {R.raw.start, R.raw.hel, R.raw.settings,R.raw.soundfx,R.raw.voicefx,R.raw.amfx,R.raw.vibration, R.raw.vibration,
-            R.raw.newgame, R.raw.continuegame,R.raw.yes, R.raw.no}; // TODO replace for reset
+    int menuVoice[] = {R.raw.start, R.raw.hel, R.raw.settings,R.raw.soundfx,R.raw.voicefx,R.raw.amfx,R.raw.vibration, R.raw.reset,
+            R.raw.newgame, R.raw.continuegame,R.raw.yes, R.raw.no};
     int menuSize[] = {3, 5, 2, 2};
     int loc;
 
@@ -58,12 +58,14 @@ public class MainActivity extends AppCompatActivity {
         mediaPlayer.start();
         /*IMPORTANT*/
         beat = MediaPlayer.create(MainActivity.this, R.raw.beatingitup); //We needed this song in our app
-        beat.setVolume(volumeControl.ambianceFX, volumeControl.ambianceFX);
+        beat.setVolume((volumeControl.ambianceFX*100)/200, (volumeControl.ambianceFX*100)/200);
         beat.setLooping(true);
         beat.start();
         super.onCreate(savedInstanceState);
         /*IMPORTANT*/
         setContentView(R.layout.activity_main);
+        Runtime r = Runtime.getRuntime();
+        r.gc();
 
         //gives memes
         menuText = (TextView) findViewById(R.id.textView);
@@ -94,7 +96,7 @@ public class MainActivity extends AppCompatActivity {
             volumeControl.ambianceFX = 0.3f;
             volumeControl.vibrationIntensity = 0.6f;
         }
-        beat.setVolume(volumeControl.ambianceFX, volumeControl.ambianceFX);
+        beat.setVolume((volumeControl.ambianceFX*100)/200, (volumeControl.ambianceFX*100)/200);
         slide.setVolume(volumeControl.soundFX, volumeControl.soundFX);
         context.setVolume(volumeControl.soundFX, volumeControl.soundFX);
         beat.start();
@@ -105,6 +107,8 @@ public class MainActivity extends AppCompatActivity {
         mediaPlayer.setVolume(volumeControl.soundFX, volumeControl.soundFX);
         mediaPlayer.start();
         menuText.setText((String) menu[0]);
+        Runtime r = Runtime.getRuntime();
+        r.gc();
         super.onResume();
 
     }
@@ -207,42 +211,57 @@ public class MainActivity extends AppCompatActivity {
                                 menuText.setText((String) menu[3]);
                                 break;
                             case 3:
-                                mediaPlayer = mediaPlayer.create(MainActivity.this, R.raw.change);
                                 if(volumeControl.soundFX == 0.3f){
                                     volumeControl.soundFX = 0.6f;
+                                    mediaPlayer = MediaPlayer.create(MainActivity.this, R.raw.soundfx);
+                                    mediaPlayer.setVolume(volumeControl.soundFX, volumeControl.soundFX);
                                 } else if(volumeControl.soundFX == 0.6f){
                                     volumeControl.soundFX = 1.0f;
+                                    mediaPlayer = MediaPlayer.create(MainActivity.this, R.raw.soundfx);
+                                    mediaPlayer.setVolume(volumeControl.soundFX, volumeControl.soundFX);
                                 } else if(volumeControl.soundFX == 1.0){
                                     volumeControl.soundFX = 0.3f;
+                                    mediaPlayer = MediaPlayer.create(MainActivity.this, R.raw.soundfx);
+                                    mediaPlayer.setVolume(volumeControl.soundFX, volumeControl.soundFX);
                                 }
                                 slide.setVolume(volumeControl.soundFX, volumeControl.soundFX);
                                 context.setVolume(volumeControl.soundFX, volumeControl.soundFX);
                                 break;
                             case 4:
-                                mediaPlayer = mediaPlayer.create(MainActivity.this, R.raw.change);
                                 if(volumeControl.voiceFX == 0.3f){
                                     volumeControl.voiceFX = 0.6f;
+                                    mediaPlayer = MediaPlayer.create(MainActivity.this, R.raw.voicefx);
+                                    mediaPlayer.setVolume(volumeControl.voiceFX, volumeControl.voiceFX);
                                 } else if(volumeControl.voiceFX == 0.6f){
                                     volumeControl.voiceFX = 1.0f;
+                                    mediaPlayer = MediaPlayer.create(MainActivity.this, R.raw.voicefx);
+                                    mediaPlayer.setVolume(volumeControl.voiceFX, volumeControl.voiceFX);
                                 } else if(volumeControl.voiceFX == 1.0f){
                                     volumeControl.voiceFX = 0.3f;
+                                    mediaPlayer = MediaPlayer.create(MainActivity.this, R.raw.voicefx);
+                                    mediaPlayer.setVolume(volumeControl.voiceFX, volumeControl.voiceFX);
                                 }
                                 break;
                             case 5:
-                                mediaPlayer = mediaPlayer.create(MainActivity.this, R.raw.change);
                                 if(volumeControl.ambianceFX == 0.3f){
                                     volumeControl.ambianceFX = 0.6f;
+                                    mediaPlayer = MediaPlayer.create(MainActivity.this, R.raw.amfx);
+                                    mediaPlayer.setVolume(volumeControl.voiceFX, volumeControl.ambianceFX);
                                 } else if(volumeControl.ambianceFX == 0.6f){
                                     volumeControl.ambianceFX = 1.0f;
+                                    mediaPlayer = MediaPlayer.create(MainActivity.this, R.raw.amfx);
+                                    mediaPlayer.setVolume(volumeControl.voiceFX, volumeControl.ambianceFX);
                                 } else if(volumeControl.ambianceFX == 1.0f){
                                     volumeControl.ambianceFX = 0.3f;
+                                    mediaPlayer = MediaPlayer.create(MainActivity.this, R.raw.amfx);
+                                    mediaPlayer.setVolume(volumeControl.voiceFX, volumeControl.ambianceFX);
                                 }
                                 beat.stop();
-                                beat.setVolume(volumeControl.ambianceFX, volumeControl.ambianceFX);
+                                beat.setVolume((volumeControl.ambianceFX*100)/200, (volumeControl.ambianceFX*100)/200);
                                 beat.start();
                                 break;
                             case 6:
-                                mediaPlayer = mediaPlayer.create(MainActivity.this, R.raw.change);
+                                mediaPlayer = MediaPlayer.create(MainActivity.this, R.raw.change);
                                 if(volumeControl.vibrationIntensity == 0.3f){
                                     volumeControl.vibrationIntensity = 0.6f;
                                 } else if(volumeControl.vibrationIntensity == 0.6f){
@@ -252,7 +271,7 @@ public class MainActivity extends AppCompatActivity {
                                 }
                                 break;
                             case 7:
-                                mediaPlayer = mediaPlayer.create(MainActivity.this, R.raw.change);
+                                mediaPlayer = MediaPlayer.create(MainActivity.this, R.raw.reset);
                                 volumeControl.soundFX = 0.6f;
                                 volumeControl.voiceFX = 1.0f;
                                 volumeControl.ambianceFX = 0.3f;
@@ -260,7 +279,7 @@ public class MainActivity extends AppCompatActivity {
                                 slide.setVolume(volumeControl.soundFX, volumeControl.soundFX);
                                 context.setVolume(volumeControl.soundFX, volumeControl.soundFX);
                                 beat.stop();
-                                beat.setVolume(volumeControl.ambianceFX, volumeControl.ambianceFX);
+                                beat.setVolume((volumeControl.ambianceFX*100)/200, (volumeControl.ambianceFX*100)/200);
                                 beat.start();
                                 break;
                             case 8:
@@ -279,7 +298,6 @@ public class MainActivity extends AppCompatActivity {
                                     menuText.setText((String) menu[10]);
                                     gameState = false;
                                 }catch(Exception e){
-                                    // TODO create error message, stay
                                 }
                                 mediaPlayer = MediaPlayer.create(MainActivity.this, R.raw.yes); // STUB
                                 break;

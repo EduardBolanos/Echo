@@ -5,18 +5,27 @@ import android.os.VibrationEffect;
 public class Item {
 
     private String mName;
-    private int mId;
     private VibrationEffect mTactileId;
     private int mTactileIdNonVibrate;
-    private int mAuditoryId;
+    private String mAuditoryId;
+    private String mPassCode;
+    private int mStatus; // 0 is ground, 1 is picked up.
+    private int mType; // 0 is key
+    private int[] mLocation;
 
-        public Item(int id, String name){
-            mId = id;
-            mName = name;
+        public Item(String passCode, int[] location, int type){
+            mPassCode = passCode;
+            mLocation = location;
+            mType = type;
         }
-
-        public int getId() {return mId;}
-        public void setId(int id) {mId = id;}
+        public int gettype(){ return mType;}
+        public void settype(int type){ mType = type;}
+        public int[] getLocation(){return mLocation;}
+        public void setLocation(int[] location){mLocation = location;}
+        public int getStatus(){ return mStatus;}
+        public void setStatus(int status){mStatus = status;}
+        public String getPassCode() {return mPassCode;}
+        public void setPassCode(String passCode) {mPassCode = passCode;}
         public VibrationEffect getTactileId(){
             return mTactileId;
         }
@@ -27,9 +36,9 @@ public class Item {
             return mName;
         }
         public void setName (String name) {mName = name;}
-        public int getAuditoryId(){
+        public String getAuditoryId(){
             return mAuditoryId;
         }
-        public void setAuditoryId(int auditoryId) {mAuditoryId = auditoryId;}
+        public void setAuditoryId(String auditoryId) {mAuditoryId = auditoryId;}
 }
 

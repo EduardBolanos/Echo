@@ -1,23 +1,35 @@
 #Internal package file, do not edit.
-#Thu Apr 18 23:58:28 PDT 2019
+#Sun Apr 21 01:43:39 PDT 2019
+7.path=test.txt
 2.base=C\:\\Users\\C.Pelton\\Desktop\\Echo\\EchoPrototype\\app\\build\\intermediates\\assets\\debug
-0.path=classes.dex
+5.set=ASSET
+0.path=level2.txt
 2.baseType=DIRECTORY
-3.base=C\:\\Users\\C.Pelton\\Desktop\\Echo\\EchoPrototype\\app\\build\\intermediates\\transforms\\dexMerger\\debug\\28
+3.base=C\:\\Users\\C.Pelton\\Desktop\\Echo\\EchoPrototype\\app\\build\\intermediates\\transforms\\dexMerger\\debug\\33
+7.baseType=DIRECTORY
 2.set=ASSET
-1.path=classes.dex
-4.base=C\:\\Users\\C.Pelton\\Desktop\\Echo\\EchoPrototype\\app\\build\\intermediates\\transforms\\dexMerger\\debug\\31
-count=5
+1.path=level3.txt
+4.base=C\:\\Users\\C.Pelton\\Desktop\\Echo\\EchoPrototype\\app\\build\\intermediates\\assets\\debug
+7.set=ASSET
+count=8
+5.baseType=DIRECTORY
 2.path=level1.txt
-4.set=DEX
+5.base=C\:\\Users\\C.Pelton\\Desktop\\Echo\\EchoPrototype\\app\\build\\intermediates\\assets\\debug
+4.set=ASSET
 3.path=classes.dex
+6.base=C\:\\Users\\C.Pelton\\Desktop\\Echo\\EchoPrototype\\app\\build\\intermediates\\assets\\debug
 3.baseType=DIRECTORY
-1.set=DEX
-4.path=classes.dex
+1.set=ASSET
+4.path=level4.txt
+7.base=C\:\\Users\\C.Pelton\\Desktop\\Echo\\EchoPrototype\\app\\build\\intermediates\\assets\\debug
+6.set=ASSET
 1.baseType=DIRECTORY
-0.base=C\:\\Users\\C.Pelton\\Desktop\\Echo\\EchoPrototype\\app\\build\\intermediates\\transforms\\dexMerger\\debug\\30
+6.baseType=DIRECTORY
+5.path=level5.txt
+0.base=C\:\\Users\\C.Pelton\\Desktop\\Echo\\EchoPrototype\\app\\build\\intermediates\\assets\\debug
 0.baseType=DIRECTORY
 3.set=DEX
-1.base=C\:\\Users\\C.Pelton\\Desktop\\Echo\\EchoPrototype\\app\\build\\intermediates\\transforms\\dexMerger\\debug\\29
+6.path=level6.txt
+1.base=C\:\\Users\\C.Pelton\\Desktop\\Echo\\EchoPrototype\\app\\build\\intermediates\\assets\\debug
 4.baseType=DIRECTORY
-0.set=DEX
+0.set=ASSET

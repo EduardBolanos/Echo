@@ -1,8 +1,8 @@
 package com.example.echo.echoprototype;
 
 import android.content.Intent;
-import android.graphics.drawable.GradientDrawable;
 import android.media.MediaPlayer;
+import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.MotionEvent;
@@ -10,6 +10,7 @@ import android.view.MotionEvent;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.InputStream;
+import java.util.ArrayList;
 
 public class GameplayActivity extends AppCompatActivity {
 
@@ -19,6 +20,7 @@ public class GameplayActivity extends AppCompatActivity {
    private MediaPlayer moveForward;
    private MediaPlayer ending;
    private MediaPlayer hitWall;
+   private MediaPlayer levelChange;
    private MediaPlayer leftSideWallTap;
    private MediaPlayer rightSideWallTap;
    private MediaPlayer[] echo;
@@ -26,6 +28,11 @@ public class GameplayActivity extends AppCompatActivity {
    private MediaPlayer emptySpaceRight;
    private MediaPlayer emptySpaceBack;
    private MediaPlayer passing;
+   private MediaPlayer narrator;
+   private int clearInventory;
+   private int flags[] = {0,0,0,0,0,0,0,0,0,0,0};
+    String primer = ("android.resource://" + "com.example.echo.echoprototype" + "/raw/");
+    Uri hammer;
    private Player player;
     float initialInputCoordinate_X, initialInputCoordinate_Y, finalInputCoordinate_X, finalInputCoordinate_Y;
     Intent navigateToInGameMenu;
@@ -34,7 +41,9 @@ public class GameplayActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_gameplay);
+        levelManager = LevelManager.get(this);
         volumeControl = new SoundSettings();
+        clearInventory = 0;
         FileInputStream settings;
         try {
             settings = openFileInput("settings");
@@ -50,9 +59,6 @@ public class GameplayActivity extends AppCompatActivity {
 
         moveForward = MediaPlayer.create(GameplayActivity.this, R.raw.genericfootsteps);
         moveForward.setVolume(volumeControl.soundFX, volumeControl.soundFX);
-
-        ending = MediaPlayer.create(GameplayActivity.this, R.raw.my_jam);
-        ending.setVolume(volumeControl.soundFX, volumeControl.soundFX);
 
         hitWall = MediaPlayer.create(GameplayActivity.this, R.raw.wall_collision);
         hitWall.setVolume(volumeControl.soundFX, volumeControl.soundFX);
@@ -77,11 +83,16 @@ public class GameplayActivity extends AppCompatActivity {
         MediaPlayer emptySpaceLeft = MediaPlayer.create(GameplayActivity.this, R.raw.swooshleft);;
         MediaPlayer emptySpaceRight = MediaPlayer.create(GameplayActivity.this, R.raw.swooshright);
 
-        levelManager = LevelManager.get(this);
+        levelChange = MediaPlayer.create(this, R.raw.levelchange);
+        levelChange.setVolume(volumeControl.soundFX, volumeControl.soundFX);
+
+        ending = MediaPlayer.create(GameplayActivity.this, R.raw.beatingitup);
+        ending.setVolume((volumeControl.soundFX*100)/200, (volumeControl.soundFX*100)/200);
+
         player = new Player(this);
         String newGameState = getIntent().getExtras().getString("gameState");
         if(newGameState.equals("yes")){
-        generateLevelFromConfigFile("level1.txt", false);
+        generateLevelFromConfigFile( levelManager.getLevel(0), false);
         }
         else if(newGameState.equals("no")){
             generateLevelFromConfigFile("saveGame", true);
@@ -89,7 +100,8 @@ public class GameplayActivity extends AppCompatActivity {
         player.setOrientation(levelManager.getPlayerSpawnOrientation());
         player.setPosition(levelManager.getPlayerSpawnPosition());
         navigateToInGameMenu = new Intent(this, InGameMenu.class);
-
+        Runtime r = Runtime.getRuntime();
+        r.gc();
         if (savedInstanceState != null)
         {
             //player.setPosition();
@@ -100,6 +112,9 @@ public class GameplayActivity extends AppCompatActivity {
     @Override
     protected void onPause(){
         this.saveGame();
+        this.saveItems();
+        narrator.stop();
+        clearInventory = 0;
         super.onPause();
 
         // WE SHOULD HAVE SOME TEXT TO SPEECH NARRATION THAT INFORMS THE PLAYER THE APP IS PAUSING
@@ -136,6 +151,8 @@ public class GameplayActivity extends AppCompatActivity {
     }
 
     public boolean onTouchEvent(MotionEvent event) {
+        Runtime r = Runtime.getRuntime();
+        r.gc();
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
                 initialInputCoordinate_X = event.getX();
@@ -149,21 +166,52 @@ public class GameplayActivity extends AppCompatActivity {
                  * The echolocate capability as explained in the SRS documentation
                  * NOTE: Not fully implemented, this is only the prototype v1.0.1
                  */
+                // TODO LOGIC for TUTORIAL
+                if(levelManager.getCurrentLevel() == 1){
+                    if ((initialInputCoordinate_Y > finalInputCoordinate_Y) && (Math.abs(initialInputCoordinate_Y - finalInputCoordinate_Y) > 400)) {
+                        attemptMoveForward();
+                    } else if ((finalInputCoordinate_Y > initialInputCoordinate_Y) && (Math.abs(finalInputCoordinate_Y - initialInputCoordinate_Y) > 400)) {
+                    startActivityForResult(navigateToInGameMenu, 1234);
+                }
 
+                }else if(levelManager.getCurrentLevel() == 2){
+                    if ((initialInputCoordinate_Y > finalInputCoordinate_Y) && (Math.abs(initialInputCoordinate_Y - finalInputCoordinate_Y) > 400)) {
+                        if (flags[0] == 1) {
+                            attemptMoveForward();
+                        }
+                    }
+                    else if (((Math.abs(initialInputCoordinate_X - finalInputCoordinate_X) < 50) && (Math.abs(initialInputCoordinate_Y - finalInputCoordinate_Y) < 50))) {
+                        echolocate();
+                        if(flags[0] == 0){
+                            narrator.stop();
+                            narrator = MediaPlayer.create(this, R.raw.tuttwovoice);
+                            narrator.setVolume(volumeControl.voiceFX, volumeControl.voiceFX);
+                            r = Runtime.getRuntime();
+                            r.gc();
+                            narrator.start();
+                            flags[0] = 1;
+                            // HERE
+                        } else if ((finalInputCoordinate_Y > initialInputCoordinate_Y) && (Math.abs(finalInputCoordinate_Y - initialInputCoordinate_Y) > 400)) {
+                            startActivityForResult(navigateToInGameMenu, 1234);
+                        }
+                    }
+                }
                 /**
                  * You move forward by swiping up, it plays your "footsteps", and when you
                  * reach the end. It also plays a good song created by Nick.
                  */
-                if ((initialInputCoordinate_Y > finalInputCoordinate_Y) && (Math.abs(initialInputCoordinate_Y - finalInputCoordinate_Y) > 400)) {
-                    attemptMoveForward();
-                } else if ((initialInputCoordinate_X > finalInputCoordinate_X) && (Math.abs(initialInputCoordinate_X - finalInputCoordinate_X) > 400)) {
-                    turnLeft();
-                } else if ((finalInputCoordinate_X > initialInputCoordinate_X) && (Math.abs(finalInputCoordinate_X - initialInputCoordinate_X) > 400)) {
-                    turnRight();
-                } else if ((finalInputCoordinate_Y > initialInputCoordinate_Y) && (Math.abs(finalInputCoordinate_Y - initialInputCoordinate_Y) > 400)) {
-                    startActivityForResult(navigateToInGameMenu, 1234);
-                } else if (((Math.abs(initialInputCoordinate_X - finalInputCoordinate_X) < 50) && (Math.abs(initialInputCoordinate_Y - finalInputCoordinate_Y) < 50))) {
-                    echolocate();
+                else {
+                    if ((initialInputCoordinate_Y > finalInputCoordinate_Y) && (Math.abs(initialInputCoordinate_Y - finalInputCoordinate_Y) > 400)) {
+                        attemptMoveForward();
+                    } else if ((initialInputCoordinate_X > finalInputCoordinate_X) && (Math.abs(initialInputCoordinate_X - finalInputCoordinate_X) > 400)) {
+                        turnLeft();
+                    } else if ((finalInputCoordinate_X > initialInputCoordinate_X) && (Math.abs(finalInputCoordinate_X - initialInputCoordinate_X) > 400)) {
+                        turnRight();
+                    } else if ((finalInputCoordinate_Y > initialInputCoordinate_Y) && (Math.abs(finalInputCoordinate_Y - initialInputCoordinate_Y) > 400)) {
+                        startActivityForResult(navigateToInGameMenu, 1234);
+                    } else if (((Math.abs(initialInputCoordinate_X - finalInputCoordinate_X) < 50) && (Math.abs(initialInputCoordinate_Y - finalInputCoordinate_Y) < 50))) {
+                        echolocate();
+                    }
                 }
         }
         return false;
@@ -220,18 +268,96 @@ public class GameplayActivity extends AppCompatActivity {
             player.setPosition(newPosition);
             if(levelManager.getTileAtCoord(newPosition).getType() == 'e')
             {
-                ending.start();
+                narrator.stop();
+               ending.start();
+                try {
+                    Thread.sleep(4000);
+                } catch (InterruptedException ex) {
+                    Thread.currentThread().interrupt();
+                }
+                ending.stop();
+                ending.reset();
+                // LOGIC FOR TUTORIAL
+                switch (levelManager.getCurrentLevel()){
+                    case 1:
+                        narrator.stop();
+                        narrator = MediaPlayer.create(this, R.raw.tutonevoice);
+                        narrator.setVolume(volumeControl.voiceFX, volumeControl.voiceFX);
+                        narrator.start();
+                        try {
+                            Thread.sleep(12000);
+                        } catch (InterruptedException ex) {
+                            Thread.currentThread().interrupt();
+                        }
+                        narrator.stop();
+                        break;
+                    case 3:
+                        narrator.stop();
+                    narrator = MediaPlayer.create(this, R.raw.tutthreevoice);
+                    narrator.setVolume(volumeControl.voiceFX, volumeControl.voiceFX);
+                    narrator.start();
+                    try {
+                        Thread.sleep(7000);
+                    } catch (InterruptedException ex) {
+                        Thread.currentThread().interrupt();
+                    }
+                    narrator.stop();
+                    break;
+                }
+                levelChange.start();
+                try {
+                    Thread.sleep(6000);
+                } catch (InterruptedException ex) {
+                    Thread.currentThread().interrupt();
+                }
+                levelChange.stop();
+                try {
+                    Thread.sleep(2000);
+                } catch (InterruptedException ex) {
+                    Thread.currentThread().interrupt();
+                }
+                clearInventory = 1;
+                levelChange = MediaPlayer.create(this, R.raw.levelchange);
+                levelChange.setVolume(volumeControl.soundFX, volumeControl.soundFX);
+
+                ending = MediaPlayer.create(GameplayActivity.this, R.raw.beatingitup);
+                ending.setVolume((volumeControl.soundFX*100)/200, (volumeControl.soundFX*100)/200);
+                r = Runtime.getRuntime();
+                r.gc();
+                this.nextLevel();
             }
             //if tile is item get item, if tile is end play end
         }
         else {
             //play wall hit
-            hitWall.start();
+            if(levelManager.getTileAtCoord(newPosition).getType() == 'w')
+            {
+                hitWall.start();
+            }
+            else if(levelManager.getTileAtCoord(newPosition).getType() == 'd')
+            {
+                if(levelManager.openDoor(newPosition)){
+                    // TODO open door noise
+                    player.setPosition(newPosition);
+                    moveForward.start();
+                }
+                else {
+                    //TODO Jingle Key, door hit
+                }
+            }
             //if(Map.isLegal(newPosition)) == false  dont move forward play tileSound
+        }
+        if(levelManager.hasKey(newPosition)){
+            if(levelManager.pickUpKey(newPosition)) {
+                // TODO Maybe pickup noise?
+            }
+            //other then that, you have already picked it up
+
         }
     }
 
-    public void echolocate() {
+    public void echolocate() { // Reason why this is so big is because sounds need to be differentated, AKA
+        // places adj to player location sounds are different from echolocate pings far in the distance.
         // logic from player.echolocate() should be transferred to here
         Runtime r = Runtime.getRuntime();
         r.gc();
@@ -289,6 +415,22 @@ public class GameplayActivity extends AppCompatActivity {
             } catch (InterruptedException ex) {
                 Thread.currentThread().interrupt();
             }
+        } else if (leftTile == 'd') {
+            // TODO play door sound near
+            //stop playing leftSound
+            try {
+                Thread.sleep(300);
+            } catch (InterruptedException ex) {
+                Thread.currentThread().interrupt();
+            }
+        }
+        if(levelManager.hasKey(leftPosition)){
+            // TODO key play noise
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException ex) {
+                Thread.currentThread().interrupt();
+            }
         }
         rightTile = levelManager.getTileAtCoord(rightPosition).getType(); // What is near the players' right side?
         if (rightTile == 'e') {
@@ -313,6 +455,21 @@ public class GameplayActivity extends AppCompatActivity {
                 Thread.currentThread().interrupt();
             }
             //stop playing rightSound
+        } else if (rightTile == 'd') {
+            // TODO play door sound near
+            try {
+                Thread.sleep(300);
+            } catch (InterruptedException ex) {
+                Thread.currentThread().interrupt();
+            }
+        }
+        if(levelManager.hasKey(rightPosition)){
+            // TODO key play noise
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException ex) {
+                Thread.currentThread().interrupt();
+            }
         }
         char backTile = levelManager.getTileAtCoord(backPosition).getType(); // what is near the player's back?
         if (backTile == 'e') {
@@ -337,6 +494,21 @@ public class GameplayActivity extends AppCompatActivity {
                 Thread.currentThread().interrupt();
             }
             //stop playing rightSound
+        } else if (backTile == 'd') {
+            // TODO play door sound near
+            try {
+                Thread.sleep(300);
+            } catch (InterruptedException ex) {
+                Thread.currentThread().interrupt();
+            }
+        }
+        if(levelManager.hasKey(backPosition)){
+            // TODO key play noise
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException ex) {
+                Thread.currentThread().interrupt();
+            }
         }
         int playOnce = 0;
         int volumePower = 100;
@@ -370,6 +542,21 @@ public class GameplayActivity extends AppCompatActivity {
                     } catch (InterruptedException ex) {
                         Thread.currentThread().interrupt();
                     }
+                } else if (leftTile == 'd') {
+                    // TODO play door left sound
+                    try {
+                        Thread.sleep(100);
+                    } catch (InterruptedException ex) {
+                        Thread.currentThread().interrupt();
+                    }
+                }
+                if(levelManager.hasKey(leftPosition)){
+                    // TODO key play noise
+                    try {
+                        Thread.sleep(1000);
+                    } catch (InterruptedException ex) {
+                        Thread.currentThread().interrupt();
+                    }
                 }
                 rightPosition = moveFromPosition(rightOrientation, newPosition);
                 rightTile = levelManager.getTileAtCoord(rightPosition).getType(); // checks right area
@@ -395,6 +582,21 @@ public class GameplayActivity extends AppCompatActivity {
                         Thread.currentThread().interrupt();
                     }
                     //stop playing rightSound
+                } else if (rightTile == 'd') {
+                    // TODO play door right sound
+                    try {
+                        Thread.sleep(100);
+                    } catch (InterruptedException ex) {
+                        Thread.currentThread().interrupt();
+                    }
+                }
+                if(levelManager.hasKey(rightPosition)){
+                    // TODO key play noise
+                    try {
+                        Thread.sleep(1000);
+                    } catch (InterruptedException ex) {
+                        Thread.currentThread().interrupt();
+                    }
                 }
             } else {
                 playOnce = 1; // now starts checking left and right
@@ -427,6 +629,14 @@ public class GameplayActivity extends AppCompatActivity {
                 }
                 passing.stop();
             }
+            if(levelManager.hasKey(newPosition)){
+                // TODO key play noise
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException ex) {
+                    Thread.currentThread().interrupt();
+                }
+            }
             newPosition = moveFromPosition(orientation, newPosition);
         }
         if (echoTurnState == 3) {
@@ -445,20 +655,39 @@ public class GameplayActivity extends AppCompatActivity {
         } catch (InterruptedException ex) {
             Thread.currentThread().interrupt();
         }
-            //play wall
-            hitWall.setVolume((volumeControl.soundFX*100)/200, (volumeControl.soundFX*100)/200);
+        backTile = levelManager.getTileAtCoord(newPosition).getType(); // using backtile as forwardtile,
+         if (backTile == 'w') {
+             //play wall
+             hitWall.setVolume((volumeControl.soundFX * 100) / 200, (volumeControl.soundFX * 100) / 200);
+             // 1/2 volume for forward wall
+             hitWall.start();
+             try {
+                 Thread.sleep(100);
+             } catch (InterruptedException ex) {
+                 Thread.currentThread().interrupt();
+             }
+         } else if (backTile == 'd') {
+            //TODO play door
+            hitWall.setVolume((volumeControl.soundFX * 100) / 200, (volumeControl.soundFX * 100) / 200);
             // 1/2 volume for forward wall
             hitWall.start();
             try {
-                Thread.sleep(500);
+                Thread.sleep(100);
             } catch (InterruptedException ex) {
                 Thread.currentThread().interrupt();
             }
+        }
             if(playOnce == 1) {
                 //go back to legal space
                 newPosition = moveFromPosition(backOrientation, newPosition);
                 //play sounds to identify left
                 leftPosition = moveFromPosition(leftOrientation, newPosition);
+                if(leftPosition[0] == -1){ // some glitch and bug
+                    leftPosition[0] = 0;
+                }
+                if(leftPosition[1] == -1){
+                    leftPosition[1] = 0;
+                }
                 leftTile = levelManager.getTileAtCoord(leftPosition).getType();
                 if (leftTile == 'e') {
                     // TODO play goal sound
@@ -482,8 +711,22 @@ public class GameplayActivity extends AppCompatActivity {
                     } catch (InterruptedException ex) {
                         Thread.currentThread().interrupt();
                     }
+                } else if (leftTile == 'd') {
+                    // TODO play door left sound
+                    try {
+                        Thread.sleep(600);
+                    } catch (InterruptedException ex) {
+                        Thread.currentThread().interrupt();
+                    }
+                    if(levelManager.hasKey(leftPosition)){
+                        // TODO key play noise
+                        try {
+                            Thread.sleep(1000);
+                        } catch (InterruptedException ex) {
+                            Thread.currentThread().interrupt();
+                        }
+                    }
                 }
-
                 //play sounds to identify right
                 rightPosition = moveFromPosition(rightOrientation, newPosition);
                 rightTile = levelManager.getTileAtCoord(rightPosition).getType();
@@ -509,8 +752,25 @@ public class GameplayActivity extends AppCompatActivity {
                         Thread.currentThread().interrupt();
                     }
                     //stop playing rightSound
+                } else if (rightTile == 'd') {
+                    // TODO play door right sound
+                    try {
+                        Thread.sleep(600);
+                    } catch (InterruptedException ex) {
+                        Thread.currentThread().interrupt();
+                    }
+                }
+                if(levelManager.hasKey(rightPosition)){
+                    // TODO key play noise
+                    try {
+                        Thread.sleep(1000);
+                    } catch (InterruptedException ex) {
+                        Thread.currentThread().interrupt();
+                    }
                 }
             }
+            r = Runtime.getRuntime();
+            r.gc();
         }
 
     public int[] moveFromPosition(int orientation, int[] position){
@@ -554,20 +814,24 @@ public class GameplayActivity extends AppCompatActivity {
 
     }
 
-    public void generateLevelFromConfigFile(String levelName, boolean saveGame) {
+    public void generateLevelFromConfigFile(String levelName, boolean saveGameStatus) {
         // logic from level.loadLevel() should be transferred here.
         // save determines if in asset or file
         int data = 0;
         String concatinator = "";
+        int[] playerPos = new int[2];
         int state = 0;
         int locX = 0;
         int locY = 0;
         int bypass = 0;
+        ArrayList<Item> refer = new ArrayList<Item>();
+        int keyLoc;
         Tile map[][] = null;
         InputStream asset = null;
         FileInputStream assetTwo = null;
+        ArrayList<Integer> passCodes = new ArrayList<Integer>();
 
-        if(!saveGame) {
+        if(!saveGameStatus) {
             try {
                 asset = this.getAssets().open(levelName);
             } catch (java.io.IOException e) {
@@ -581,7 +845,7 @@ public class GameplayActivity extends AppCompatActivity {
 
         if (asset != null || assetTwo != null) {
             while (data != -1) {
-                if(!saveGame) {
+                if(!saveGameStatus) {
                     try {
                         data = asset.read();
                     } catch (java.io.IOException e) {
@@ -627,22 +891,80 @@ public class GameplayActivity extends AppCompatActivity {
                         case 2:
                             if (data != 35) {
                                 switch (data) {
-                                    case 102:
+                                    case 'f': // a walkable floor
                                         map[locX][locY] = levelManager.floor;
                                         break;
-                                    case 101:
+                                    case 'e': // the goal
                                         map[locX][locY] = levelManager.end;
                                         int[] ep = {locX, locY};
                                         levelManager.setPlayerSpawnPosition(ep);
                                         break;
-                                    case 119:
+                                    case 'w': // adds a wall
                                         map[locX][locY] = levelManager.wall;
                                         break;
-                                    case 80:
+                                    case 'P': // initiates player spawn
                                         map[locX][locY] = levelManager.floor;
-                                        int[] playerPos = {locX, locY};
+                                        playerPos[0] = locX; playerPos[1] = locY;
                                         levelManager.setPlayerSpawnPosition(playerPos);
                                         break;
+                                    case 'd': // adds a door
+                                        map[locX][locY] = levelManager.door;
+                                        while (data != ')') {
+                                            if (!saveGameStatus) {
+                                                try {
+                                                    data = asset.read();
+                                                } catch (java.io.IOException e) {
+                                                }
+                                            } else {
+                                                try {
+                                                    data = assetTwo.read();
+                                                } catch (java.io.IOException e) {
+                                                }
+                                            }
+                                            if (data != '(' && data != ')') {
+                                                concatinator = concatinator + ((char) data);
+                                            } else if (data != '(') {
+                                                int[] doorPos = {locX, locY};
+                                                StringBuilder doorCode = new StringBuilder();
+                                                doorCode.append(concatinator);
+                                                Door aDoor = new Door(doorPos, doorCode.toString());
+                                                levelManager.addDoor(aDoor);
+                                                concatinator = "";
+                                            }
+                                        }
+                                        break;
+                                    case 'k':
+                                        map[locX][locY] = levelManager.floor;
+                                        while (data != ')') {
+                                            if (!saveGameStatus) {
+                                                try {
+                                                    data = asset.read();
+                                                } catch (java.io.IOException e) {
+                                                }
+                                            } else {
+                                                try {
+                                                    data = assetTwo.read();
+                                                } catch (java.io.IOException e) {
+                                                }
+                                            }
+                                            if (data != '(' && data != ')') {
+                                                concatinator = concatinator + ((char) data);
+                                            } else if (data != '(') {
+                                                if(data == 'P'){
+                                                    map[locX][locY] = levelManager.floor;
+                                                    playerPos[0] = locX; playerPos[1] = locY;
+                                                    levelManager.setPlayerSpawnPosition(playerPos);
+                                                }
+                                                int[] keyPos = {locX, locY};
+                                                StringBuilder keyCode = new StringBuilder();
+                                                keyCode.append(concatinator);
+                                                Item aKey = new Item(keyCode.toString(), keyPos, 0); // 0 is key
+                                                refer.add(aKey);
+                                                concatinator = "";
+                                            }
+                                        }
+                                        break;
+
                                 }
                                 locX++;
                             } else {
@@ -658,18 +980,107 @@ public class GameplayActivity extends AppCompatActivity {
                             concatinator = "";
                             concatinator = concatinator + ((char) data);
                             levelManager.setPlayerSpawnOrientation(Integer.parseInt(concatinator));
-                            asset = null;
-                            Runtime r = Runtime.getRuntime();
-                            r.gc();
+                            concatinator = "";
+                            if (!saveGameStatus) {// plays a new level intro
+                                try {
+                                    data = asset.read();
+                                } catch (java.io.IOException e) {
+                                }
+                                while (data != -1) {
+                                    try {
+                                        data = asset.read();
+                                    } catch (java.io.IOException e) {
+                                    }
+                                    if (((char) data != '\n' && ((char) data > 31))) {
+                                        if (data != 35) {
+                                            concatinator = concatinator + ((char) data);
+                                        } else {
+                                            hammer = Uri.parse(primer + concatinator); // intro lines
+                                            narrator = MediaPlayer.create(this, hammer);
+                                            narrator.setVolume(volumeControl.voiceFX, volumeControl.voiceFX);
+                                            narrator.start();
+                                            concatinator = "";
+                                            data = -1;
+                                        }
+                                    }
+                                }
+                            }
+                            if (refer.size() > 0) {
+                                if (saveGameStatus) {
+                                    try {
+                                        data = assetTwo.read();
+                                    } catch (java.io.IOException e) {
+                                    }
+                                }
+                            }
+                            concatinator = "";
+                            state = 0;
+                            keyLoc = 0;
+                            int end = 1;
+                            for (int x = 0; x < refer.size(); x++) { // adding items
+                                end = 1;
+                                while (end == 1) {
+                                    if (!saveGameStatus) {
+                                        try {
+                                            data = asset.read();
+                                        } catch (java.io.IOException e) {
+                                        }
+                                    } else {
+                                        try {
+                                            data = assetTwo.read();
+                                        } catch (java.io.IOException e) {
+                                        }
+                                    }
+                                    if (((char) data != '\n' && ((char) data > 31))) {
+                                        if (data != 35) {
+                                            concatinator = concatinator + ((char) data);
+                                        } else {
+                                            switch (state) {
+                                                case 0:
+                                                    for (int y = 0; y < refer.size(); y++) {
+                                                        keyLoc = y;
+                                                        if(refer.get(y).getPassCode().equals(concatinator)){
+                                                            break;
+                                                        }
+                                                    }
+                                                    concatinator = "";
+                                                    state = 1;
+                                                    break;
+                                                case 1:
+                                                    refer.get(keyLoc).setName(concatinator);
+                                                    concatinator = "";
+                                                    state = 2;
+                                                    break;
+                                                case 2:
+                                                    refer.get(keyLoc).setAuditoryId(concatinator);
+                                                    concatinator = "";
+                                                    state = 3;
+                                                    break;
+                                                case 3:
+                                                    concatinator = "";
+                                                    state = 4;
+                                                    break;
+                                                case 4:
+                                                    refer.get(keyLoc).setStatus(Integer.parseInt(concatinator));
+                                                    concatinator = "";
+                                                    state = 0;
+                                                    keyLoc = 0;
+                                                    end = 0;
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                            for (int x = 0; x < refer.size(); x++) {
+                             levelManager.addItem(refer.get(x));
+                            }
                             data = -1;
-
-                            break;
+                    }
                     }
                 }
             }
 
         }
-    }
 
  public void saveGame(){
          FileOutputStream saveGame;
@@ -711,15 +1122,57 @@ public class GameplayActivity extends AppCompatActivity {
              saveGame.write('#');
              int mPlayerSpawnPoint[] = player.getPosition();
              Tile mMap[][] = levelManager.getMap();
+             int checker[]= new int[2];
              for(int y = levelManager.sizeY - 1; y >= 0 ; y--){
                 for(int x = 0; x < levelManager.sizeX; x++){
                     // if(mEndPoint[0] == x && mEndPoint[1] == y){
                     //     saveGame.write(levelManager.end.getType());
                    //  }
                      //else
+                    checker[0] = x; checker[1] = y;
+
+                     if(levelManager.hasKey(checker)){
+                         saveGame.write('k');
+                        saveGame.write('(');
+                        for(int i = 0; i < levelManager.getItemArraySize(); i++){
+                            if(levelManager.getItem(i).getLocation()[0] == x && levelManager.getItem(i).getLocation()[1] == y){
+                                parser = levelManager.getItem(i).getPassCode();
+                                stringSizeTracker = 0;
+                                while (stringSizeTracker < parser.length()) {
+                                    try {
+                                        saveGame.write(parser.charAt(stringSizeTracker));
+                                        stringSizeTracker++;
+                                    } catch (Exception e) {
+                                        e.printStackTrace();
+                                    }
+                                }
+                            }
+                        }
                          if(mPlayerSpawnPoint[0] == x && mPlayerSpawnPoint[1] == y){
-                         saveGame.write('P');
-                     }
+                             saveGame.write('P');}
+                        saveGame.write(')');
+                    } else if(mPlayerSpawnPoint[0] == x && mPlayerSpawnPoint[1] == y){
+                        saveGame.write('P');
+                    }
+                    else if(mMap[x][y].getType() == 'd'){
+                        saveGame.write('d');
+                        saveGame.write('(');
+                        for(int i = 0; i < levelManager.getDoorArraySize(); i++){
+                            if(levelManager.getDoor(i).mLocation[0] == x && levelManager.getDoor(i).mLocation[1] == y){
+                                parser = levelManager.getDoor(i).getPasscode();
+                                stringSizeTracker = 0;
+                                while (stringSizeTracker < parser.length()) {
+                                    try {
+                                        saveGame.write(parser.charAt(stringSizeTracker));
+                                        stringSizeTracker++;
+                                    } catch (Exception e) {
+                                        e.printStackTrace();
+                                    }
+                                }
+                            }
+                        }
+                        saveGame.write(')');
+                    }
                      else {
                          saveGame.write(mMap[x][y].getType());
                      }
@@ -729,10 +1182,155 @@ public class GameplayActivity extends AppCompatActivity {
              parser = Integer.toString(player.getOrientation());
              saveGame.write(parser.charAt(0));
              saveGame.write('#');
+             for(int x = 0; x < levelManager.getItemArraySize(); x++){
+                 parser = levelManager.getItem(x).getPassCode();
+                 stringSizeTracker = 0;
+                 while (stringSizeTracker < parser.length()) {
+                     try {
+                         saveGame.write(parser.charAt(stringSizeTracker));
+                         stringSizeTracker++;
+                     } catch (Exception e) {
+                         e.printStackTrace();
+                     }
+                 }
+                 saveGame.write('#');
+                 parser = levelManager.getItem(x).getName();
+                 stringSizeTracker = 0;
+                 while (stringSizeTracker < parser.length()) {
+                     try {
+                         saveGame.write(parser.charAt(stringSizeTracker));
+                         stringSizeTracker++;
+                     } catch (Exception e) {
+                         e.printStackTrace();
+                     }
+                 }
+                 saveGame.write('#');
+                 parser = levelManager.getItem(x).getAuditoryId();
+                 stringSizeTracker = 0;
+                 while (stringSizeTracker < parser.length()) {
+                     try {
+                         saveGame.write(parser.charAt(stringSizeTracker));
+                         stringSizeTracker++;
+                     } catch (Exception e) {
+                         e.printStackTrace();
+                     }
+                 }
+                 saveGame.write('#');
+                 parser = "none"; // STUB TactileID
+                 stringSizeTracker = 0;
+                 while (stringSizeTracker < parser.length()) {
+                     try {
+                         saveGame.write(parser.charAt(stringSizeTracker));
+                         stringSizeTracker++;
+                     } catch (Exception e) {
+                         e.printStackTrace();
+                     }
+                 }
+                 saveGame.write('#');
+                 parser = Integer.toString(levelManager.getItem(x).getStatus()); // STUB TactileID
+                 stringSizeTracker = 0;
+                 while (stringSizeTracker < parser.length()) {
+                     try {
+                         saveGame.write(parser.charAt(stringSizeTracker));
+                         stringSizeTracker++;
+                     } catch (Exception e) {
+                         e.printStackTrace();
+                     }
+                 }
+                 saveGame.write('#');
+             }
              saveGame.close();
          } catch (Exception e) {
         e.printStackTrace();
         }
      }
 
+     public void saveItems() {
+         FileOutputStream saveItems;
+         String parser;
+         int stringSizeTracker = 0;
+         try {
+             saveItems = openFileOutput("items", this.MODE_PRIVATE);
+             if(clearInventory == 1){
+                 saveItems.write('R');
+             }
+             for(int x = 0; x < levelManager.getItemArraySize(); x++){
+                 parser = levelManager.getItem(x).getPassCode();
+                 stringSizeTracker = 0;
+                 while (stringSizeTracker < parser.length()) {
+                     try {
+                         saveItems.write(parser.charAt(stringSizeTracker));
+                         stringSizeTracker++;
+                     } catch (Exception e) {
+                         e.printStackTrace();
+                     }
+                 }
+                 saveItems.write('#');
+                 parser = levelManager.getItem(x).getName();
+                 stringSizeTracker = 0;
+                 while (stringSizeTracker < parser.length()) {
+                     try {
+                         saveItems.write(parser.charAt(stringSizeTracker));
+                         stringSizeTracker++;
+                     } catch (Exception e) {
+                         e.printStackTrace();
+                     }
+                 }
+                 saveItems.write('#');
+                 parser = levelManager.getItem(x).getAuditoryId();
+                 stringSizeTracker = 0;
+                 while (stringSizeTracker < parser.length()) {
+                     try {
+                         saveItems.write(parser.charAt(stringSizeTracker));
+                         stringSizeTracker++;
+                     } catch (Exception e) {
+                         e.printStackTrace();
+                     }
+                 }
+                 saveItems.write('#');
+                 parser = "none"; // STUB TactileID
+                 stringSizeTracker = 0;
+                 while (stringSizeTracker < parser.length()) {
+                     try {
+                         saveItems.write(parser.charAt(stringSizeTracker));
+                         stringSizeTracker++;
+                     } catch (Exception e) {
+                         e.printStackTrace();
+                     }
+                 }
+                 saveItems.write('#');
+                 parser = Integer.toString(levelManager.getItem(x).getStatus()); // STUB TactileID
+                 stringSizeTracker = 0;
+                 while (stringSizeTracker < parser.length()) {
+                     try {
+                         saveItems.write(parser.charAt(stringSizeTracker));
+                         stringSizeTracker++;
+                     } catch (Exception e) {
+                         e.printStackTrace();
+                     }
+                 }
+                 saveItems.write('#');
+                 parser = Integer.toString(levelManager.getItem(x).gettype()); // STUB TactileID
+                 stringSizeTracker = 0;
+                 while (stringSizeTracker < parser.length()) {
+                     try {
+                         saveItems.write(parser.charAt(stringSizeTracker));
+                         stringSizeTracker++;
+                     } catch (Exception e) {
+                         e.printStackTrace();
+                     }
+                 }
+                 saveItems.write('#');
+             }
+             saveItems.write('@');
+             saveItems.close();
+         } catch (Exception e) {
+             e.printStackTrace();
+         }
+     }
+    public void nextLevel(){
+        generateLevelFromConfigFile(levelManager.getLevel(levelManager.getCurrentLevel()), false);
+        player.setOrientation(levelManager.getPlayerSpawnOrientation());
+        player.setPosition(levelManager.getPlayerSpawnPosition());
+    }
 }

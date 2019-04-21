@@ -31,7 +31,8 @@ public class ItemNode implements Comparable{
     @Override
     public int compareTo(Object o) {
         //some compare about data
-        if (((ItemNode)o).getData().getName() == this.getData().getName()){
+        if ((((ItemNode)o).getData().getName().equals(this.getData().getName()))
+                && (((ItemNode) o).getData().getPassCode().equals(this.getData().getPassCode()))){
             return 0; // we found it Tim
         }
         return -1; // not found

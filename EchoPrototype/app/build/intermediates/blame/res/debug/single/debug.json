@@ -184,6 +184,10 @@
         "source": "C:\\Users\\C.Pelton\\.gradle\\caches\\transforms-1\\files-1.1\\appcompat-v7-28.0.0.aar\\837343b25b50ca0324dbf5e96e4b7e10\\res\\drawable-hdpi-v4\\abc_ic_commit_search_api_mtrl_alpha.png"
     },
     {
+        "merged": "C:\\Users\\C.Pelton\\Desktop\\Echo\\EchoPrototype\\app\\build\\intermediates\\res\\merged\\debug\\raw_tutthreevoice.mp3.flat",
+        "source": "C:\\Users\\C.Pelton\\Desktop\\Echo\\EchoPrototype\\app\\src\\main\\res\\raw\\tutthreevoice.mp3"
+    },
+    {
         "merged": "C:\\Users\\C.Pelton\\Desktop\\Echo\\EchoPrototype\\app\\build\\intermediates\\res\\merged\\debug\\drawable-hdpi-v4_abc_ic_star_black_36dp.png.flat",
         "source": "C:\\Users\\C.Pelton\\.gradle\\caches\\transforms-1\\files-1.1\\appcompat-v7-28.0.0.aar\\837343b25b50ca0324dbf5e96e4b7e10\\res\\drawable-hdpi-v4\\abc_ic_star_black_36dp.png"
     },
@@ -196,12 +200,12 @@
         "source": "C:\\Users\\C.Pelton\\.gradle\\caches\\transforms-1\\files-1.1\\appcompat-v7-28.0.0.aar\\837343b25b50ca0324dbf5e96e4b7e10\\res\\drawable\\abc_ratingbar_small_material.xml"
     },
     {
-        "merged": "C:\\Users\\C.Pelton\\Desktop\\Echo\\EchoPrototype\\app\\build\\intermediates\\res\\merged\\debug\\drawable-xhdpi-v4_abc_textfield_search_activated_mtrl_alpha.9.png.flat",
-        "source": "C:\\Users\\C.Pelton\\.gradle\\caches\\transforms-1\\files-1.1\\appcompat-v7-28.0.0.aar\\837343b25b50ca0324dbf5e96e4b7e10\\res\\drawable-xhdpi-v4\\abc_textfield_search_activated_mtrl_alpha.9.png"
-    },
-    {
         "merged": "C:\\Users\\C.Pelton\\Desktop\\Echo\\EchoPrototype\\app\\build\\intermediates\\res\\merged\\debug\\drawable-hdpi-v4_notification_bg_normal_pressed.9.png.flat",
         "source": "C:\\Users\\C.Pelton\\.gradle\\caches\\transforms-1\\files-1.1\\support-compat-28.0.0.aar\\e0c36a56e3a3f7f815b4a5b865379c39\\res\\drawable-hdpi-v4\\notification_bg_normal_pressed.9.png"
+    },
+    {
+        "merged": "C:\\Users\\C.Pelton\\Desktop\\Echo\\EchoPrototype\\app\\build\\intermediates\\res\\merged\\debug\\drawable-xhdpi-v4_abc_textfield_search_activated_mtrl_alpha.9.png.flat",
+        "source": "C:\\Users\\C.Pelton\\.gradle\\caches\\transforms-1\\files-1.1\\appcompat-v7-28.0.0.aar\\837343b25b50ca0324dbf5e96e4b7e10\\res\\drawable-xhdpi-v4\\abc_textfield_search_activated_mtrl_alpha.9.png"
     },
     {
         "merged": "C:\\Users\\C.Pelton\\Desktop\\Echo\\EchoPrototype\\app\\build\\intermediates\\res\\merged\\debug\\drawable-hdpi-v4_abc_btn_switch_to_on_mtrl_00012.9.png.flat",
@@ -298,6 +302,10 @@
     {
         "merged": "C:\\Users\\C.Pelton\\Desktop\\Echo\\EchoPrototype\\app\\build\\intermediates\\res\\merged\\debug\\drawable-xxhdpi-v4_abc_list_pressed_holo_dark.9.png.flat",
         "source": "C:\\Users\\C.Pelton\\.gradle\\caches\\transforms-1\\files-1.1\\appcompat-v7-28.0.0.aar\\837343b25b50ca0324dbf5e96e4b7e10\\res\\drawable-xxhdpi-v4\\abc_list_pressed_holo_dark.9.png"
+    },
+    {
+        "merged": "C:\\Users\\C.Pelton\\Desktop\\Echo\\EchoPrototype\\app\\build\\intermediates\\res\\merged\\debug\\raw_tutonebegin.mp3.flat",
+        "source": "C:\\Users\\C.Pelton\\Desktop\\Echo\\EchoPrototype\\app\\src\\main\\res\\raw\\tutonebegin.mp3"
     },
     {
         "merged": "C:\\Users\\C.Pelton\\Desktop\\Echo\\EchoPrototype\\app\\build\\intermediates\\res\\merged\\debug\\raw_slide.mp3.flat",
@@ -428,6 +436,10 @@
         "source": "C:\\Users\\C.Pelton\\.gradle\\caches\\transforms-1\\files-1.1\\appcompat-v7-28.0.0.aar\\837343b25b50ca0324dbf5e96e4b7e10\\res\\color\\switch_thumb_material_light.xml"
     },
     {
+        "merged": "C:\\Users\\C.Pelton\\Desktop\\Echo\\EchoPrototype\\app\\build\\intermediates\\res\\merged\\debug\\raw_tuttwobegin.mp3.flat",
+        "source": "C:\\Users\\C.Pelton\\Desktop\\Echo\\EchoPrototype\\app\\src\\main\\res\\raw\\tuttwobegin.mp3"
+    },
+    {
         "merged": "C:\\Users\\C.Pelton\\Desktop\\Echo\\EchoPrototype\\app\\build\\intermediates\\res\\merged\\debug\\drawable_abc_item_background_holo_light.xml.flat",
         "source": "C:\\Users\\C.Pelton\\.gradle\\caches\\transforms-1\\files-1.1\\appcompat-v7-28.0.0.aar\\837343b25b50ca0324dbf5e96e4b7e10\\res\\drawable\\abc_item_background_holo_light.xml"
     },
@@ -458,6 +470,10 @@
     {
         "merged": "C:\\Users\\C.Pelton\\Desktop\\Echo\\EchoPrototype\\app\\build\\intermediates\\res\\merged\\debug\\drawable-v21_notification_action_background.xml.flat",
         "source": "C:\\Users\\C.Pelton\\.gradle\\caches\\transforms-1\\files-1.1\\support-compat-28.0.0.aar\\e0c36a56e3a3f7f815b4a5b865379c39\\res\\drawable-v21\\notification_action_background.xml"
+    },
+    {
+        "merged": "C:\\Users\\C.Pelton\\Desktop\\Echo\\EchoPrototype\\app\\build\\intermediates\\res\\merged\\debug\\raw_tutonevoice.mp3.flat",
+        "source": "C:\\Users\\C.Pelton\\Desktop\\Echo\\EchoPrototype\\app\\src\\main\\res\\raw\\tutonevoice.mp3"
     },
     {
         "merged": "C:\\Users\\C.Pelton\\Desktop\\Echo\\EchoPrototype\\app\\build\\intermediates\\res\\merged\\debug\\drawable-hdpi-v4_abc_text_select_handle_right_mtrl_dark.png.flat",
@@ -692,12 +708,12 @@
         "source": "C:\\Users\\C.Pelton\\.gradle\\caches\\transforms-1\\files-1.1\\appcompat-v7-28.0.0.aar\\837343b25b50ca0324dbf5e96e4b7e10\\res\\color-v23\\abc_tint_edittext.xml"
     },
     {
-        "merged": "C:\\Users\\C.Pelton\\Desktop\\Echo\\EchoPrototype\\app\\build\\intermediates\\res\\merged\\debug\\drawable_abc_ic_arrow_drop_right_black_24dp.xml.flat",
-        "source": "C:\\Users\\C.Pelton\\.gradle\\caches\\transforms-1\\files-1.1\\appcompat-v7-28.0.0.aar\\837343b25b50ca0324dbf5e96e4b7e10\\res\\drawable\\abc_ic_arrow_drop_right_black_24dp.xml"
-    },
-    {
         "merged": "C:\\Users\\C.Pelton\\Desktop\\Echo\\EchoPrototype\\app\\build\\intermediates\\res\\merged\\debug\\drawable-hdpi-v4_abc_ic_menu_cut_mtrl_alpha.png.flat",
         "source": "C:\\Users\\C.Pelton\\.gradle\\caches\\transforms-1\\files-1.1\\appcompat-v7-28.0.0.aar\\837343b25b50ca0324dbf5e96e4b7e10\\res\\drawable-hdpi-v4\\abc_ic_menu_cut_mtrl_alpha.png"
+    },
+    {
+        "merged": "C:\\Users\\C.Pelton\\Desktop\\Echo\\EchoPrototype\\app\\build\\intermediates\\res\\merged\\debug\\drawable_abc_ic_arrow_drop_right_black_24dp.xml.flat",
+        "source": "C:\\Users\\C.Pelton\\.gradle\\caches\\transforms-1\\files-1.1\\appcompat-v7-28.0.0.aar\\837343b25b50ca0324dbf5e96e4b7e10\\res\\drawable\\abc_ic_arrow_drop_right_black_24dp.xml"
     },
     {
         "merged": "C:\\Users\\C.Pelton\\Desktop\\Echo\\EchoPrototype\\app\\build\\intermediates\\res\\merged\\debug\\drawable-xxxhdpi-v4_abc_btn_check_to_on_mtrl_015.png.flat",
@@ -742,6 +758,10 @@
     {
         "merged": "C:\\Users\\C.Pelton\\Desktop\\Echo\\EchoPrototype\\app\\build\\intermediates\\res\\merged\\debug\\drawable-ldrtl-hdpi-v17_abc_spinner_mtrl_am_alpha.9.png.flat",
         "source": "C:\\Users\\C.Pelton\\.gradle\\caches\\transforms-1\\files-1.1\\appcompat-v7-28.0.0.aar\\837343b25b50ca0324dbf5e96e4b7e10\\res\\drawable-ldrtl-hdpi-v17\\abc_spinner_mtrl_am_alpha.9.png"
+    },
+    {
+        "merged": "C:\\Users\\C.Pelton\\Desktop\\Echo\\EchoPrototype\\app\\build\\intermediates\\res\\merged\\debug\\raw_tutfourbegin.mp3.flat",
+        "source": "C:\\Users\\C.Pelton\\Desktop\\Echo\\EchoPrototype\\app\\src\\main\\res\\raw\\tutfourbegin.mp3"
     },
     {
         "merged": "C:\\Users\\C.Pelton\\Desktop\\Echo\\EchoPrototype\\app\\build\\intermediates\\res\\merged\\debug\\drawable-v24_downdrawn.png.flat",
@@ -972,6 +992,10 @@
         "source": "C:\\Users\\C.Pelton\\.gradle\\caches\\transforms-1\\files-1.1\\appcompat-v7-28.0.0.aar\\837343b25b50ca0324dbf5e96e4b7e10\\res\\layout\\abc_list_menu_item_checkbox.xml"
     },
     {
+        "merged": "C:\\Users\\C.Pelton\\Desktop\\Echo\\EchoPrototype\\app\\build\\intermediates\\res\\merged\\debug\\raw_levelchange.mp3.flat",
+        "source": "C:\\Users\\C.Pelton\\Desktop\\Echo\\EchoPrototype\\app\\src\\main\\res\\raw\\levelchange.mp3"
+    },
+    {
         "merged": "C:\\Users\\C.Pelton\\Desktop\\Echo\\EchoPrototype\\app\\build\\intermediates\\res\\merged\\debug\\drawable-mdpi-v4_abc_spinner_mtrl_am_alpha.9.png.flat",
         "source": "C:\\Users\\C.Pelton\\.gradle\\caches\\transforms-1\\files-1.1\\appcompat-v7-28.0.0.aar\\837343b25b50ca0324dbf5e96e4b7e10\\res\\drawable-mdpi-v4\\abc_spinner_mtrl_am_alpha.9.png"
     },
@@ -1040,6 +1064,10 @@
         "source": "C:\\Users\\C.Pelton\\.gradle\\caches\\transforms-1\\files-1.1\\appcompat-v7-28.0.0.aar\\837343b25b50ca0324dbf5e96e4b7e10\\res\\drawable-ldrtl-hdpi-v17\\abc_ic_menu_cut_mtrl_alpha.png"
     },
     {
+        "merged": "C:\\Users\\C.Pelton\\Desktop\\Echo\\EchoPrototype\\app\\build\\intermediates\\res\\merged\\debug\\raw_reset.mp3.flat",
+        "source": "C:\\Users\\C.Pelton\\Desktop\\Echo\\EchoPrototype\\app\\src\\main\\res\\raw\\reset.mp3"
+    },
+    {
         "merged": "C:\\Users\\C.Pelton\\Desktop\\Echo\\EchoPrototype\\app\\build\\intermediates\\res\\merged\\debug\\mipmap-xhdpi_ic_launcher_round.png.flat",
         "source": "C:\\Users\\C.Pelton\\Desktop\\Echo\\EchoPrototype\\app\\src\\main\\res\\mipmap-xhdpi\\ic_launcher_round.png"
     },
@@ -1094,6 +1122,10 @@
     {
         "merged": "C:\\Users\\C.Pelton\\Desktop\\Echo\\EchoPrototype\\app\\build\\intermediates\\res\\merged\\debug\\drawable-mdpi-v4_abc_ic_star_black_16dp.png.flat",
         "source": "C:\\Users\\C.Pelton\\.gradle\\caches\\transforms-1\\files-1.1\\appcompat-v7-28.0.0.aar\\837343b25b50ca0324dbf5e96e4b7e10\\res\\drawable-mdpi-v4\\abc_ic_star_black_16dp.png"
+    },
+    {
+        "merged": "C:\\Users\\C.Pelton\\Desktop\\Echo\\EchoPrototype\\app\\build\\intermediates\\res\\merged\\debug\\raw_tutthreebegin.mp3.flat",
+        "source": "C:\\Users\\C.Pelton\\Desktop\\Echo\\EchoPrototype\\app\\src\\main\\res\\raw\\tutthreebegin.mp3"
     },
     {
         "merged": "C:\\Users\\C.Pelton\\Desktop\\Echo\\EchoPrototype\\app\\build\\intermediates\\res\\merged\\debug\\mipmap-xxxhdpi_ic_launcher.png.flat",
@@ -1314,6 +1346,10 @@
     {
         "merged": "C:\\Users\\C.Pelton\\Desktop\\Echo\\EchoPrototype\\app\\build\\intermediates\\res\\merged\\debug\\drawable-xhdpi-v4_abc_switch_track_mtrl_alpha.9.png.flat",
         "source": "C:\\Users\\C.Pelton\\.gradle\\caches\\transforms-1\\files-1.1\\appcompat-v7-28.0.0.aar\\837343b25b50ca0324dbf5e96e4b7e10\\res\\drawable-xhdpi-v4\\abc_switch_track_mtrl_alpha.9.png"
+    },
+    {
+        "merged": "C:\\Users\\C.Pelton\\Desktop\\Echo\\EchoPrototype\\app\\build\\intermediates\\res\\merged\\debug\\raw_tuttwovoice.mp3.flat",
+        "source": "C:\\Users\\C.Pelton\\Desktop\\Echo\\EchoPrototype\\app\\src\\main\\res\\raw\\tuttwovoice.mp3"
     },
     {
         "merged": "C:\\Users\\C.Pelton\\Desktop\\Echo\\EchoPrototype\\app\\build\\intermediates\\res\\merged\\debug\\raw_instructions.mp3.flat",
@@ -1632,6 +1668,10 @@
         "source": "C:\\Users\\C.Pelton\\.gradle\\caches\\transforms-1\\files-1.1\\appcompat-v7-28.0.0.aar\\837343b25b50ca0324dbf5e96e4b7e10\\res\\drawable-xxhdpi-v4\\abc_ic_star_half_black_16dp.png"
     },
     {
+        "merged": "C:\\Users\\C.Pelton\\Desktop\\Echo\\EchoPrototype\\app\\build\\intermediates\\res\\merged\\debug\\raw_tutfivebegin.mp3.flat",
+        "source": "C:\\Users\\C.Pelton\\Desktop\\Echo\\EchoPrototype\\app\\src\\main\\res\\raw\\tutfivebegin.mp3"
+    },
+    {
         "merged": "C:\\Users\\C.Pelton\\Desktop\\Echo\\EchoPrototype\\app\\build\\intermediates\\res\\merged\\debug\\drawable-mdpi-v4_abc_scrubber_control_to_pressed_mtrl_000.png.flat",
         "source": "C:\\Users\\C.Pelton\\.gradle\\caches\\transforms-1\\files-1.1\\appcompat-v7-28.0.0.aar\\837343b25b50ca0324dbf5e96e4b7e10\\res\\drawable-mdpi-v4\\abc_scrubber_control_to_pressed_mtrl_000.png"
     },
@@ -1674,6 +1714,10 @@
     {
         "merged": "C:\\Users\\C.Pelton\\Desktop\\Echo\\EchoPrototype\\app\\build\\intermediates\\res\\merged\\debug\\drawable-xxhdpi-v4_abc_ic_menu_paste_mtrl_am_alpha.png.flat",
         "source": "C:\\Users\\C.Pelton\\.gradle\\caches\\transforms-1\\files-1.1\\appcompat-v7-28.0.0.aar\\837343b25b50ca0324dbf5e96e4b7e10\\res\\drawable-xxhdpi-v4\\abc_ic_menu_paste_mtrl_am_alpha.png"
+    },
+    {
+        "merged": "C:\\Users\\C.Pelton\\Desktop\\Echo\\EchoPrototype\\app\\build\\intermediates\\res\\merged\\debug\\raw_tutsixbegin.mp3.flat",
+        "source": "C:\\Users\\C.Pelton\\Desktop\\Echo\\EchoPrototype\\app\\src\\main\\res\\raw\\tutsixbegin.mp3"
     },
     {
         "merged": "C:\\Users\\C.Pelton\\Desktop\\Echo\\EchoPrototype\\app\\build\\intermediates\\res\\merged\\debug\\drawable-mdpi-v4_abc_list_selector_disabled_holo_light.9.png.flat",

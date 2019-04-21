@@ -1,13 +1,11 @@
 1#
-10 10#
-wwwwwwwwww#
-wwwwwwwwww#
-wwwwewwwww#
-wwwwfwwwww#
-wwwwfwwwww#
-wffffwwwww#
-wfwwwwwwww#
-wfwwwwwwww#
-wPwwwwwwww#
-wwwwwwwwww#
+7 7#
+wwwwwww#
+wwwewww#
+wwwfwww#
+wwwfwww#
+wwwfwww#
+wwwPwww#
+wwwwwww#
 0#
+tutonebegin#
