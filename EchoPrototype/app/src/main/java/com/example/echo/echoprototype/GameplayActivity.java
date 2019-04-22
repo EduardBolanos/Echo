@@ -29,6 +29,12 @@ public class GameplayActivity extends AppCompatActivity {
    private MediaPlayer emptySpaceBack;
    private MediaPlayer passing;
    private MediaPlayer narrator;
+   private MediaPlayer doorUnlocking;
+   private MediaPlayer doorLocked;
+   private MediaPlayer slavicDoorHit;
+   private MediaPlayer keyJingle;
+   private MediaPlayer pickup;
+
    private int clearInventory;
    private int flags[] = {0,0,0,0,0,0,0,0,0,0,0};
     String primer = ("android.resource://" + "com.example.echo.echoprototype" + "/raw/");
@@ -66,6 +72,18 @@ public class GameplayActivity extends AppCompatActivity {
         passing = MediaPlayer.create(GameplayActivity.this, R.raw.goalresponse);
         passing.setVolume(volumeControl.soundFX, volumeControl.soundFX);
 
+        doorUnlocking = MediaPlayer.create(GameplayActivity.this, R.raw.unlockingdoor);
+        doorUnlocking.setVolume(volumeControl.soundFX,volumeControl.soundFX);
+
+        doorLocked = MediaPlayer.create(GameplayActivity.this, R.raw.doorlocked);
+        doorLocked.setVolume(volumeControl.soundFX,volumeControl.soundFX);
+
+        slavicDoorHit = MediaPlayer.create(GameplayActivity.this, R.raw.slav01);
+        slavicDoorHit.setVolume(volumeControl.soundFX,volumeControl.soundFX);
+
+        pickup = MediaPlayer.create(GameplayActivity.this, R.raw.okay);
+        pickup.setVolume(volumeControl.soundFX,volumeControl.soundFX);
+
         echo = new MediaPlayer[3]; // forward echo
         echo[0] = new MediaPlayer();
         echo[1] = new MediaPlayer();
@@ -77,12 +95,12 @@ public class GameplayActivity extends AppCompatActivity {
         echo[1].setVolume(volumeControl.soundFX, volumeControl.soundFX);
         echo[2].setVolume(volumeControl.soundFX, volumeControl.soundFX);
 
-        MediaPlayer leftSideWallTap = MediaPlayer.create(GameplayActivity.this, R.raw.echolocate); // TODO TIP
-        MediaPlayer rightSideWallTap = MediaPlayer.create(GameplayActivity.this, R.raw.echolocate);; // TODO TAP
+        leftSideWallTap = MediaPlayer.create(GameplayActivity.this, R.raw.echolocate); // TODO TIP
+        rightSideWallTap = MediaPlayer.create(GameplayActivity.this, R.raw.echolocate);; // TODO TAP
 
-        MediaPlayer emptySpaceLeft = MediaPlayer.create(GameplayActivity.this, R.raw.empty_space_left);;
-        MediaPlayer emptySpaceRight = MediaPlayer.create(GameplayActivity.this, R.raw.empty_space_right);
-        MediaPlayer emptySpaceBack = MediaPlayer.create(GameplayActivity.this, R.raw.empty_space);
+        emptySpaceLeft = MediaPlayer.create(GameplayActivity.this, R.raw.empty_space_left);;
+        emptySpaceRight = MediaPlayer.create(GameplayActivity.this, R.raw.empty_space_right);
+        emptySpaceBack = MediaPlayer.create(GameplayActivity.this, R.raw.empty_space);
         emptySpaceLeft.setVolume(volumeControl.soundFX, volumeControl.soundFX);
         emptySpaceRight.setVolume(volumeControl.soundFX, volumeControl.soundFX);
         emptySpaceBack.setVolume((volumeControl.soundFX * 100) / 200, (volumeControl.soundFX * 100) / 0200);
@@ -239,6 +257,7 @@ public class GameplayActivity extends AppCompatActivity {
             player.setOrientation((player.getOrientation())-1);
         }
         //play turn
+        turn = MediaPlayer.create(this, R.raw.swooshleft);
         turn.setVolume(volumeControl.soundFX, 0);
         turn.start();
     }
@@ -257,6 +276,7 @@ public class GameplayActivity extends AppCompatActivity {
             player.setOrientation((player.getOrientation())+1);
         }
         //play turn
+        turn = MediaPlayer.create(this, R.raw.swooshright);
         turn.setVolume(0, volumeControl.soundFX);
         turn.start();
     }
@@ -340,24 +360,52 @@ public class GameplayActivity extends AppCompatActivity {
             //play wall hit
             if(levelManager.getTileAtCoord(newPosition).getType() == 'w')
             {
+                hitWall.setVolume(volumeControl.soundFX,volumeControl.soundFX);
                 hitWall.start();
             }
             else if(levelManager.getTileAtCoord(newPosition).getType() == 'd')
             {
                 if(levelManager.openDoor(newPosition)){
-                    // TODO open door noise
+
+                    doorUnlocking.start();
                     player.setPosition(newPosition);
                     moveForward.start();
                 }
                 else {
-                    //TODO Jingle Key, door hit
+                    slavicDoorHit.setVolume(volumeControl.soundFX,volumeControl.soundFX);
+                    slavicDoorHit.start();
+                    try {
+                        Thread.sleep(1000);
+                    } catch (InterruptedException ex) {
+                        Thread.currentThread().interrupt();
+                    }
+                    doorLocked.setVolume(volumeControl.soundFX,volumeControl.soundFX);
+                    doorLocked.start();
+                    try {
+                        Thread.sleep(3000);
+                    } catch (InterruptedException ex) {
+                        Thread.currentThread().interrupt();
+                    }
+                    hammer = Uri.parse(primer + "key0" + levelManager.getDoorAtPosition(newPosition).getPasscode());
+                    keyJingle = MediaPlayer.create(GameplayActivity.this, hammer);
+
                 }
             }
             //if(Map.isLegal(newPosition)) == false  dont move forward play tileSound
         }
         if(levelManager.hasKey(newPosition)){
             if(levelManager.pickUpKey(newPosition)) {
-                // TODO Maybe pickup noise?
+                // TODO Maybe pickup noise?, temp pickup noise btw
+                pickup.setVolume(volumeControl.soundFX,volumeControl.soundFX);
+                pickup.start();
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException ex) {
+                    Thread.currentThread().interrupt();
+                }
+                hammer = Uri.parse(primer + "key0" + levelManager.getItemAtPosition(newPosition).getPassCode());
+                keyJingle = MediaPlayer.create(GameplayActivity.this, hammer);
+                keyJingle.start();
             }
             //other then that, you have already picked it up
 
@@ -435,7 +483,10 @@ public class GameplayActivity extends AppCompatActivity {
             }
         }
         if(levelManager.hasKey(leftPosition)){
-            // TODO key play noise
+            hammer = Uri.parse(primer + "key0" + levelManager.getItemAtPosition(leftPosition).getPassCode());
+            keyJingle = MediaPlayer.create(GameplayActivity.this, hammer);
+            keyJingle.setVolume(volumeControl.soundFX,0);
+            keyJingle.start();
             try {
                 Thread.sleep(1000);
             } catch (InterruptedException ex) {
@@ -477,7 +528,10 @@ public class GameplayActivity extends AppCompatActivity {
             }
         }
         if(levelManager.hasKey(rightPosition)){
-            // TODO key play noise
+            hammer = Uri.parse(primer + "key0" + levelManager.getItemAtPosition(rightPosition).getPassCode());
+            keyJingle = MediaPlayer.create(GameplayActivity.this, hammer);
+            keyJingle.setVolume(0,volumeControl.soundFX);
+            keyJingle.start();
             try {
                 Thread.sleep(1000);
             } catch (InterruptedException ex) {
@@ -519,7 +573,10 @@ public class GameplayActivity extends AppCompatActivity {
             }
         }
         if(levelManager.hasKey(backPosition)){
-            // TODO key play noise
+            hammer = Uri.parse(primer + "key0" + levelManager.getItemAtPosition(backPosition).getPassCode());
+            keyJingle = MediaPlayer.create(GameplayActivity.this, hammer);
+            keyJingle.setVolume((volumeControl.soundFX*100)/200,(volumeControl.soundFX*100)/200);
+            keyJingle.start();
             try {
                 Thread.sleep(1000);
             } catch (InterruptedException ex) {
@@ -568,7 +625,10 @@ public class GameplayActivity extends AppCompatActivity {
                     }
                 }
                 if(levelManager.hasKey(leftPosition)){
-                    // TODO key play noise
+                    hammer = Uri.parse(primer + "key0" + levelManager.getItemAtPosition(leftPosition).getPassCode());
+                    keyJingle = MediaPlayer.create(GameplayActivity.this, hammer);
+                    keyJingle.setVolume((volumeControl.soundFX*volumePower)/200,0);
+                    keyJingle.start();
                     try {
                         Thread.sleep(1000);
                     } catch (InterruptedException ex) {
@@ -609,7 +669,10 @@ public class GameplayActivity extends AppCompatActivity {
                     }
                 }
                 if(levelManager.hasKey(rightPosition)){
-                    // TODO key play noise
+                    hammer = Uri.parse(primer + "key0" + levelManager.getItemAtPosition(rightPosition).getPassCode());
+                    keyJingle = MediaPlayer.create(GameplayActivity.this, hammer);
+                    keyJingle.setVolume(0,(volumeControl.soundFX*volumePower)/200);
+                    keyJingle.start();
                     try {
                         Thread.sleep(1000);
                     } catch (InterruptedException ex) {
@@ -648,7 +711,10 @@ public class GameplayActivity extends AppCompatActivity {
                 }
             }
             if(levelManager.hasKey(newPosition)){
-                // TODO key play noise
+                hammer = Uri.parse(primer + "key0" + levelManager.getItemAtPosition(newPosition).getPassCode());
+                keyJingle = MediaPlayer.create(GameplayActivity.this, hammer);
+                keyJingle.setVolume((volumeControl.soundFX*volumePower)/200,(volumeControl.soundFX*volumePower)/200);
+                keyJingle.start();
                 try {
                     Thread.sleep(1000);
                 } catch (InterruptedException ex) {
@@ -740,7 +806,10 @@ public class GameplayActivity extends AppCompatActivity {
                         Thread.currentThread().interrupt();
                     }
                     if(levelManager.hasKey(leftPosition)){
-                        // TODO key play noise
+                        hammer = Uri.parse(primer + "key0" + levelManager.getItemAtPosition(leftPosition).getPassCode());
+                        keyJingle = MediaPlayer.create(GameplayActivity.this, hammer);
+                        keyJingle.setVolume((volumeControl.soundFX*volumePower)/200,0);
+                        keyJingle.start();
                         try {
                             Thread.sleep(1000);
                         } catch (InterruptedException ex) {
@@ -785,7 +854,10 @@ public class GameplayActivity extends AppCompatActivity {
                     }
                 }
                 if(levelManager.hasKey(rightPosition)){
-                    // TODO key play noise
+                    hammer = Uri.parse(primer + "key0" + levelManager.getItemAtPosition(rightPosition).getPassCode());
+                    keyJingle = MediaPlayer.create(GameplayActivity.this, hammer);
+                    keyJingle.setVolume(0,(volumeControl.soundFX*volumePower)/200);
+                    keyJingle.start();
                     try {
                         Thread.sleep(1000);
                     } catch (InterruptedException ex) {

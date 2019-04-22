@@ -241,4 +241,26 @@ public class LevelManager {
     public String getLevel(int cronologicalOrder){
         return mLevels.get(cronologicalOrder);
     }
+
+    public Door getDoorAtPosition(int[] position){
+        Door theDoor = null;
+        for(int i = 0; i < mDoors.size(); i++){
+            theDoor = mDoors.get(i);
+            if(position[0] == theDoor.mLocation[0] && position[1] == theDoor.mLocation[1]){
+                return theDoor;
+            }
+        }
+        return null;
+    }
+
+    public Item getItemAtPosition(int[] position){
+        Item theItem = null;
+        for(int i = 0; i < mItemsToSpawn.size(); i++){
+             theItem= mItemsToSpawn.get(i);
+            if(position[0] == theItem.getLocation()[0] && position[1] == theItem.getLocation()[1]){
+                return theItem;
+            }
+        }
+        return null;
+    }
 }

@@ -1,4 +1,4 @@
-#Thu Apr 18 23:58:28 PDT 2019
-base.0=C\:\\Users\\C.Pelton\\Desktop\\Echo\\EchoPrototype\\app\\build\\intermediates\\transforms\\dexMerger\\debug\\25
+#Mon Apr 22 14:15:06 PDT 2019
+base.0=/Users/eduard.bolanos642/Desktop/Echo/EchoPrototype/app/build/intermediates/transforms/dexMerger/debug/9
 path.0=classes.dex
 renamed.0=classes.dex
