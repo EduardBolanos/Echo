@@ -1,14 +1,14 @@
 #Internal package file, do not edit.
-#Mon Apr 22 14:27:55 PDT 2019
-4.path=classes.dex
+#Mon Apr 22 15:27:12 PDT 2019
+4.path=level4.txt
 8.set=ASSET
-6.path=level1.txt
+6.path=level5.txt
 0.baseType=DIRECTORY
 5.baseType=DIRECTORY
 1.base=/Users/eduard.bolanos642/Desktop/Echo/EchoPrototype/app/build/intermediates/assets/debug
-8.path=level5.txt
-3.base=/Users/eduard.bolanos642/Desktop/Echo/EchoPrototype/app/build/intermediates/assets/debug
-4.set=DEX
+8.path=test.txt
+3.base=/Users/eduard.bolanos642/Desktop/Echo/EchoPrototype/app/build/intermediates/transforms/dexMerger/debug/0
+4.set=ASSET
 5.base=/Users/eduard.bolanos642/Desktop/Echo/EchoPrototype/app/build/intermediates/assets/debug
 7.base=/Users/eduard.bolanos642/Desktop/Echo/EchoPrototype/app/build/intermediates/assets/debug
 9.base=/Users/eduard.bolanos642/Desktop/Echo/EchoPrototype/app/build/intermediates/assets/debug
@@ -16,18 +16,18 @@
 0.set=ASSET
 6.baseType=DIRECTORY
 7.set=ASSET
-3.set=ASSET
+3.set=DEX
 2.baseType=DIRECTORY
-1.path=level4.txt
+1.path=level1.txt
 7.baseType=DIRECTORY
-3.path=test.txt
-5.path=level6.txt
+3.path=classes.dex
+5.path=level3.txt
 0.base=/Users/eduard.bolanos642/Desktop/Echo/EchoPrototype/app/build/intermediates/assets/debug
-7.path=level3.txt
+7.path=level8.txt
 9.path=level7.txt
 6.set=ASSET
 2.base=/Users/eduard.bolanos642/Desktop/Echo/EchoPrototype/app/build/intermediates/assets/debug
-4.base=/Users/eduard.bolanos642/Desktop/Echo/EchoPrototype/app/build/intermediates/transforms/dexMerger/debug/17
+4.base=/Users/eduard.bolanos642/Desktop/Echo/EchoPrototype/app/build/intermediates/assets/debug
 3.baseType=DIRECTORY
 6.base=/Users/eduard.bolanos642/Desktop/Echo/EchoPrototype/app/build/intermediates/assets/debug
 8.base=/Users/eduard.bolanos642/Desktop/Echo/EchoPrototype/app/build/intermediates/assets/debug
@@ -38,6 +38,6 @@ count=10
 4.baseType=DIRECTORY
 5.set=ASSET
 9.baseType=DIRECTORY
-0.path=level2.txt
+0.path=level6.txt
 1.set=ASSET
-2.path=level8.txt
+2.path=level2.txt

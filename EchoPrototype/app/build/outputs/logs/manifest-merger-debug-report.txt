@@ -35,7 +35,7 @@ INJECTED from /Users/eduard.bolanos642/Desktop/Echo/EchoPrototype/app/src/main/A
 INJECTED from /Users/eduard.bolanos642/Desktop/Echo/EchoPrototype/app/src/main/AndroidManifest.xml:2:1-28:12
 INJECTED from /Users/eduard.bolanos642/Desktop/Echo/EchoPrototype/app/src/main/AndroidManifest.xml:2:1-28:12
 	package
-		ADDED from /Users/eduard.bolanos642/Desktop/Echo/EchoPrototype/app/src/main/AndroidManifest.xml:3:5-45
+		ADDED from /Users/eduard.bolanos642/Desktop/Echo/EchoPrototype/app/src/main/AndroidManifest.xml:3:5-44
 		INJECTED from /Users/eduard.bolanos642/Desktop/Echo/EchoPrototype/app/src/main/AndroidManifest.xml
 		INJECTED from /Users/eduard.bolanos642/Desktop/Echo/EchoPrototype/app/src/main/AndroidManifest.xml
 	android:versionName
@@ -70,10 +70,10 @@ MERGED from [com.android.support:versionedparcelable:28.0.0] /Users/eduard.bolan
 		ADDED from /Users/eduard.bolanos642/Desktop/Echo/EchoPrototype/app/src/main/AndroidManifest.xml:6:9-35
 	android:theme
 		ADDED from /Users/eduard.bolanos642/Desktop/Echo/EchoPrototype/app/src/main/AndroidManifest.xml:11:9-40
-activity#com.example.echo.echoprototype.MainActivity
+activity#com.example.echo.echo_v_1_0_2.MainActivity
 ADDED from /Users/eduard.bolanos642/Desktop/Echo/EchoPrototype/app/src/main/AndroidManifest.xml:12:9-18:20
 	android:name
-		ADDED from /Users/eduard.bolanos642/Desktop/Echo/EchoPrototype/app/src/main/AndroidManifest.xml:12:19-47
+		ADDED from /Users/eduard.bolanos642/Desktop/Echo/EchoPrototype/app/src/main/AndroidManifest.xml:12:19-76
 intent-filter#action:name:android.intent.action.MAIN+category:name:android.intent.category.LAUNCHER
 ADDED from /Users/eduard.bolanos642/Desktop/Echo/EchoPrototype/app/src/main/AndroidManifest.xml:13:13-17:29
 action#android.intent.action.MAIN
@@ -84,14 +84,14 @@ category#android.intent.category.LAUNCHER
 ADDED from /Users/eduard.bolanos642/Desktop/Echo/EchoPrototype/app/src/main/AndroidManifest.xml:16:17-77
 	android:name
 		ADDED from /Users/eduard.bolanos642/Desktop/Echo/EchoPrototype/app/src/main/AndroidManifest.xml:16:27-74
-activity#com.example.echo.echoprototype.InGameMenu
-ADDED from /Users/eduard.bolanos642/Desktop/Echo/EchoPrototype/app/src/main/AndroidManifest.xml:19:9-57
+activity#com.example.echo.echo_v_1_0_2.InGameMenu
+ADDED from /Users/eduard.bolanos642/Desktop/Echo/EchoPrototype/app/src/main/AndroidManifest.xml:19:9-86
 	android:name
-		ADDED from /Users/eduard.bolanos642/Desktop/Echo/EchoPrototype/app/src/main/AndroidManifest.xml:19:19-45
-activity#com.example.echo.echoprototype.GameplayActivity
+		ADDED from /Users/eduard.bolanos642/Desktop/Echo/EchoPrototype/app/src/main/AndroidManifest.xml:19:19-74
+activity#com.example.echo.echo_v_1_0_2.GameplayActivity
 ADDED from /Users/eduard.bolanos642/Desktop/Echo/EchoPrototype/app/src/main/AndroidManifest.xml:20:9-21:24
 	android:name
-		ADDED from /Users/eduard.bolanos642/Desktop/Echo/EchoPrototype/app/src/main/AndroidManifest.xml:20:19-51
+		ADDED from /Users/eduard.bolanos642/Desktop/Echo/EchoPrototype/app/src/main/AndroidManifest.xml:20:19-80
 meta-data#preloaded_fonts
 ADDED from /Users/eduard.bolanos642/Desktop/Echo/EchoPrototype/app/src/main/AndroidManifest.xml:23:9-25:57
 	android:resource

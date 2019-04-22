@@ -3,7 +3,7 @@ apply plugin: 'com.android.application'
 android {
     compileSdkVersion 28
     defaultConfig {
-        applicationId "com.example.echo.echoprototype"
+        applicationId "com.example.echo.echo_v_1_0_2"
         minSdkVersion 27
         targetSdkVersion 28
         versionCode 1
