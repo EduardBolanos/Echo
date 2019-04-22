@@ -20,11 +20,12 @@ public class InGameMenu extends AppCompatActivity {
             "Vibration Level", "Reset Volume Values", "Return to Menu", "Instructions"};
     // create these voice files
     private int menuVoice[] = {R.raw.inventory, R.raw.explain, R.raw.soundfx, R.raw.voicefx, R.raw.amfx,
-            R.raw.vibration, R.raw.reset, R.raw.returntomenu ,R.raw.help};
-    private int menuSize[] = {2, 7};
+            R.raw.vibration, R.raw.reset, R.raw.reset ,R.raw.returntomenu ,R.raw.help}; // TODO get a reset
+    private int menuSize[] = {2, 8};
     public String primer = ("android.resource://" + "com.example.echo.echoprototype" + "/raw/"); // Incase things happen such as package reference for public
     private Uri hammer;
     private int loc;
+    private boolean resetLevel;
     private MediaPlayer mediaPlayer;
     private MediaPlayer ambiance; // WE ARE APPARENTLY BRITISH DEVELOPERS TODO, get something
     private int nodeSize;
@@ -46,6 +47,7 @@ public class InGameMenu extends AppCompatActivity {
         //gives memes /*IMPORTANT*/
         nodeSize = 0;
         volumeControl = new SoundSettings();
+        resetLevel = false;
         this.loadAndSetItems();
         FileInputStream settings;
         try {
@@ -78,6 +80,7 @@ public class InGameMenu extends AppCompatActivity {
     @Override
     protected void onPause(){
         this.saveSettings();
+        resetLevel = false;
         super.onPause();
 
     }
@@ -224,6 +227,12 @@ public class InGameMenu extends AppCompatActivity {
                          */
                         case 0:
                             currentNode = fatherNode;
+                            Intent output = new Intent();
+                            output.putExtra("ShutOffState", false);
+                            output.putExtra("resetLevel", resetLevel);
+                            setResult(RESULT_OK, output);
+                            this.saveSettings();
+                            resetLevel = false;
                             finish();
                             break;
                         /**
@@ -345,15 +354,23 @@ public class InGameMenu extends AppCompatActivity {
                                 slide.setVolume(volumeControl.soundFX, volumeControl.soundFX);
                                 context.setVolume(volumeControl.soundFX, volumeControl.soundFX);
                                 break;
-                            case 8:
+                            case 7:
+                                resetLevel = true;
+                                mediaPlayer = MediaPlayer.create(InGameMenu.this, R.raw.instructions);
+                                mediaPlayer.start(); // TODO change audio to confirm
+                                break;
+                            case 9:
                                 mediaPlayer = MediaPlayer.create(InGameMenu.this, R.raw.instructions);
                                 mediaPlayer.start();
                                 break;
-                            case 7:
+                            case 8:
                                 // invokes save state in game, invokes finish state in game to go back to main menu
                                 Intent output = new Intent();
                                 output.putExtra("ShutOffState", true);
+                                output.putExtra("resetLevel", resetLevel);
                                 setResult(RESULT_OK, output);
+                                this.saveSettings();
+                                resetLevel = false;
                                 finish();
                                 break;
                         }

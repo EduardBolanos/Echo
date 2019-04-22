@@ -147,7 +147,11 @@ public class GameplayActivity extends AppCompatActivity {
             }
             this.generateLevelFromConfigFile("saveGame",true);
         if (requestCode == 1234 && resultCode == RESULT_OK && data != null) {
-            boolean test = data.getBooleanExtra("ShutOffState", false);
+            boolean test = data.getBooleanExtra("resetLevel", false);
+            if(test){
+                this.resetLevel();
+            }
+            test = data.getBooleanExtra("ShutOffState", false);
             if(test){
                 finish();
             }
@@ -1348,6 +1352,12 @@ public class GameplayActivity extends AppCompatActivity {
      }
     public void nextLevel(){
         generateLevelFromConfigFile(levelManager.getLevel(levelManager.getCurrentLevel()), false);
+        player.setOrientation(levelManager.getPlayerSpawnOrientation());
+        player.setPosition(levelManager.getPlayerSpawnPosition());
+    }
+
+    public void resetLevel(){
+        generateLevelFromConfigFile(levelManager.getLevel(levelManager.getCurrentLevel()-1), false);
         player.setOrientation(levelManager.getPlayerSpawnOrientation());
         player.setPosition(levelManager.getPlayerSpawnPosition());
     }
