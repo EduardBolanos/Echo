@@ -406,9 +406,10 @@ public class GameplayActivity extends AppCompatActivity {
                 Thread.currentThread().interrupt();
             }
         } else if (leftTile == 'w') {
-            // TODO play wall left sound near
+            hitWall.setVolume(volumeControl.soundFX, 0);
+            hitWall.start();
             try {
-                Thread.sleep(300);
+                Thread.sleep(500);
             } catch (InterruptedException ex) {
                 Thread.currentThread().interrupt();
             }
@@ -447,14 +448,16 @@ public class GameplayActivity extends AppCompatActivity {
                 Thread.currentThread().interrupt();
             }
         } else if (rightTile == 'w') {
-            emptySpaceRight.start();
+            hitWall.setVolume(0, volumeControl.soundFX);
+            hitWall.start();
             try {
-                Thread.sleep(300);
+                Thread.sleep(500);
             } catch (InterruptedException ex) {
                 Thread.currentThread().interrupt();
             }
         } else if (rightTile == 'f') {
-            // TODO play floor sound near
+            emptySpaceLeft.setVolume(0, volumeControl.soundFX);
+            emptySpaceLeft.start();
             try {
                 Thread.sleep(500);
             } catch (InterruptedException ex) {
@@ -487,16 +490,18 @@ public class GameplayActivity extends AppCompatActivity {
                 Thread.currentThread().interrupt();
             }
         } else if (backTile == 'w') {
-            // TODO play wall sound near
+            hitWall.setVolume((volumeControl.soundFX*100)/200, (volumeControl.soundFX*100)/200);
+            hitWall.start();
             try {
-                Thread.sleep(300);
+                Thread.sleep(500);
             } catch (InterruptedException ex) {
                 Thread.currentThread().interrupt();
             }
         } else if (backTile == 'f') {
+            emptySpaceBack.setVolume(volumeControl.soundFX, volumeControl.soundFX);
             emptySpaceBack.start();
             try {
-                Thread.sleep(500);
+                Thread.sleep(2000);
             } catch (InterruptedException ex) {
                 Thread.currentThread().interrupt();
             }
@@ -546,7 +551,7 @@ public class GameplayActivity extends AppCompatActivity {
                     emptySpaceLeft.start();
                     //stop playing leftSound
                     try {
-                        Thread.sleep(300);
+                        Thread.sleep(500);
                     } catch (InterruptedException ex) {
                         Thread.currentThread().interrupt();
                     }
@@ -586,7 +591,7 @@ public class GameplayActivity extends AppCompatActivity {
                 } else if (rightTile == 'f') {
                     emptySpaceRight.start();
                     try {
-                        Thread.sleep(300);
+                        Thread.sleep(500);
                     } catch (InterruptedException ex) {
                         Thread.currentThread().interrupt();
                     }
@@ -699,20 +704,23 @@ public class GameplayActivity extends AppCompatActivity {
                 }
                 leftTile = levelManager.getTileAtCoord(leftPosition).getType();
                 if (leftTile == 'e') {
-                    // TODO play goal sound
+                    passing.setVolume((volumeControl.soundFX*100)/200, 0);
+                    passing.start();
                     try {
                         Thread.sleep(1000);
                     } catch (InterruptedException ex) {
                         Thread.currentThread().interrupt();
                     }
                 } else if (leftTile == 'w') {
-                    // TODO play wall left sound
+                    hitWall.setVolume(volumeControl.soundFX, 0);
+                    hitWall.start();
                     try {
                         Thread.sleep(600);
                     } catch (InterruptedException ex) {
                         Thread.currentThread().interrupt();
                     }
                 } else if (leftTile == 'f') {
+                    emptySpaceLeft.setVolume(volumeControl.soundFX, 0);
                     emptySpaceLeft.start();
                     //stop playing leftSound
                     try {
@@ -740,20 +748,23 @@ public class GameplayActivity extends AppCompatActivity {
                 rightPosition = moveFromPosition(rightOrientation, newPosition);
                 rightTile = levelManager.getTileAtCoord(rightPosition).getType();
                 if (rightTile == 'e') {
-                    // TODO play goal sound
+                    passing.setVolume(0, (volumeControl.soundFX*100)/200);
+                    passing.start();
                     try {
                         Thread.sleep(1000);
                     } catch (InterruptedException ex) {
                         Thread.currentThread().interrupt();
                     }
                 } else if (rightTile == 'w') {
-                    // TODO play wall sound
+                    hitWall.setVolume(0, volumeControl.soundFX);
+                    hitWall.start();
                     try {
                         Thread.sleep(600);
                     } catch (InterruptedException ex) {
                         Thread.currentThread().interrupt();
                     }
                 } else if (rightTile == 'f') {
+                    emptySpaceRight.setVolume(0, volumeControl.soundFX);
                     emptySpaceRight.start();
                     try {
                         Thread.sleep(300);

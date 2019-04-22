@@ -173,6 +173,7 @@ public class InGameMenu extends AppCompatActivity {
                     if(currentMenuContextIG == 2 && nodeSize != 0){
                         currentNode = currentNode.getPrevious();
                         hammer = Uri.parse((primer + currentNode.getData().getAuditoryId()));
+                        //TODO key sound logic
                         mediaPlayer = MediaPlayer.create(InGameMenu.this, hammer);
                         menuText.setText((String) currentNode.getData().getName());
                     }
@@ -197,6 +198,7 @@ public class InGameMenu extends AppCompatActivity {
                     if(currentMenuContextIG == 2 && nodeSize != 0){
                         currentNode = currentNode.getNext();
                         hammer = Uri.parse((primer + currentNode.getData().getAuditoryId()));
+                        // TODO key logic
                         mediaPlayer = MediaPlayer.create(InGameMenu.this, hammer);
                         menuText.setText((String) currentNode.getData().getName());
                     }
@@ -254,6 +256,7 @@ public class InGameMenu extends AppCompatActivity {
                                     currentMenuContextIG = 2;
                                     hammer = Uri.parse((primer + currentNode.getData().getAuditoryId()));
                                     mediaPlayer = MediaPlayer.create(InGameMenu.this, hammer);
+                                    // TODO add key sound logic
                                     mediaPlayer.setVolume(volumeControl.voiceFX, volumeControl.voiceFX);
                                     mediaPlayer.start();
                                     menuText.setText((String) currentNode.getData().getName());

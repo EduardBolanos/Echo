@@ -10,9 +10,9 @@ wwwwwd(2)wwwww#
 wwwwwfwwwwww#
 wwwwwfwwwwww#
 wwwwwfwwwwww#
-wwk(1)ffPffk(2)ww#
+wwk(3)ffPffk(2)ww#
 wwwwwwwwwwww#
 0#
 none#
 2#Ain't no Rusty Key#notrusty#none#0#
-1#Rusty Key#rustykey#none#0#
+3#Rusty Key#rustykey#none#0#
