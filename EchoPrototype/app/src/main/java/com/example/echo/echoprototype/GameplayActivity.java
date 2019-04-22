@@ -80,8 +80,12 @@ public class GameplayActivity extends AppCompatActivity {
         MediaPlayer leftSideWallTap = MediaPlayer.create(GameplayActivity.this, R.raw.echolocate); // TODO TIP
         MediaPlayer rightSideWallTap = MediaPlayer.create(GameplayActivity.this, R.raw.echolocate);; // TODO TAP
 
-        MediaPlayer emptySpaceLeft = MediaPlayer.create(GameplayActivity.this, R.raw.swooshleft);;
-        MediaPlayer emptySpaceRight = MediaPlayer.create(GameplayActivity.this, R.raw.swooshright);
+        MediaPlayer emptySpaceLeft = MediaPlayer.create(GameplayActivity.this, R.raw.empty_space_left);;
+        MediaPlayer emptySpaceRight = MediaPlayer.create(GameplayActivity.this, R.raw.empty_space_right);
+        MediaPlayer emptySpaceBack = MediaPlayer.create(GameplayActivity.this, R.raw.empty_space);
+        emptySpaceLeft.setVolume(volumeControl.soundFX, volumeControl.soundFX);
+        emptySpaceRight.setVolume(volumeControl.soundFX, volumeControl.soundFX);
+        emptySpaceBack.setVolume((volumeControl.soundFX * 100) / 200, (volumeControl.soundFX * 100) / 0200);
 
         levelChange = MediaPlayer.create(this, R.raw.levelchange);
         levelChange.setVolume(volumeControl.soundFX, volumeControl.soundFX);
@@ -394,7 +398,8 @@ public class GameplayActivity extends AppCompatActivity {
         backPosition = moveFromPosition(backOrientation, position);
         leftTile = levelManager.getTileAtCoord(leftPosition).getType(); // What is near player's left side?
         if (leftTile == 'e') {
-            // TODO play goal sound near
+            passing.setVolume(volumeControl.soundFX, 0);
+            passing.start();
             try {
                 Thread.sleep(1000);
             } catch (InterruptedException ex) {
@@ -408,7 +413,7 @@ public class GameplayActivity extends AppCompatActivity {
                 Thread.currentThread().interrupt();
             }
         } else if (leftTile == 'f') {
-            // TODO play wind sound near
+            emptySpaceLeft.start();
             //stop playing leftSound
             try {
                 Thread.sleep(500);
@@ -434,14 +439,15 @@ public class GameplayActivity extends AppCompatActivity {
         }
         rightTile = levelManager.getTileAtCoord(rightPosition).getType(); // What is near the players' right side?
         if (rightTile == 'e') {
-            // TODO play goal sound near
+            passing.setVolume(0, volumeControl.soundFX);
+            passing.start();
             try {
                 Thread.sleep(1000);
             } catch (InterruptedException ex) {
                 Thread.currentThread().interrupt();
             }
         } else if (rightTile == 'w') {
-            // TODO play wall sound near
+            emptySpaceRight.start();
             try {
                 Thread.sleep(300);
             } catch (InterruptedException ex) {
@@ -473,7 +479,8 @@ public class GameplayActivity extends AppCompatActivity {
         }
         char backTile = levelManager.getTileAtCoord(backPosition).getType(); // what is near the player's back?
         if (backTile == 'e') {
-            // TODO play goal sound near
+            passing.setVolume((volumeControl.soundFX*100)/200, (volumeControl.soundFX*100)/200);
+            passing.start();
             try {
                 Thread.sleep(1000);
             } catch (InterruptedException ex) {
@@ -487,7 +494,7 @@ public class GameplayActivity extends AppCompatActivity {
                 Thread.currentThread().interrupt();
             }
         } else if (backTile == 'f') {
-            // TODO play floor sound near
+            emptySpaceBack.start();
             try {
                 Thread.sleep(500);
             } catch (InterruptedException ex) {
@@ -521,7 +528,8 @@ public class GameplayActivity extends AppCompatActivity {
                 leftPosition = moveFromPosition(leftOrientation, newPosition);
                 leftTile = levelManager.getTileAtCoord(leftPosition).getType(); // checks left area
                 if (leftTile == 'e') {
-                    // TODO play goal sound
+                    passing.setVolume((volumeControl.soundFX*100)/200, 0);
+                    passing.start();
                     try {
                         Thread.sleep(1000);
                     } catch (InterruptedException ex) {
@@ -535,7 +543,7 @@ public class GameplayActivity extends AppCompatActivity {
                         Thread.currentThread().interrupt();
                     }
                 } else if (leftTile == 'f') {
-                    // TODO play wind sound
+                    emptySpaceLeft.start();
                     //stop playing leftSound
                     try {
                         Thread.sleep(300);
@@ -561,7 +569,8 @@ public class GameplayActivity extends AppCompatActivity {
                 rightPosition = moveFromPosition(rightOrientation, newPosition);
                 rightTile = levelManager.getTileAtCoord(rightPosition).getType(); // checks right area
                 if (rightTile == 'e') {
-                    // TODO play goal sound
+                    passing.setVolume(0, (volumeControl.soundFX*200)/100);
+                    passing.start();
                     try {
                         Thread.sleep(1000);
                     } catch (InterruptedException ex) {
@@ -575,7 +584,7 @@ public class GameplayActivity extends AppCompatActivity {
                         Thread.currentThread().interrupt();
                     }
                 } else if (rightTile == 'f') {
-                    // TODO play floor sound
+                    emptySpaceRight.start();
                     try {
                         Thread.sleep(300);
                     } catch (InterruptedException ex) {
@@ -621,13 +630,13 @@ public class GameplayActivity extends AppCompatActivity {
             }
             if (levelManager.getTileAtCoord(newPosition).getType() == 'e') {
 //                echo.stop();
+                passing.setVolume(volumeControl.soundFX, volumeControl.soundFX);
                 passing.start();
                 try {
                     Thread.sleep(1000);
                 } catch (InterruptedException ex) {
                     Thread.currentThread().interrupt();
                 }
-                passing.stop();
             }
             if(levelManager.hasKey(newPosition)){
                 // TODO key play noise
@@ -704,7 +713,7 @@ public class GameplayActivity extends AppCompatActivity {
                         Thread.currentThread().interrupt();
                     }
                 } else if (leftTile == 'f') {
-                    // TODO play wind sound
+                    emptySpaceLeft.start();
                     //stop playing leftSound
                     try {
                         Thread.sleep(300);
@@ -745,7 +754,7 @@ public class GameplayActivity extends AppCompatActivity {
                         Thread.currentThread().interrupt();
                     }
                 } else if (rightTile == 'f') {
-                    // TODO play floor sound
+                    emptySpaceRight.start();
                     try {
                         Thread.sleep(300);
                     } catch (InterruptedException ex) {
@@ -1071,9 +1080,7 @@ public class GameplayActivity extends AppCompatActivity {
                                     }
                                 }
                             }
-                            for (int x = 0; x < refer.size(); x++) {
-                             levelManager.addItem(refer.get(x));
-                            }
+                            levelManager.setItemsToSpawn(refer);
                             data = -1;
                     }
                     }

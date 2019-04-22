@@ -260,6 +260,8 @@ public class InGameMenu extends AppCompatActivity {
                                 }
                                 else{
                                     mediaPlayer = MediaPlayer.create(InGameMenu.this, R.raw.noitem);
+                                    mediaPlayer.setVolume(volumeControl.voiceFX, volumeControl.voiceFX);
+                                    mediaPlayer.start();
                                 }
                                 break;
                             case 1:

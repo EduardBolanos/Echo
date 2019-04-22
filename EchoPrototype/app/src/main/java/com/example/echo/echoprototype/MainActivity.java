@@ -298,11 +298,12 @@ public class MainActivity extends AppCompatActivity {
                                     menuText.setText((String) menu[10]);
                                     gameState = false;
                                 }catch(Exception e){
+                                    mediaPlayer = MediaPlayer.create(MainActivity.this, R.raw.continueerror);
                                 }
-                                mediaPlayer = MediaPlayer.create(MainActivity.this, R.raw.yes); // STUB
                                 break;
                             case 10:
                                 mediaPlayer = MediaPlayer.create(MainActivity.this, R.raw.change);
+                                mediaPlayer.setVolume(volumeControl.soundFX, volumeControl.soundFX);
                                 if(gameState) {
                                     gameplayActivity.putExtra("gameState", "yes");
                                 }else{
