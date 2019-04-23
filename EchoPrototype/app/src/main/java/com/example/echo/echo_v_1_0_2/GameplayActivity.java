@@ -368,6 +368,7 @@ public class GameplayActivity extends AppCompatActivity {
             //play wall hit
             if(levelManager.getTileAtCoord(newPosition).getType() == 'w')
             {
+                hitWall = MediaPlayer.create(GameplayActivity.this, R.raw.wall_collision);
                 hitWall.setVolume(volumeControl.soundFX,volumeControl.soundFX);
                 hitWall.start();
             }
@@ -466,6 +467,7 @@ public class GameplayActivity extends AppCompatActivity {
                 Thread.currentThread().interrupt();
             }
         } else if (leftTile == 'w') {
+            hitWall = MediaPlayer.create(GameplayActivity.this, R.raw.wall_collision);
             hitWall.setVolume(volumeControl.soundFX, 0);
             hitWall.start();
             try {
@@ -512,6 +514,7 @@ public class GameplayActivity extends AppCompatActivity {
                 Thread.currentThread().interrupt();
             }
         } else if (rightTile == 'w') {
+            hitWall = MediaPlayer.create(GameplayActivity.this, R.raw.wall_collision);
             hitWall.setVolume(0, volumeControl.soundFX);
             hitWall.start();
             try {
@@ -558,6 +561,7 @@ public class GameplayActivity extends AppCompatActivity {
                 Thread.currentThread().interrupt();
             }
         } else if (backTile == 'w') {
+            hitWall = MediaPlayer.create(GameplayActivity.this, R.raw.wall_collision);
             hitWall.setVolume((volumeControl.soundFX*100)/200, (volumeControl.soundFX*100)/200);
             hitWall.start();
             try {
@@ -755,6 +759,7 @@ public class GameplayActivity extends AppCompatActivity {
         backTile = levelManager.getTileAtCoord(newPosition).getType(); // using backtile as forwardtile,
          if (backTile == 'w') {
              //play wall
+             hitWall = MediaPlayer.create(GameplayActivity.this, R.raw.wall_collision);
              hitWall.setVolume((volumeControl.soundFX * 100) / 200, (volumeControl.soundFX * 100) / 200);
              // 1/2 volume for forward wall
              hitWall.start();
@@ -793,6 +798,7 @@ public class GameplayActivity extends AppCompatActivity {
                         Thread.currentThread().interrupt();
                     }
                 } else if (leftTile == 'w') {
+                    hitWall = MediaPlayer.create(GameplayActivity.this, R.raw.wall_collision);
                     hitWall.setVolume(volumeControl.soundFX, 0);
                     hitWall.start();
                     try {
@@ -841,6 +847,7 @@ public class GameplayActivity extends AppCompatActivity {
                         Thread.currentThread().interrupt();
                     }
                 } else if (rightTile == 'w') {
+                    hitWall = MediaPlayer.create(GameplayActivity.this, R.raw.wall_collision);
                     hitWall.setVolume(0, volumeControl.soundFX);
                     hitWall.start();
                     try {
