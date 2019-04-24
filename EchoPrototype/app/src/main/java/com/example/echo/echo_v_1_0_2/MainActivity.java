@@ -22,6 +22,7 @@ public class MainActivity extends AppCompatActivity {
     MediaPlayer slide;
     MediaPlayer context;
     MediaPlayer beat;
+    private ChopstickMan nick;
 
 
     float x1, x2, y1, y2;
@@ -63,6 +64,10 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         /*IMPORTANT*/
         setContentView(R.layout.activity_main);
+
+        nick = new ChopstickMan();
+        nick.m_AJ = true;
+
         Runtime r = Runtime.getRuntime();
         r.gc();
 
@@ -116,83 +121,82 @@ public class MainActivity extends AppCompatActivity {
         /**
          * Cleans up Excess Audio Clips - if not released
          */
-        Runtime r = Runtime.getRuntime();
-        r.gc();
-        switch (event.getAction()) {
-            case MotionEvent.ACTION_DOWN:
-                x1 = event.getX();
-                y1 = event.getY();
-                break;
+        if (nick.m_AJ) {
+            nick.m_AJ = false;
+            Runtime r = Runtime.getRuntime();
+            r.gc();
+            switch (event.getAction()) {
+                case MotionEvent.ACTION_DOWN:
+                    x1 = event.getX();
+                    y1 = event.getY();
+                    break;
 
-            case MotionEvent.ACTION_UP:
-                x2 = event.getX();
-                y2 = event.getY();
-                //OMEGA CODE BLOCK
-                loc = 0;
-                for(int x = 0; x < currentMenuContext; x++){
-                    loc = (loc + menuSize[x]);
-                }
-                if ((x1 < x2) && (Math.abs(x1 - x2) > 400)) {
-                    mediaPlayer.release();
-                    slide.start();
-                    contextSelect = Math.abs((currentSelect - 1) % menuSize[currentMenuContext]);
-                    mediaPlayer = MediaPlayer.create(MainActivity.this, menuVoice[contextSelect + loc]);
-                    mediaPlayer.setVolume(volumeControl.voiceFX, volumeControl.voiceFX);
-                    menuText.setText((String) menu[loc + contextSelect]);
-                    currentSelect--;
-                }
-                else if ((x1 > x2) && (Math.abs(x1 - x2) > 400)){
-                    mediaPlayer.release();
-                    slide.start();
-                    contextSelect = Math.abs((currentSelect + 1) % menuSize[currentMenuContext]);
-                    mediaPlayer = MediaPlayer.create(MainActivity.this, menuVoice[contextSelect + loc]);
-                    mediaPlayer.setVolume(volumeControl.voiceFX, volumeControl.voiceFX);
-                    menuText.setText((String) menu[loc + contextSelect]);
-                    currentSelect++;
-
-                }
-                else if ((y1 > y2) && (Math.abs(y1 - y2) > 400)) {
-                    mediaPlayer.release();
-                    switch (currentMenuContext){
-                        /**
-                         * Case 0 is the main menu, there is no where to go back.
-                         */
-                        case 0: break;
-                        /**
-                         * Case 1 is the settings menu and Case 2 is the game selection menu, this will take you back
-                         * to the main menu.
-                         */
-                        case 1:
-                        case 2:
-                            context.start();
-                            currentMenuContext = 0;
-                            currentSelect = 0;
-                            contextSelect = 0;
-                            mediaPlayer = MediaPlayer.create(MainActivity.this, R.raw.start);
-                            mediaPlayer.setVolume(volumeControl.voiceFX, volumeControl.voiceFX);
-                            menuText.setText((String) menu[0]);
-                            break;
-                        /**
-                         * Case 3 is the confirmation menu, it takes you back to the
-                         * game selection screen.
-                         */
-                        case 3:
-                            context.start();
-                            currentMenuContext = 2;
-                            currentSelect = 0;
-                            contextSelect = 0;
-                            mediaPlayer = MediaPlayer.create(MainActivity.this, R.raw.newgame);
-                            mediaPlayer.setVolume(volumeControl.voiceFX, volumeControl.voiceFX);
-                            menuText.setText((String) menu[8]);
-                            break;
+                case MotionEvent.ACTION_UP:
+                    x2 = event.getX();
+                    y2 = event.getY();
+                    //OMEGA CODE BLOCK
+                    loc = 0;
+                    for (int x = 0; x < currentMenuContext; x++) {
+                        loc = (loc + menuSize[x]);
                     }
-                }
-                else if ((y1 < y2) && (Math.abs(y1 - y2) > 400)) {
-                    mediaPlayer.start();
-                }
-                else if (((Math.abs(x1 - x2) < 50) && (Math.abs(y1 - y2) < 50))){
-                    mediaPlayer.release();
-                    context.start();
+                    if ((x1 < x2) && (Math.abs(x1 - x2) > 400)) {
+                        mediaPlayer.release();
+                        slide.start();
+                        contextSelect = Math.abs((currentSelect - 1) % menuSize[currentMenuContext]);
+                        mediaPlayer = MediaPlayer.create(MainActivity.this, menuVoice[contextSelect + loc]);
+                        mediaPlayer.setVolume(volumeControl.voiceFX, volumeControl.voiceFX);
+                        menuText.setText((String) menu[loc + contextSelect]);
+                        currentSelect--;
+                    } else if ((x1 > x2) && (Math.abs(x1 - x2) > 400)) {
+                        mediaPlayer.release();
+                        slide.start();
+                        contextSelect = Math.abs((currentSelect + 1) % menuSize[currentMenuContext]);
+                        mediaPlayer = MediaPlayer.create(MainActivity.this, menuVoice[contextSelect + loc]);
+                        mediaPlayer.setVolume(volumeControl.voiceFX, volumeControl.voiceFX);
+                        menuText.setText((String) menu[loc + contextSelect]);
+                        currentSelect++;
+
+                    } else if ((y1 > y2) && (Math.abs(y1 - y2) > 400)) {
+                        mediaPlayer.release();
+                        switch (currentMenuContext) {
+                            /**
+                             * Case 0 is the main menu, there is no where to go back.
+                             */
+                            case 0:
+                                break;
+                            /**
+                             * Case 1 is the settings menu and Case 2 is the game selection menu, this will take you back
+                             * to the main menu.
+                             */
+                            case 1:
+                            case 2:
+                                context.start();
+                                currentMenuContext = 0;
+                                currentSelect = 0;
+                                contextSelect = 0;
+                                mediaPlayer = MediaPlayer.create(MainActivity.this, R.raw.start);
+                                mediaPlayer.setVolume(volumeControl.voiceFX, volumeControl.voiceFX);
+                                menuText.setText((String) menu[0]);
+                                break;
+                            /**
+                             * Case 3 is the confirmation menu, it takes you back to the
+                             * game selection screen.
+                             */
+                            case 3:
+                                context.start();
+                                currentMenuContext = 2;
+                                currentSelect = 0;
+                                contextSelect = 0;
+                                mediaPlayer = MediaPlayer.create(MainActivity.this, R.raw.newgame);
+                                mediaPlayer.setVolume(volumeControl.voiceFX, volumeControl.voiceFX);
+                                menuText.setText((String) menu[8]);
+                                break;
+                        }
+                    } else if ((y1 < y2) && (Math.abs(y1 - y2) > 400)) {
+                        mediaPlayer.start();
+                    } else if (((Math.abs(x1 - x2) < 50) && (Math.abs(y1 - y2) < 50))) {
+                        mediaPlayer.release();
+                        context.start();
                         switch (loc + contextSelect) {
                             case 0:
                                 mediaPlayer = MediaPlayer.create(MainActivity.this, R.raw.newgame);
@@ -210,15 +214,15 @@ public class MainActivity extends AppCompatActivity {
                                 menuText.setText((String) menu[3]);
                                 break;
                             case 3:
-                                if(volumeControl.soundFX == 0.3f){
+                                if (volumeControl.soundFX == 0.3f) {
                                     volumeControl.soundFX = 0.6f;
                                     mediaPlayer = MediaPlayer.create(MainActivity.this, R.raw.soundfx);
                                     mediaPlayer.setVolume(volumeControl.soundFX, volumeControl.soundFX);
-                                } else if(volumeControl.soundFX == 0.6f){
+                                } else if (volumeControl.soundFX == 0.6f) {
                                     volumeControl.soundFX = 1.0f;
                                     mediaPlayer = MediaPlayer.create(MainActivity.this, R.raw.soundfx);
                                     mediaPlayer.setVolume(volumeControl.soundFX, volumeControl.soundFX);
-                                } else if(volumeControl.soundFX == 1.0){
+                                } else if (volumeControl.soundFX == 1.0) {
                                     volumeControl.soundFX = 0.3f;
                                     mediaPlayer = MediaPlayer.create(MainActivity.this, R.raw.soundfx);
                                     mediaPlayer.setVolume(volumeControl.soundFX, volumeControl.soundFX);
@@ -227,45 +231,45 @@ public class MainActivity extends AppCompatActivity {
                                 context.setVolume(volumeControl.soundFX, volumeControl.soundFX);
                                 break;
                             case 4:
-                                if(volumeControl.voiceFX == 0.3f){
+                                if (volumeControl.voiceFX == 0.3f) {
                                     volumeControl.voiceFX = 0.6f;
                                     mediaPlayer = MediaPlayer.create(MainActivity.this, R.raw.voicefx);
                                     mediaPlayer.setVolume(volumeControl.voiceFX, volumeControl.voiceFX);
-                                } else if(volumeControl.voiceFX == 0.6f){
+                                } else if (volumeControl.voiceFX == 0.6f) {
                                     volumeControl.voiceFX = 1.0f;
                                     mediaPlayer = MediaPlayer.create(MainActivity.this, R.raw.voicefx);
                                     mediaPlayer.setVolume(volumeControl.voiceFX, volumeControl.voiceFX);
-                                } else if(volumeControl.voiceFX == 1.0f){
+                                } else if (volumeControl.voiceFX == 1.0f) {
                                     volumeControl.voiceFX = 0.3f;
                                     mediaPlayer = MediaPlayer.create(MainActivity.this, R.raw.voicefx);
                                     mediaPlayer.setVolume(volumeControl.voiceFX, volumeControl.voiceFX);
                                 }
                                 break;
                             case 5:
-                                if(volumeControl.ambianceFX == 0.3f){
+                                if (volumeControl.ambianceFX == 0.3f) {
                                     volumeControl.ambianceFX = 0.6f;
                                     mediaPlayer = MediaPlayer.create(MainActivity.this, R.raw.amfx);
                                     mediaPlayer.setVolume(volumeControl.voiceFX, volumeControl.ambianceFX);
-                                } else if(volumeControl.ambianceFX == 0.6f){
+                                } else if (volumeControl.ambianceFX == 0.6f) {
                                     volumeControl.ambianceFX = 1.0f;
                                     mediaPlayer = MediaPlayer.create(MainActivity.this, R.raw.amfx);
                                     mediaPlayer.setVolume(volumeControl.voiceFX, volumeControl.ambianceFX);
-                                } else if(volumeControl.ambianceFX == 1.0f){
+                                } else if (volumeControl.ambianceFX == 1.0f) {
                                     volumeControl.ambianceFX = 0.3f;
                                     mediaPlayer = MediaPlayer.create(MainActivity.this, R.raw.amfx);
                                     mediaPlayer.setVolume(volumeControl.voiceFX, volumeControl.ambianceFX);
                                 }
                                 beat.stop();
-                                beat.setVolume((volumeControl.ambianceFX*100)/200, (volumeControl.ambianceFX*100)/200);
+                                beat.setVolume((volumeControl.ambianceFX * 100) / 200, (volumeControl.ambianceFX * 100) / 200);
                                 beat.start();
                                 break;
                             case 6:
                                 mediaPlayer = MediaPlayer.create(MainActivity.this, R.raw.change);
-                                if(volumeControl.vibrationIntensity == 0.3f){
+                                if (volumeControl.vibrationIntensity == 0.3f) {
                                     volumeControl.vibrationIntensity = 0.6f;
-                                } else if(volumeControl.vibrationIntensity == 0.6f){
+                                } else if (volumeControl.vibrationIntensity == 0.6f) {
                                     volumeControl.vibrationIntensity = 1.0f;
-                                } else if(volumeControl.vibrationIntensity == 1.0f){
+                                } else if (volumeControl.vibrationIntensity == 1.0f) {
                                     volumeControl.vibrationIntensity = 0.3f;
                                 }
                                 break;
@@ -278,7 +282,7 @@ public class MainActivity extends AppCompatActivity {
                                 slide.setVolume(volumeControl.soundFX, volumeControl.soundFX);
                                 context.setVolume(volumeControl.soundFX, volumeControl.soundFX);
                                 beat.stop();
-                                beat.setVolume((volumeControl.ambianceFX*100)/200, (volumeControl.ambianceFX*100)/200);
+                                beat.setVolume((volumeControl.ambianceFX * 100) / 200, (volumeControl.ambianceFX * 100) / 200);
                                 beat.start();
                                 break;
                             case 8:
@@ -289,23 +293,23 @@ public class MainActivity extends AppCompatActivity {
                                 gameState = true;
                                 break;
                             case 9:
-                                try{
+                                try {
                                     openFileInput("saveGame");
                                     mediaPlayer = MediaPlayer.create(MainActivity.this, R.raw.yes);
                                     currentMenuContext = 3;
                                     contextSelect = 0;
                                     menuText.setText((String) menu[10]);
                                     gameState = false;
-                                }catch(Exception e){
+                                } catch (Exception e) {
                                     mediaPlayer = MediaPlayer.create(MainActivity.this, R.raw.continueerror);
                                 }
                                 break;
                             case 10:
                                 mediaPlayer = MediaPlayer.create(MainActivity.this, R.raw.change);
                                 mediaPlayer.setVolume(volumeControl.soundFX, volumeControl.soundFX);
-                                if(gameState) {
+                                if (gameState) {
                                     gameplayActivity.putExtra("gameState", "yes");
-                                }else{
+                                } else {
                                     gameplayActivity.putExtra("gameState", "no");
                                 }
                                 startActivity(gameplayActivity);
@@ -317,10 +321,12 @@ public class MainActivity extends AppCompatActivity {
                                 break;
                         }
                     }
-                mediaPlayer.setVolume(volumeControl.voiceFX, volumeControl.voiceFX);
-                mediaPlayer.start();
-                break;
+                    mediaPlayer.setVolume(volumeControl.voiceFX, volumeControl.voiceFX);
+                    mediaPlayer.start();
+                    break;
+            }
         }
+        nick.m_AJ = true;
         return false;
     }
 

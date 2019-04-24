@@ -35,6 +35,7 @@ public class GameplayActivity extends AppCompatActivity {
    private MediaPlayer keyJingle;
    private MediaPlayer pickup;
    private MediaPlayer echoDoor;
+   private ChopstickMan keith;
 
    private int clearInventory;
    private int flags[] = {0,0,0,0,0,0,0,0,0,0,0};
@@ -131,6 +132,10 @@ public class GameplayActivity extends AppCompatActivity {
         player.setOrientation(levelManager.getPlayerSpawnOrientation());
         player.setPosition(levelManager.getPlayerSpawnPosition());
         navigateToInGameMenu = new Intent(this, InGameMenu.class);
+
+        keith = new ChopstickMan();
+        keith.m_AJ = true;
+
         Runtime r = Runtime.getRuntime();
         r.gc();
         if (savedInstanceState != null)
@@ -186,68 +191,71 @@ public class GameplayActivity extends AppCompatActivity {
     }
 
     public boolean onTouchEvent(MotionEvent event) {
-        Runtime r = Runtime.getRuntime();
-        r.gc();
-        switch (event.getAction()) {
-            case MotionEvent.ACTION_DOWN:
-                initialInputCoordinate_X = event.getX();
-                initialInputCoordinate_Y = event.getY();
-                break;
+        if (keith.m_AJ) {
+            keith.m_AJ = false;
+            Runtime r = Runtime.getRuntime();
+            r.gc();
+            switch (event.getAction()) {
+                case MotionEvent.ACTION_DOWN:
+                    initialInputCoordinate_X = event.getX();
+                    initialInputCoordinate_Y = event.getY();
+                    break;
 
-            case MotionEvent.ACTION_UP:
-                finalInputCoordinate_X = event.getX();
-                finalInputCoordinate_Y = event.getY();
-                /**
-                 * The echolocate capability as explained in the SRS documentation
-                 */
-                // TODO LOGIC for TUTORIAL
-                if(levelManager.getCurrentLevel() == 1){
-                    if ((initialInputCoordinate_Y > finalInputCoordinate_Y) && (Math.abs(initialInputCoordinate_Y - finalInputCoordinate_Y) > 400)) {
-                        attemptMoveForward();
-                    } else if ((finalInputCoordinate_Y > initialInputCoordinate_Y) && (Math.abs(finalInputCoordinate_Y - initialInputCoordinate_Y) > 400)) {
-                    startActivityForResult(navigateToInGameMenu, 1234);
-                }
-
-                }else if(levelManager.getCurrentLevel() == 2){
-                    if ((initialInputCoordinate_Y > finalInputCoordinate_Y) && (Math.abs(initialInputCoordinate_Y - finalInputCoordinate_Y) > 400)) {
-                        if (flags[0] == 1) {
+                case MotionEvent.ACTION_UP:
+                    finalInputCoordinate_X = event.getX();
+                    finalInputCoordinate_Y = event.getY();
+                    /**
+                     * The echolocate capability as explained in the SRS documentation
+                     */
+                    // TODO LOGIC for TUTORIAL
+                    if (levelManager.getCurrentLevel() == 1) {
+                        if ((initialInputCoordinate_Y > finalInputCoordinate_Y) && (Math.abs(initialInputCoordinate_Y - finalInputCoordinate_Y) > 400)) {
                             attemptMoveForward();
-                        }
-                    }
-                    else if (((Math.abs(initialInputCoordinate_X - finalInputCoordinate_X) < 50) && (Math.abs(initialInputCoordinate_Y - finalInputCoordinate_Y) < 50))) {
-                        echolocate();
-                        if(flags[0] == 0){
-                            narrator.stop();
-                            narrator = MediaPlayer.create(this, R.raw.tuttwovoice);
-                            narrator.setVolume(volumeControl.voiceFX, volumeControl.voiceFX);
-                            r = Runtime.getRuntime();
-                            r.gc();
-                            narrator.start();
-                            flags[0] = 1;
-                            // HERE
                         } else if ((finalInputCoordinate_Y > initialInputCoordinate_Y) && (Math.abs(finalInputCoordinate_Y - initialInputCoordinate_Y) > 400)) {
                             startActivityForResult(navigateToInGameMenu, 1234);
                         }
+
+                    } else if (levelManager.getCurrentLevel() == 2) {
+                        if ((initialInputCoordinate_Y > finalInputCoordinate_Y) && (Math.abs(initialInputCoordinate_Y - finalInputCoordinate_Y) > 400)) {
+                            if (flags[0] == 1) {
+                                attemptMoveForward();
+                            }
+                        } else if (((Math.abs(initialInputCoordinate_X - finalInputCoordinate_X) < 50) && (Math.abs(initialInputCoordinate_Y - finalInputCoordinate_Y) < 50))) {
+                            echolocate();
+                            if (flags[0] == 0) {
+                                narrator.stop();
+                                narrator = MediaPlayer.create(this, R.raw.tuttwovoice);
+                                narrator.setVolume(volumeControl.voiceFX, volumeControl.voiceFX);
+                                r = Runtime.getRuntime();
+                                r.gc();
+                                narrator.start();
+                                flags[0] = 1;
+                                // HERE
+                            } else if ((finalInputCoordinate_Y > initialInputCoordinate_Y) && (Math.abs(finalInputCoordinate_Y - initialInputCoordinate_Y) > 400)) {
+                                startActivityForResult(navigateToInGameMenu, 1234);
+                            }
+                        }
                     }
-                }
-                /**
-                 * You move forward by swiping up, it plays your "footsteps", and when you
-                 * reach the end. It also plays a good song created by Nick.
-                 */
-                else {
-                    if ((initialInputCoordinate_Y > finalInputCoordinate_Y) && (Math.abs(initialInputCoordinate_Y - finalInputCoordinate_Y) > 400)) {
-                        attemptMoveForward();
-                    } else if ((initialInputCoordinate_X > finalInputCoordinate_X) && (Math.abs(initialInputCoordinate_X - finalInputCoordinate_X) > 400)) {
-                        turnLeft();
-                    } else if ((finalInputCoordinate_X > initialInputCoordinate_X) && (Math.abs(finalInputCoordinate_X - initialInputCoordinate_X) > 400)) {
-                        turnRight();
-                    } else if ((finalInputCoordinate_Y > initialInputCoordinate_Y) && (Math.abs(finalInputCoordinate_Y - initialInputCoordinate_Y) > 400)) {
-                        startActivityForResult(navigateToInGameMenu, 1234);
-                    } else if (((Math.abs(initialInputCoordinate_X - finalInputCoordinate_X) < 50) && (Math.abs(initialInputCoordinate_Y - finalInputCoordinate_Y) < 50))) {
-                        echolocate();
+                    /**
+                     * You move forward by swiping up, it plays your "footsteps", and when you
+                     * reach the end. It also plays a good song created by Nick.
+                     */
+                    else {
+                        if ((initialInputCoordinate_Y > finalInputCoordinate_Y) && (Math.abs(initialInputCoordinate_Y - finalInputCoordinate_Y) > 400)) {
+                            attemptMoveForward();
+                        } else if ((initialInputCoordinate_X > finalInputCoordinate_X) && (Math.abs(initialInputCoordinate_X - finalInputCoordinate_X) > 400)) {
+                            turnLeft();
+                        } else if ((finalInputCoordinate_X > initialInputCoordinate_X) && (Math.abs(finalInputCoordinate_X - initialInputCoordinate_X) > 400)) {
+                            turnRight();
+                        } else if ((finalInputCoordinate_Y > initialInputCoordinate_Y) && (Math.abs(finalInputCoordinate_Y - initialInputCoordinate_Y) > 400)) {
+                            startActivityForResult(navigateToInGameMenu, 1234);
+                        } else if (((Math.abs(initialInputCoordinate_X - finalInputCoordinate_X) < 50) && (Math.abs(initialInputCoordinate_Y - finalInputCoordinate_Y) < 50))) {
+                            echolocate();
+                        }
                     }
-                }
+            }
         }
+        keith.m_AJ = true;
         return false;
     }
 
@@ -376,11 +384,13 @@ public class GameplayActivity extends AppCompatActivity {
             {
                 if(levelManager.openDoor(newPosition)){
 
+                    doorUnlocking = MediaPlayer.create(GameplayActivity.this, R.raw.unlockingdoor);
                     doorUnlocking.start();
                     player.setPosition(newPosition);
                     moveForward.start();
                 }
                 else {
+                    slavicDoorHit = MediaPlayer.create(GameplayActivity.this, R.raw.slav01);
                     slavicDoorHit.setVolume(volumeControl.soundFX,volumeControl.soundFX);
                     slavicDoorHit.start();
                     try {
@@ -388,6 +398,7 @@ public class GameplayActivity extends AppCompatActivity {
                     } catch (InterruptedException ex) {
                         Thread.currentThread().interrupt();
                     }
+                    doorLocked = MediaPlayer.create(GameplayActivity.this, R.raw.doorlocked);
                     doorLocked.setVolume(volumeControl.soundFX,volumeControl.soundFX);
                     doorLocked.start();
                     try {
@@ -405,6 +416,7 @@ public class GameplayActivity extends AppCompatActivity {
         if(levelManager.hasKey(newPosition)){
             if(levelManager.pickUpKey(newPosition)) {
                 // TODO Maybe pickup noise?, temp pickup noise btw
+                pickup = MediaPlayer.create(GameplayActivity.this, R.raw.okay);
                 pickup.setVolume(volumeControl.soundFX,volumeControl.soundFX);
                 pickup.start();
                 try {
@@ -459,6 +471,7 @@ public class GameplayActivity extends AppCompatActivity {
         backPosition = moveFromPosition(backOrientation, position);
         leftTile = levelManager.getTileAtCoord(leftPosition).getType(); // What is near player's left side?
         if (leftTile == 'e') {
+            passing = MediaPlayer.create(GameplayActivity.this, R.raw.goalresponse);
             passing.setVolume(volumeControl.soundFX, 0);
             passing.start();
             try {
@@ -476,6 +489,7 @@ public class GameplayActivity extends AppCompatActivity {
                 Thread.currentThread().interrupt();
             }
         } else if (leftTile == 'f') {
+            emptySpaceLeft = MediaPlayer.create(GameplayActivity.this, R.raw.empty_space_left);
             emptySpaceLeft.start();
             //stop playing leftSound
             try {
@@ -484,6 +498,7 @@ public class GameplayActivity extends AppCompatActivity {
                 Thread.currentThread().interrupt();
             }
         } else if (leftTile == 'd') {
+            echoDoor = MediaPlayer.create(GameplayActivity.this, R.raw.yeah);
             echoDoor.setVolume(volumeControl.soundFX,0);
             echoDoor.start();
             //stop playing leftSound
@@ -506,6 +521,7 @@ public class GameplayActivity extends AppCompatActivity {
         }
         rightTile = levelManager.getTileAtCoord(rightPosition).getType(); // What is near the players' right side?
         if (rightTile == 'e') {
+            passing = MediaPlayer.create(GameplayActivity.this, R.raw.goalresponse);
             passing.setVolume(0, volumeControl.soundFX);
             passing.start();
             try {
@@ -523,8 +539,9 @@ public class GameplayActivity extends AppCompatActivity {
                 Thread.currentThread().interrupt();
             }
         } else if (rightTile == 'f') {
-            emptySpaceLeft.setVolume(0, volumeControl.soundFX);
-            emptySpaceLeft.start();
+            emptySpaceRight = MediaPlayer.create(GameplayActivity.this, R.raw.empty_space_right);
+            emptySpaceRight.setVolume(0, volumeControl.soundFX);
+            emptySpaceRight.start();
             try {
                 Thread.sleep(500);
             } catch (InterruptedException ex) {
@@ -532,6 +549,7 @@ public class GameplayActivity extends AppCompatActivity {
             }
             //stop playing rightSound
         } else if (rightTile == 'd') {
+            echoDoor = MediaPlayer.create(GameplayActivity.this, R.raw.yeah);
             echoDoor.setVolume(0,volumeControl.soundFX);
             echoDoor.start();
             try {
@@ -553,6 +571,7 @@ public class GameplayActivity extends AppCompatActivity {
         }
         char backTile = levelManager.getTileAtCoord(backPosition).getType(); // what is near the player's back?
         if (backTile == 'e') {
+            passing = MediaPlayer.create(GameplayActivity.this, R.raw.goalresponse);
             passing.setVolume((volumeControl.soundFX*100)/200, (volumeControl.soundFX*100)/200);
             passing.start();
             try {
@@ -570,6 +589,7 @@ public class GameplayActivity extends AppCompatActivity {
                 Thread.currentThread().interrupt();
             }
         } else if (backTile == 'f') {
+            emptySpaceBack = MediaPlayer.create(GameplayActivity.this, R.raw.empty_space);
             emptySpaceBack.setVolume(volumeControl.soundFX, volumeControl.soundFX);
             emptySpaceBack.start();
             try {
@@ -579,6 +599,7 @@ public class GameplayActivity extends AppCompatActivity {
             }
             //stop playing rightSound
         } else if (backTile == 'd') {
+            echoDoor = MediaPlayer.create(GameplayActivity.this, R.raw.yeah);
             echoDoor.setVolume((volumeControl.soundFX*100)/200,(volumeControl.soundFX*100)/200);
             echoDoor.start();
             try {
@@ -609,6 +630,7 @@ public class GameplayActivity extends AppCompatActivity {
                 leftPosition = moveFromPosition(leftOrientation, newPosition);
                 leftTile = levelManager.getTileAtCoord(leftPosition).getType(); // checks left area
                 if (leftTile == 'e') {
+                    passing = MediaPlayer.create(GameplayActivity.this, R.raw.goalresponse);
                     passing.setVolume((volumeControl.soundFX*100)/200, 0);
                     passing.start();
                     try {
@@ -617,6 +639,8 @@ public class GameplayActivity extends AppCompatActivity {
                         Thread.currentThread().interrupt();
                     }
                 } else if (leftTile == 'w') {
+                    leftSideWallTap = MediaPlayer.create(GameplayActivity.this, R.raw.wall03_tin_ting);
+                    leftSideWallTap.setVolume((volumeControl.soundFX*100)/400, 0);
                     leftSideWallTap.start();
                     try {
                         Thread.sleep(100);
@@ -624,6 +648,7 @@ public class GameplayActivity extends AppCompatActivity {
                         Thread.currentThread().interrupt();
                     }
                 } else if (leftTile == 'f') {
+                    emptySpaceLeft = MediaPlayer.create(GameplayActivity.this, R.raw.empty_space_left);
                     emptySpaceLeft.start();
                     //stop playing leftSound
                     try {
@@ -632,6 +657,7 @@ public class GameplayActivity extends AppCompatActivity {
                         Thread.currentThread().interrupt();
                     }
                 } else if (leftTile == 'd') {
+                    echoDoor = MediaPlayer.create(GameplayActivity.this, R.raw.yeah);
                     echoDoor.setVolume((volumeControl.soundFX*100)/200,0);
                     echoDoor.start();
                     try {
@@ -654,6 +680,7 @@ public class GameplayActivity extends AppCompatActivity {
                 rightPosition = moveFromPosition(rightOrientation, newPosition);
                 rightTile = levelManager.getTileAtCoord(rightPosition).getType(); // checks right area
                 if (rightTile == 'e') {
+                    passing = MediaPlayer.create(GameplayActivity.this, R.raw.goalresponse);
                     passing.setVolume(0, (volumeControl.soundFX*200)/100);
                     passing.start();
                     try {
@@ -662,6 +689,8 @@ public class GameplayActivity extends AppCompatActivity {
                         Thread.currentThread().interrupt();
                     }
                 } else if (rightTile == 'w') {
+                    rightSideWallTap = MediaPlayer.create(GameplayActivity.this, R.raw.wall05_steel_bonk);
+                    rightSideWallTap.setVolume(0,(volumeControl.soundFX*100)/400);
                     rightSideWallTap.start();
                     try {
                         Thread.sleep(100);
@@ -669,6 +698,7 @@ public class GameplayActivity extends AppCompatActivity {
                         Thread.currentThread().interrupt();
                     }
                 } else if (rightTile == 'f') {
+                    emptySpaceRight = MediaPlayer.create(GameplayActivity.this, R.raw.empty_space_right);
                     emptySpaceRight.start();
                     try {
                         Thread.sleep(500);
@@ -677,6 +707,7 @@ public class GameplayActivity extends AppCompatActivity {
                     }
                     //stop playing rightSound
                 } else if (rightTile == 'd') {
+                    echoDoor = MediaPlayer.create(GameplayActivity.this, R.raw.yeah);
                     echoDoor.setVolume(0,(volumeControl.soundFX*100)/200);
                     echoDoor.start();
                     try {
@@ -704,6 +735,7 @@ public class GameplayActivity extends AppCompatActivity {
             if (echoTurnState == 3) { // cycles ping sound
                 echoTurnState = 0;
             }
+            echo[echoTurnState] = MediaPlayer.create(GameplayActivity.this, R.raw.echolocate);
             echo[echoTurnState].start();
             if (volumePower > 25) { //reduce volume
                 volumePower = volumePower - 5;
@@ -743,6 +775,7 @@ public class GameplayActivity extends AppCompatActivity {
         if (echoTurnState == 3) {
             echoTurnState = 0;
         }
+        echo[echoTurnState] = MediaPlayer.create(GameplayActivity.this, R.raw.echolocate);
         echo[echoTurnState].start();
         if (volumePower > 25) {
             volumePower = volumePower - 5;
@@ -769,6 +802,7 @@ public class GameplayActivity extends AppCompatActivity {
                  Thread.currentThread().interrupt();
              }
          } else if (backTile == 'd') {
+             echoDoor = MediaPlayer.create(GameplayActivity.this, R.raw.yeah);
             echoDoor.setVolume((volumeControl.soundFX * 100) / 200, (volumeControl.soundFX * 100) / 200);
             echoDoor.start();
             try {
@@ -790,6 +824,7 @@ public class GameplayActivity extends AppCompatActivity {
                 }
                 leftTile = levelManager.getTileAtCoord(leftPosition).getType();
                 if (leftTile == 'e') {
+                    passing = MediaPlayer.create(GameplayActivity.this, R.raw.goalresponse);
                     passing.setVolume((volumeControl.soundFX*100)/200, 0);
                     passing.start();
                     try {
@@ -807,6 +842,7 @@ public class GameplayActivity extends AppCompatActivity {
                         Thread.currentThread().interrupt();
                     }
                 } else if (leftTile == 'f') {
+                    emptySpaceLeft = MediaPlayer.create(GameplayActivity.this, R.raw.empty_space_left);
                     emptySpaceLeft.setVolume(volumeControl.soundFX, 0);
                     emptySpaceLeft.start();
                     //stop playing leftSound
@@ -816,6 +852,7 @@ public class GameplayActivity extends AppCompatActivity {
                         Thread.currentThread().interrupt();
                     }
                 } else if (leftTile == 'd') {
+                    echoDoor = MediaPlayer.create(GameplayActivity.this, R.raw.yeah);
                     echoDoor.setVolume((volumeControl.soundFX*100)/400,0);
                     echoDoor.start();
                     try {
@@ -839,6 +876,7 @@ public class GameplayActivity extends AppCompatActivity {
                 rightPosition = moveFromPosition(rightOrientation, newPosition);
                 rightTile = levelManager.getTileAtCoord(rightPosition).getType();
                 if (rightTile == 'e') {
+                    passing = MediaPlayer.create(GameplayActivity.this, R.raw.goalresponse);
                     passing.setVolume(0, (volumeControl.soundFX*100)/200);
                     passing.start();
                     try {
@@ -856,6 +894,7 @@ public class GameplayActivity extends AppCompatActivity {
                         Thread.currentThread().interrupt();
                     }
                 } else if (rightTile == 'f') {
+                    emptySpaceRight = MediaPlayer.create(GameplayActivity.this, R.raw.empty_space_right);
                     emptySpaceRight.setVolume(0, volumeControl.soundFX);
                     emptySpaceRight.start();
                     try {
@@ -865,6 +904,7 @@ public class GameplayActivity extends AppCompatActivity {
                     }
                     //stop playing rightSound
                 } else if (rightTile == 'd') {
+                    echoDoor = MediaPlayer.create(GameplayActivity.this, R.raw.yeah);
                     echoDoor.setVolume(0,(volumeControl.soundFX*100)/400);
                     echoDoor.start();
                     try {
@@ -1115,6 +1155,11 @@ public class GameplayActivity extends AppCompatActivity {
                                             narrator = MediaPlayer.create(this, hammer);
                                             narrator.setVolume(volumeControl.voiceFX, volumeControl.voiceFX);
                                             narrator.start();
+                                            try {
+                                                Thread.sleep(1000);
+                                            } catch (InterruptedException ex) {
+                                                Thread.currentThread().interrupt();
+                                            }
                                             concatinator = "";
                                             data = -1;
                                         }
@@ -1443,14 +1488,18 @@ public class GameplayActivity extends AppCompatActivity {
          }
      }
     public void nextLevel(){
+        keith.m_AJ = false;
         generateLevelFromConfigFile(levelManager.getLevel(levelManager.getCurrentLevel()), false);
         player.setOrientation(levelManager.getPlayerSpawnOrientation());
         player.setPosition(levelManager.getPlayerSpawnPosition());
+        keith.m_AJ = true;
     }
 
     public void resetLevel(){
+        keith.m_AJ = false;
         generateLevelFromConfigFile(levelManager.getLevel(levelManager.getCurrentLevel()-1), false);
         player.setOrientation(levelManager.getPlayerSpawnOrientation());
         player.setPosition(levelManager.getPlayerSpawnPosition());
+        keith.m_AJ = true;
     }
 }
