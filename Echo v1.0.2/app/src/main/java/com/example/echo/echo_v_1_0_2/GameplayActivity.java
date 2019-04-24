@@ -62,6 +62,7 @@ public class GameplayActivity extends AppCompatActivity {
             volumeControl.ambianceFX = 0.3f;
             volumeControl.vibrationIntensity = 0.6f;
         }
+        narrator = MediaPlayer.create(GameplayActivity.this, R.raw.none);
         turn = MediaPlayer.create(GameplayActivity.this, R.raw.swooshleft);
 
         moveForward = MediaPlayer.create(GameplayActivity.this, R.raw.genericfootsteps);
@@ -114,10 +115,10 @@ public class GameplayActivity extends AppCompatActivity {
         emptySpaceRight.setVolume(volumeControl.soundFX, volumeControl.soundFX);
         emptySpaceBack.setVolume((volumeControl.soundFX * 100) / 200, (volumeControl.soundFX * 100) / 0200);
 
-        levelChange = MediaPlayer.create(this, R.raw.levelchange);
+        levelChange = MediaPlayer.create(this, R.raw.nextlevel);
         levelChange.setVolume(volumeControl.soundFX, volumeControl.soundFX);
 
-        ending = MediaPlayer.create(GameplayActivity.this, R.raw.beatingitup);
+        ending = MediaPlayer.create(GameplayActivity.this, R.raw.beatingitup2);
         ending.setVolume((volumeControl.soundFX*100)/200, (volumeControl.soundFX*100)/200);
 
         player = new Player(this);
@@ -144,7 +145,7 @@ public class GameplayActivity extends AppCompatActivity {
     protected void onPause(){
         this.saveGame();
         this.saveItems();
-        narrator.stop();
+        narrator.release();
         clearInventory = 0;
         super.onPause();
 
@@ -173,6 +174,7 @@ public class GameplayActivity extends AppCompatActivity {
                 volumeControl.vibrationIntensity = 0.6f;
             }
             this.generateLevelFromConfigFile("saveGame",true);
+            narrator = MediaPlayer.create(this, R.raw.none);
         if (requestCode == 1234 && resultCode == RESULT_OK && data != null) {
             boolean test = data.getBooleanExtra("resetLevel", false);
             if(test){
@@ -217,6 +219,7 @@ public class GameplayActivity extends AppCompatActivity {
                     else if (((Math.abs(initialInputCoordinate_X - finalInputCoordinate_X) < 50) && (Math.abs(initialInputCoordinate_Y - finalInputCoordinate_Y) < 50))) {
                         echolocate();
                         if(flags[0] == 0){
+                            narrator.release();
                             narrator = MediaPlayer.create(GameplayActivity.this, R.raw.twovoice);
                             r = Runtime.getRuntime();
                             r.gc();
@@ -314,6 +317,7 @@ public class GameplayActivity extends AppCompatActivity {
                 // LOGIC FOR TUTORIAL
                 switch (levelManager.getCurrentLevel()){
                     case 1:
+                        narrator.release();
                         narrator = MediaPlayer.create(this, R.raw.tutonevoice);
                         r = Runtime.getRuntime();
                         r.gc();
@@ -327,6 +331,7 @@ public class GameplayActivity extends AppCompatActivity {
                         narrator.stop();
                         break;
                     case 3:
+                        narrator.release();
                     narrator = MediaPlayer.create(this, R.raw.tutthreevoice);
                         r = Runtime.getRuntime();
                         r.gc();
@@ -940,7 +945,7 @@ public class GameplayActivity extends AppCompatActivity {
         InputStream asset = null;
         FileInputStream assetTwo = null;
         ArrayList<Integer> passCodes = new ArrayList<Integer>();
-
+        levelManager.resetDoors();
         if(!saveGameStatus) {
             try {
                 asset = this.getAssets().open(levelName);
@@ -1106,6 +1111,7 @@ public class GameplayActivity extends AppCompatActivity {
                                             concatinator = concatinator + ((char) data);
                                         } else {
                                             hammer = Uri.parse(primer + concatinator); // intro lines
+                                            narrator.release();
                                             narrator = MediaPlayer.create(this, hammer);
                                             narrator.setVolume(volumeControl.voiceFX, volumeControl.voiceFX);
                                             narrator.start();
