@@ -203,7 +203,7 @@ public class GameplayActivity extends AppCompatActivity {
             play(R.raw.genericfootsteps);
             player.setPosition(newPosition);
             if (levelManager.getTileAtCoord(newPosition).getType() == 'e') {
-                playSoundScape(R.raw.goalresponse, volumeControl.soundFX, volumeControl.soundFX);
+                playSoundScape(R.raw.beatingitup2, volumeControl.soundFX, volumeControl.soundFX);
                 try {
                     Thread.sleep(4000);
                 } catch (InterruptedException ex) {
@@ -232,7 +232,7 @@ public class GameplayActivity extends AppCompatActivity {
                         }
                         break;
                 }
-                playSoundScape(R.raw.level_change1,volumeControl.soundFX, volumeControl.soundFX);
+                playSoundScape(R.raw.nextlevel,volumeControl.soundFX, volumeControl.soundFX);
                 try {
                     Thread.sleep(6000);
                 } catch (InterruptedException ex) {
