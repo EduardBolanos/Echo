@@ -19,14 +19,13 @@ public class InGameMenu extends AppCompatActivity {
     private String menu[] = {"Inventory", "Settings and Navigation", "Sound FX Volume", "Voice Volume", "Ambiance & Music",
             "Vibration Level", "Reset Volume Values", "Reset Level",  "Return to Menu", "Instructions"};
     // create these voice files
-    private int menuVoice[] = {R.raw.inventory, R.raw.explain, R.raw.soundfx, R.raw.voicefx, R.raw.amfx,
-            R.raw.vibration, R.raw.reset, R.raw.resetlevel ,R.raw.returntomenu ,R.raw.help};
+    private String menuVoice[] = {"inventory", "explain", "soundfx", "voicefx", "R.raw.amfx",
+            "vibration", "reset", "resetlevel" , "returntomenu" ,"help"};
     private int menuSize[] = {2, 8};
     public String primer = ("android.resource://" + "com.example.echo.echo_v_1_0_2" + "/raw/"); // Incase things happen such as package reference for public
     private Uri hammer;
     private int loc;
     private boolean resetLevel;
-    private MediaPlayer mediaPlayer;
     private MediaPlayer ambiance; // WE ARE APPARENTLY BRITISH DEVELOPERS TODO, get something
     private int nodeSize;
     private ItemNode fatherNode;
@@ -34,10 +33,7 @@ public class InGameMenu extends AppCompatActivity {
     private ItemNode currentNode;
     float x1, x2, y1, y2;
     TextView menuText;
-    private MediaPlayer slide;
-    private MediaPlayer context;
     SoundSettings volumeControl; // Dunno
-    private MediaPlayer keyJingle;
     /**
      * TEST: Use this code for only as a last resort
      */
@@ -61,13 +57,6 @@ public class InGameMenu extends AppCompatActivity {
             volumeControl.ambianceFX = 0.3f;
             volumeControl.vibrationIntensity = 0.6f;
         }
-        slide = MediaPlayer.create(InGameMenu.this, R.raw.slide);
-        context = MediaPlayer.create(InGameMenu.this,R.raw.change);
-        slide.setVolume(volumeControl.soundFX, volumeControl.soundFX);
-        context.setVolume(volumeControl.soundFX, volumeControl.soundFX);
-        mediaPlayer = MediaPlayer.create(InGameMenu.this, R.raw.inventory);
-        mediaPlayer.setVolume(volumeControl.voiceFX, volumeControl.voiceFX);
-        mediaPlayer.start();
         menuText = (TextView) findViewById(R.id.textView); // Make sure to change this to new activity counterpart, unless same
         currentSelectIG = 0;
         currentMenuContextIG = 0;
@@ -98,8 +87,6 @@ public class InGameMenu extends AppCompatActivity {
             volumeControl.ambianceFX = 0.3f;
             volumeControl.vibrationIntensity = 0.6f;
         }
-        slide.setVolume(volumeControl.soundFX, volumeControl.soundFX);
-        context.setVolume(volumeControl.soundFX, volumeControl.soundFX);
         super.onResume();
 
     }
@@ -173,16 +160,12 @@ public class InGameMenu extends AppCompatActivity {
                     loc = (loc + menuSize[x]);
                 }
                 if ((x1 < x2) && (Math.abs(x1 - x2) > 400)) {
-                    slide.start();
+                    playSoundScape(R.raw.slide, volumeControl.soundFX, volumeControl.soundFX);
                     if(currentMenuContextIG == 2 && nodeSize != 0){
                         currentNode = currentNode.getPrevious();
-                        hammer = Uri.parse((primer + currentNode.getData().getAuditoryId()));
+                        playByUriSoundScape(currentNode.getData().getAuditoryId(),volumeControl.voiceFX,volumeControl.voiceFX);
                         //TODO key sound logic
-                        mediaPlayer = MediaPlayer.create(InGameMenu.this, hammer);
-                        hammer = Uri.parse(primer + "keys0" + currentNode.getData().getPassCode());
-                        keyJingle = mediaPlayer.create(InGameMenu.this, hammer);
-                        keyJingle.setVolume(volumeControl.soundFX, volumeControl.soundFX);
-                        keyJingle.start();
+                        playByUriSoundScape("keys0" + currentNode.getData().getPassCode(),volumeControl.soundFX,volumeControl.soundFX);
                         try {
                             Thread.sleep(2000);
                         } catch (InterruptedException ex) {
@@ -192,31 +175,25 @@ public class InGameMenu extends AppCompatActivity {
                     }
                     else if(currentMenuContextIG == 2 && nodeSize == 0){
                         currentMenuContextIG = 0;
-                        mediaPlayer = MediaPlayer.create(InGameMenu.this, R.raw.noitem);
+                        playSoundScape(R.raw.noitem, volumeControl.voiceFX, volumeControl.voiceFX);
                         menuText.setText((String) menu[0]);
                         currentSelectIG = 0;
                         contextSelectIG = 0;
                     }
                     else {
                         contextSelectIG = Math.abs((currentSelectIG - 1) % menuSize[currentMenuContextIG]);
-                        mediaPlayer = MediaPlayer.create(InGameMenu.this, menuVoice[contextSelectIG + loc]);
+                        playByUriSoundScape(menuVoice[contextSelectIG + loc], volumeControl.voiceFX, volumeControl.voiceFX);
                         menuText.setText((String) menu[loc + contextSelectIG]);
                         currentSelectIG--;
                     }
-                    mediaPlayer.setVolume(volumeControl.voiceFX, volumeControl.voiceFX);
-                  mediaPlayer.start();
                 }
                 else if ((x1 > x2) && (Math.abs(x1 - x2) > 400)){
-                    slide.start();
+                    playSoundScape(R.raw.slide, volumeControl.soundFX, volumeControl.soundFX);
                     if(currentMenuContextIG == 2 && nodeSize != 0){
                         currentNode = currentNode.getNext();
-                        hammer = Uri.parse((primer + currentNode.getData().getAuditoryId()));
-                        // TODO key logic
-                        mediaPlayer = MediaPlayer.create(InGameMenu.this, hammer);
-                        hammer = Uri.parse(primer + "keys0" + currentNode.getData().getPassCode());
-                        keyJingle = mediaPlayer.create(InGameMenu.this, hammer);
-                        keyJingle.setVolume(volumeControl.soundFX, volumeControl.soundFX);
-                        keyJingle.start();
+                        playByUriSoundScape(currentNode.getData().getAuditoryId(),volumeControl.voiceFX,volumeControl.voiceFX);
+                        //TODO key sound logic
+                        playByUriSoundScape("keys0" + currentNode.getData().getPassCode(),volumeControl.soundFX,volumeControl.soundFX);
                         try {
                             Thread.sleep(2000);
                         } catch (InterruptedException ex) {
@@ -226,19 +203,17 @@ public class InGameMenu extends AppCompatActivity {
                     }
                     else if(currentMenuContextIG == 2 && nodeSize == 0){
                         currentMenuContextIG = 0;
-                        mediaPlayer = MediaPlayer.create(InGameMenu.this, R.raw.noitem);
+                        playSoundScape(R.raw.noitem, volumeControl.voiceFX, volumeControl.voiceFX);
                         menuText.setText((String) menu[0]);
                         currentSelectIG = 0;
                         contextSelectIG = 0;
                     }
                     else {
                         contextSelectIG = Math.abs((currentSelectIG + 1) % menuSize[currentMenuContextIG]);
-                        mediaPlayer = MediaPlayer.create(InGameMenu.this, menuVoice[contextSelectIG + loc]);
+                        playByUriSoundScape(menuVoice[contextSelectIG + loc], volumeControl.voiceFX, volumeControl.voiceFX);
                         menuText.setText((String) menu[loc + contextSelectIG]);
                         currentSelectIG++;
                     }
-                    mediaPlayer.setVolume(volumeControl.voiceFX, volumeControl.voiceFX);
-                   mediaPlayer.start();
                 } else if ((y1 > y2) && (Math.abs(y1 - y2) > 400)) {
                     switch (currentMenuContextIG) {
                         /**
@@ -259,133 +234,98 @@ public class InGameMenu extends AppCompatActivity {
                          */
                         case 1:
                         case 2:
-                            context.start();
+                            playSoundScape(R.raw.change,volumeControl.soundFX, volumeControl.soundFX);
                             currentMenuContextIG = 0;
-                            mediaPlayer = MediaPlayer.create(InGameMenu.this, R.raw.inventory);
-                            mediaPlayer.setVolume(volumeControl.voiceFX, volumeControl.voiceFX);
-                            mediaPlayer.start();
+                            playSoundScape(R.raw.inventory,volumeControl.voiceFX, volumeControl.voiceFX);
                             menuText.setText((String) menu[0]);
                             currentSelectIG = 0;
                             contextSelectIG = 0;
                     }
                 } else if ((y1 < y2) && (Math.abs(y1 - y2) > 400)) {
-                    mediaPlayer.start();
+                    playByUriSoundScape(menuVoice[contextSelectIG + loc], volumeControl.voiceFX, volumeControl.voiceFX);
                 }
                 else if (((Math.abs(x1 - x2) < 50) && (Math.abs(y1 - y2) < 50))) {
                     if (currentMenuContextIG == 3){
                        // goto previous and send back data if needed for the item
                     }
                     else{
-                        context.start();
+                        playSoundScape(R.raw.change, volumeControl.soundFX, volumeControl.soundFX);
                         switch (loc + contextSelectIG) {
                             case 0:
 
                                 if(nodeSize != 0) {
                                     currentMenuContextIG = 2;
-                                    hammer = Uri.parse((primer + currentNode.getData().getAuditoryId()));
-                                    mediaPlayer = MediaPlayer.create(InGameMenu.this, hammer);
-                                    // TODO add key sound logic
-                                    hammer = Uri.parse(primer + "keys0" + currentNode.getData().getPassCode());
-                                    keyJingle = mediaPlayer.create(InGameMenu.this, hammer);
-                                    keyJingle.setVolume(volumeControl.soundFX, volumeControl.soundFX);
-                                    keyJingle.start();
+                                    playByUriSoundScape(currentNode.getData().getAuditoryId(),volumeControl.voiceFX,volumeControl.voiceFX);
+                                    //TODO key sound logic
+                                    playByUriSoundScape("keys0" + currentNode.getData().getPassCode(),volumeControl.soundFX,volumeControl.soundFX);
                                     try {
                                         Thread.sleep(2000);
                                     } catch (InterruptedException ex) {
                                         Thread.currentThread().interrupt();
                                     }
-                                    mediaPlayer.setVolume(volumeControl.voiceFX, volumeControl.voiceFX);
-                                    mediaPlayer.start();
                                     menuText.setText((String) currentNode.getData().getName());
                                 }
                                 else{
-                                    mediaPlayer = MediaPlayer.create(InGameMenu.this, R.raw.noitem);
-                                    mediaPlayer.setVolume(volumeControl.voiceFX, volumeControl.voiceFX);
-                                    mediaPlayer.start();
+                                    playSoundScape(R.raw.noitem, volumeControl.voiceFX, volumeControl.voiceFX);
                                 }
                                 break;
                             case 1:
                                 currentMenuContextIG = 1;
-                                mediaPlayer = MediaPlayer.create(InGameMenu.this, R.raw.soundfx);
-                                mediaPlayer.setVolume(volumeControl.voiceFX, volumeControl.voiceFX);
-                                mediaPlayer.start();
+                                contextSelectIG = 0;
+                                currentSelectIG = 0;
+                                playSoundScape(R.raw.soundfx, volumeControl.soundFX, volumeControl.soundFX);
                                 menuText.setText(menu[2]);
                                 break;
                             case 2:
                                 if(volumeControl.soundFX == 0.3f){
                                     volumeControl.soundFX = 0.6f;
-                                    mediaPlayer = MediaPlayer.create(InGameMenu.this, R.raw.soundfx);
-                                    mediaPlayer.setVolume(volumeControl.soundFX, volumeControl.soundFX);
                                 } else if(volumeControl.soundFX == 0.6f){
                                     volumeControl.soundFX = 1.0f;
-                                    mediaPlayer = MediaPlayer.create(InGameMenu.this, R.raw.soundfx);
-                                    mediaPlayer.setVolume(volumeControl.soundFX, volumeControl.soundFX);
                                 } else if(volumeControl.soundFX == 1.0f){
                                     volumeControl.soundFX = 0.3f;
-                                    mediaPlayer = MediaPlayer.create(InGameMenu.this, R.raw.soundfx);
-                                    mediaPlayer.setVolume(volumeControl.soundFX, volumeControl.soundFX);
                                 }
-                                mediaPlayer.start();
-                                slide.setVolume(volumeControl.soundFX, volumeControl.soundFX);
-                                context.setVolume(volumeControl.soundFX, volumeControl.soundFX);
+                                playSoundScape(R.raw.soundfx, volumeControl.soundFX, volumeControl.soundFX);
                                 break;
                             case 3:
                                 if(volumeControl.voiceFX == 0.3f){
                                     volumeControl.voiceFX = 0.6f;
-                                    mediaPlayer = MediaPlayer.create(InGameMenu.this, R.raw.voicefx);
-                                    mediaPlayer.setVolume(volumeControl.voiceFX, volumeControl.voiceFX);
                                 } else if(volumeControl.voiceFX == 0.6f){
                                     volumeControl.voiceFX = 1.0f;
-                                    mediaPlayer = MediaPlayer.create(InGameMenu.this, R.raw.voicefx);
-                                    mediaPlayer.setVolume(volumeControl.voiceFX, volumeControl.voiceFX);
                                 } else if(volumeControl.voiceFX == 1.0f){
                                     volumeControl.voiceFX = 0.3f;
-                                    mediaPlayer = MediaPlayer.create(InGameMenu.this, R.raw.voicefx);
-                                    mediaPlayer.setVolume(volumeControl.voiceFX, volumeControl.voiceFX);
                                 }
-                                mediaPlayer.start();
+                                playSoundScape(R.raw.voicefx, volumeControl.voiceFX, volumeControl.voiceFX);
                                 break;
                             case 4:
                                 if(volumeControl.ambianceFX == 0.3f){
-                                    mediaPlayer = MediaPlayer.create(InGameMenu.this, R.raw.amfx);
-                                    mediaPlayer.setVolume(volumeControl.ambianceFX, volumeControl.ambianceFX);
                                     volumeControl.ambianceFX = 0.6f;
                                 } else if(volumeControl.ambianceFX == 0.6f){
-                                    mediaPlayer = MediaPlayer.create(InGameMenu.this, R.raw.amfx);
-                                    mediaPlayer.setVolume(volumeControl.ambianceFX, volumeControl.ambianceFX);
                                     volumeControl.ambianceFX = 1.0f;
                                 } else if(volumeControl.ambianceFX == 1.0f){
-                                    mediaPlayer = MediaPlayer.create(InGameMenu.this, R.raw.amfx);
-                                    mediaPlayer.setVolume(volumeControl.ambianceFX, volumeControl.ambianceFX);
                                     volumeControl.ambianceFX = 0.3f;
                                 }
-                                mediaPlayer.start();
+                                playSoundScape(R.raw.amfx, volumeControl.ambianceFX, volumeControl.ambianceFX);
                                 break;
                             case 5:
-                                mediaPlayer = MediaPlayer.create(InGameMenu.this, R.raw.change);
-                                mediaPlayer.start();
-                                if(volumeControl.vibrationIntensity == 0.3f){
+                                if (volumeControl.vibrationIntensity == 0.3f) {
                                     volumeControl.vibrationIntensity = 0.6f;
-                                } else if(volumeControl.vibrationIntensity == 0.6f){
+                                } else if (volumeControl.vibrationIntensity == 0.6f) {
                                     volumeControl.vibrationIntensity = 1.0f;
-                                } else if(volumeControl.vibrationIntensity == 1.0f){
+                                } else if (volumeControl.vibrationIntensity == 1.0f) {
                                     volumeControl.vibrationIntensity = 0.3f;
                                 }
+                                playSoundScape(R.raw.slide, volumeControl.vibrationIntensity, volumeControl.vibrationIntensity);
                                 break;
                             case 6:
-                                mediaPlayer = MediaPlayer.create(InGameMenu.this, R.raw.reset);
-                                mediaPlayer.start();
                                 volumeControl.soundFX = 0.6f;
                                 volumeControl.voiceFX = 1.0f;
                                 volumeControl.ambianceFX = 0.3f;
                                 volumeControl.vibrationIntensity = 0.6f;
-                                slide.setVolume(volumeControl.soundFX, volumeControl.soundFX);
-                                context.setVolume(volumeControl.soundFX, volumeControl.soundFX);
+                                playSoundScape(R.raw.reset, volumeControl.voiceFX, volumeControl.voiceFX);
                                 break;
                             case 7:
                                 resetLevel = true;
-                                mediaPlayer = MediaPlayer.create(InGameMenu.this, R.raw.resetlevel);
-                                mediaPlayer.start();
+                                playSoundScape(R.raw.resetlevel, volumeControl.voiceFX, volumeControl.voiceFX);
                                 break;
                             case 8:
                                 // invokes save state in game, invokes finish state in game to go back to main menu
@@ -398,8 +338,7 @@ public class InGameMenu extends AppCompatActivity {
                                 finish();
                                 break;
                             case 9:
-                                mediaPlayer = MediaPlayer.create(InGameMenu.this, R.raw.instructions);
-                                mediaPlayer.start();
+                                playSoundScape(R.raw.instructions, volumeControl.voiceFX, volumeControl.voiceFX);
                                 break;
                         }
                     }
@@ -522,6 +461,88 @@ public class InGameMenu extends AppCompatActivity {
         }
            catch (Exception e) {
         }
+    }
+
+    void play(int resourceID) {
+
+        final MediaPlayer player = MediaPlayer.create(this, resourceID);
+
+        player.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+            @Override
+            public void onCompletion(MediaPlayer mp) {
+                player.release();
+            }
+        });
+
+        player.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+            @Override
+            public void onPrepared(MediaPlayer mp) {
+                mp.start();
+            }
+        });
+
+    }
+    void playByUri(String soundName) {
+
+
+        hammer = Uri.parse(primer + soundName);
+        final MediaPlayer player = MediaPlayer.create(this, hammer);
+
+        player.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+            @Override
+            public void onCompletion(MediaPlayer mp) {
+                player.release();
+            }
+        });
+
+        player.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+            @Override
+            public void onPrepared(MediaPlayer mp) {
+                mp.start();
+            }
+        });
+
+    }
+
+    void playSoundScape(int resourceID, float left, float right) {
+
+        final MediaPlayer player = MediaPlayer.create(this, resourceID);
+        player.setVolume(left, right);
+        player.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+            @Override
+            public void onCompletion(MediaPlayer mp) {
+                player.release();
+            }
+        });
+
+        player.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+            @Override
+            public void onPrepared(MediaPlayer mp) {
+                mp.start();
+            }
+        });
+
+    }
+    void playByUriSoundScape(String soundName, float left, float right) {
+
+        hammer = Uri.parse(primer + soundName);
+        final MediaPlayer player = MediaPlayer.create(this, hammer);
+        player.setVolume(left, right);
+
+        player.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+            @Override
+            public void onCompletion(MediaPlayer mp) {
+                player.release();
+            }
+        });
+
+        player.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+            @Override
+            public void onPrepared(MediaPlayer mp) {
+                mp.start();
+            }
+        });
+
     }
 
 }
