@@ -17,7 +17,7 @@ public class InGameMenu extends AppCompatActivity {
     private int contextSelectIG; //Location in arrays, ex
     //Omega String
     private String menu[] = {"Inventory", "Settings and Navigation", "Sound FX Volume", "Voice Volume", "Ambiance & Music",
-            "Vibration Level", "Reset Volume Values", "Return to Menu", "Instructions"};
+            "Vibration Level", "Reset Volume Values", "Reset Level",  "Return to Menu", "Instructions"};
     // create these voice files
     private int menuVoice[] = {R.raw.inventory, R.raw.explain, R.raw.soundfx, R.raw.voicefx, R.raw.amfx,
             R.raw.vibration, R.raw.reset, R.raw.resetlevel ,R.raw.returntomenu ,R.raw.help};
@@ -179,7 +179,7 @@ public class InGameMenu extends AppCompatActivity {
                         hammer = Uri.parse((primer + currentNode.getData().getAuditoryId()));
                         //TODO key sound logic
                         mediaPlayer = MediaPlayer.create(InGameMenu.this, hammer);
-                        hammer = Uri.parse(primer + "key0" + currentNode.getData().getPassCode());
+                        hammer = Uri.parse(primer + "keys0" + currentNode.getData().getPassCode());
                         keyJingle = mediaPlayer.create(InGameMenu.this, hammer);
                         keyJingle.setVolume(volumeControl.soundFX, volumeControl.soundFX);
                         keyJingle.start();
@@ -208,7 +208,7 @@ public class InGameMenu extends AppCompatActivity {
                         hammer = Uri.parse((primer + currentNode.getData().getAuditoryId()));
                         // TODO key logic
                         mediaPlayer = MediaPlayer.create(InGameMenu.this, hammer);
-                        hammer = Uri.parse(primer + "key0" + currentNode.getData().getPassCode());
+                        hammer = Uri.parse(primer + "keys0" + currentNode.getData().getPassCode());
                         keyJingle = mediaPlayer.create(InGameMenu.this, hammer);
                         keyJingle.setVolume(volumeControl.soundFX, volumeControl.soundFX);
                         keyJingle.start();
@@ -275,7 +275,7 @@ public class InGameMenu extends AppCompatActivity {
                                     hammer = Uri.parse((primer + currentNode.getData().getAuditoryId()));
                                     mediaPlayer = MediaPlayer.create(InGameMenu.this, hammer);
                                     // TODO add key sound logic
-                                    hammer = Uri.parse(primer + "key0" + currentNode.getData().getPassCode());
+                                    hammer = Uri.parse(primer + "keys0" + currentNode.getData().getPassCode());
                                     keyJingle = mediaPlayer.create(InGameMenu.this, hammer);
                                     keyJingle.setVolume(volumeControl.soundFX, volumeControl.soundFX);
                                     keyJingle.start();
@@ -372,10 +372,6 @@ public class InGameMenu extends AppCompatActivity {
                                 mediaPlayer = MediaPlayer.create(InGameMenu.this, R.raw.resetlevel);
                                 mediaPlayer.start();
                                 break;
-                            case 9:
-                                mediaPlayer = MediaPlayer.create(InGameMenu.this, R.raw.instructions);
-                                mediaPlayer.start();
-                                break;
                             case 8:
                                 // invokes save state in game, invokes finish state in game to go back to main menu
                                 Intent output = new Intent();
@@ -385,6 +381,10 @@ public class InGameMenu extends AppCompatActivity {
                                 this.saveSettings();
                                 resetLevel = false;
                                 finish();
+                                break;
+                            case 9:
+                                mediaPlayer = MediaPlayer.create(InGameMenu.this, R.raw.instructions);
+                                mediaPlayer.start();
                                 break;
                         }
                     }
@@ -449,11 +449,11 @@ public class InGameMenu extends AppCompatActivity {
                 Runtime r = Runtime.getRuntime();
                 r.gc();
             }
+            try {
+                data = items.read();
+            } catch (java.io.IOException e) {
+            }
             while (data != '@') {
-                try {
-                    data = items.read();
-                } catch (java.io.IOException e) {
-                }
 
                 if (((char) data != '\n' && ((char) data > 31))) {
                     if (data != 35) {
@@ -498,6 +498,10 @@ public class InGameMenu extends AppCompatActivity {
                                 state = 0;
                         }
                     }
+                }
+                try {
+                    data = items.read();
+                } catch (java.io.IOException e) {
                 }
             }
         }

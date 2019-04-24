@@ -217,9 +217,7 @@ public class GameplayActivity extends AppCompatActivity {
                     else if (((Math.abs(initialInputCoordinate_X - finalInputCoordinate_X) < 50) && (Math.abs(initialInputCoordinate_Y - finalInputCoordinate_Y) < 50))) {
                         echolocate();
                         if(flags[0] == 0){
-                            narrator.stop();
-                            narrator = MediaPlayer.create(this, R.raw.tuttwovoice);
-                            narrator.setVolume(volumeControl.voiceFX, volumeControl.voiceFX);
+                            narrator = MediaPlayer.create(GameplayActivity.this, R.raw.twovoice);
                             r = Runtime.getRuntime();
                             r.gc();
                             narrator.start();
@@ -250,6 +248,7 @@ public class GameplayActivity extends AppCompatActivity {
         }
         return false;
     }
+
 
 
     public void turnLeft()
@@ -304,7 +303,6 @@ public class GameplayActivity extends AppCompatActivity {
             player.setPosition(newPosition);
             if(levelManager.getTileAtCoord(newPosition).getType() == 'e')
             {
-                narrator.stop();
                ending.start();
                 try {
                     Thread.sleep(4000);
@@ -316,8 +314,9 @@ public class GameplayActivity extends AppCompatActivity {
                 // LOGIC FOR TUTORIAL
                 switch (levelManager.getCurrentLevel()){
                     case 1:
-                        narrator.stop();
                         narrator = MediaPlayer.create(this, R.raw.tutonevoice);
+                        r = Runtime.getRuntime();
+                        r.gc();
                         narrator.setVolume(volumeControl.voiceFX, volumeControl.voiceFX);
                         narrator.start();
                         try {
@@ -328,8 +327,9 @@ public class GameplayActivity extends AppCompatActivity {
                         narrator.stop();
                         break;
                     case 3:
-                        narrator.stop();
                     narrator = MediaPlayer.create(this, R.raw.tutthreevoice);
+                        r = Runtime.getRuntime();
+                        r.gc();
                     narrator.setVolume(volumeControl.voiceFX, volumeControl.voiceFX);
                     narrator.start();
                     try {
@@ -395,7 +395,7 @@ public class GameplayActivity extends AppCompatActivity {
                     } catch (InterruptedException ex) {
                         Thread.currentThread().interrupt();
                     }
-                    hammer = Uri.parse(primer + "key0" + levelManager.getDoorAtPosition(newPosition).getPasscode());
+                    hammer = Uri.parse(primer + "keys0" + levelManager.getDoorAtPosition(newPosition).getPasscode());
                     keyJingle = MediaPlayer.create(GameplayActivity.this, hammer);
 
                 }
@@ -412,7 +412,7 @@ public class GameplayActivity extends AppCompatActivity {
                 } catch (InterruptedException ex) {
                     Thread.currentThread().interrupt();
                 }
-                hammer = Uri.parse(primer + "key0" + levelManager.getItemAtPosition(newPosition).getPassCode());
+                hammer = Uri.parse(primer + "keys0" + levelManager.getItemAtPosition(newPosition).getPassCode());
                 keyJingle = MediaPlayer.create(GameplayActivity.this, hammer);
                 keyJingle.start();
             }
@@ -494,9 +494,8 @@ public class GameplayActivity extends AppCompatActivity {
             }
         }
         if(levelManager.hasKey(leftPosition)){
-            hammer = Uri.parse(primer + "key0" + levelManager.getItemAtPosition(leftPosition).getPassCode());
+            hammer = Uri.parse(primer + "keys0" + levelManager.getItemAtPosition(leftPosition).getPassCode());
             keyJingle = MediaPlayer.create(GameplayActivity.this, hammer);
-            keyJingle.setVolume(volumeControl.soundFX,0);
             keyJingle.start();
             try {
                 Thread.sleep(1000);
@@ -541,9 +540,8 @@ public class GameplayActivity extends AppCompatActivity {
             }
         }
         if(levelManager.hasKey(rightPosition)){
-            hammer = Uri.parse(primer + "key0" + levelManager.getItemAtPosition(rightPosition).getPassCode());
+            hammer = Uri.parse(primer + "keys0" + levelManager.getItemAtPosition(rightPosition).getPassCode());
             keyJingle = MediaPlayer.create(GameplayActivity.this, hammer);
-            keyJingle.setVolume(0,volumeControl.soundFX);
             keyJingle.start();
             try {
                 Thread.sleep(1000);
@@ -588,9 +586,8 @@ public class GameplayActivity extends AppCompatActivity {
             }
         }
         if(levelManager.hasKey(backPosition)){
-            hammer = Uri.parse(primer + "key0" + levelManager.getItemAtPosition(backPosition).getPassCode());
+            hammer = Uri.parse(primer + "keys0" + levelManager.getItemAtPosition(backPosition).getPassCode());
             keyJingle = MediaPlayer.create(GameplayActivity.this, hammer);
-            keyJingle.setVolume((volumeControl.soundFX*100)/200,(volumeControl.soundFX*100)/200);
             keyJingle.start();
             try {
                 Thread.sleep(1000);
@@ -641,9 +638,8 @@ public class GameplayActivity extends AppCompatActivity {
                     }
                 }
                 if(levelManager.hasKey(leftPosition)){
-                    hammer = Uri.parse(primer + "key0" + levelManager.getItemAtPosition(leftPosition).getPassCode());
+                    hammer = Uri.parse(primer + "keys0" + levelManager.getItemAtPosition(leftPosition).getPassCode());
                     keyJingle = MediaPlayer.create(GameplayActivity.this, hammer);
-                    keyJingle.setVolume((volumeControl.soundFX*volumePower)/200,0);
                     keyJingle.start();
                     try {
                         Thread.sleep(1000);
@@ -686,9 +682,8 @@ public class GameplayActivity extends AppCompatActivity {
                     }
                 }
                 if(levelManager.hasKey(rightPosition)){
-                    hammer = Uri.parse(primer + "key0" + levelManager.getItemAtPosition(rightPosition).getPassCode());
+                    hammer = Uri.parse(primer + "keys0" + levelManager.getItemAtPosition(rightPosition).getPassCode());
                     keyJingle = MediaPlayer.create(GameplayActivity.this, hammer);
-                    keyJingle.setVolume(0,(volumeControl.soundFX*volumePower)/200);
                     keyJingle.start();
                     try {
                         Thread.sleep(1000);
@@ -728,9 +723,8 @@ public class GameplayActivity extends AppCompatActivity {
                 }
             }
             if(levelManager.hasKey(newPosition)){
-                hammer = Uri.parse(primer + "key0" + levelManager.getItemAtPosition(newPosition).getPassCode());
+                hammer = Uri.parse(primer + "keys0" + levelManager.getItemAtPosition(newPosition).getPassCode());
                 keyJingle = MediaPlayer.create(GameplayActivity.this, hammer);
-                keyJingle.setVolume((volumeControl.soundFX*volumePower)/200,(volumeControl.soundFX*volumePower)/200);
                 keyJingle.start();
                 try {
                     Thread.sleep(1000);
@@ -824,7 +818,7 @@ public class GameplayActivity extends AppCompatActivity {
                         Thread.currentThread().interrupt();
                     }
                     if(levelManager.hasKey(leftPosition)){
-                        hammer = Uri.parse(primer + "key0" + levelManager.getItemAtPosition(leftPosition).getPassCode());
+                        hammer = Uri.parse(primer + "keys0" + levelManager.getItemAtPosition(leftPosition).getPassCode());
                         keyJingle = MediaPlayer.create(GameplayActivity.this, hammer);
                         keyJingle.setVolume((volumeControl.soundFX*volumePower)/200,0);
                         keyJingle.start();
@@ -874,7 +868,7 @@ public class GameplayActivity extends AppCompatActivity {
                     }
                 }
                 if(levelManager.hasKey(rightPosition)){
-                    hammer = Uri.parse(primer + "key0" + levelManager.getItemAtPosition(rightPosition).getPassCode());
+                    hammer = Uri.parse(primer + "keys0" + levelManager.getItemAtPosition(rightPosition).getPassCode());
                     keyJingle = MediaPlayer.create(GameplayActivity.this, hammer);
                     keyJingle.setVolume(0,(volumeControl.soundFX*volumePower)/200);
                     keyJingle.start();

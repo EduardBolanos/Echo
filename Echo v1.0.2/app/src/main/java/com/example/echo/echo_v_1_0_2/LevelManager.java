@@ -28,7 +28,7 @@ public class LevelManager {
     private LevelManager(Context context)
     {
         mLevels = new ArrayList<String>();
-        for(int x = 1; x < 9; x++){
+        for(int x = 1; x < 20; x++){
             mLevels.add(("level" + x + ".txt"));
         }
         mCurrentLevel = 0;
