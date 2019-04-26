@@ -1,12 +1,11 @@
 1#
-8 8#
-wwwwwwww#
-wwwewwww#
-wwwfwwww#
-wwwfwwww#
-wwwfwwww#
-wwwfwwww#
-wwwPwwww#
-wwwwwwww#
+7 7#
+wwwwwww#
+wwwewww#
+wwwfwww#
+wwwfwww#
+wwwfwww#
+wwwPwww#
+wwwwwww#
 0#
 tutonebegin#

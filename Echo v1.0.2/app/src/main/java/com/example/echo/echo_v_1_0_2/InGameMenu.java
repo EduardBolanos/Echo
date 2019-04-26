@@ -19,8 +19,8 @@ public class InGameMenu extends AppCompatActivity {
     private String menu[] = {"Inventory", "Settings and Navigation", "Sound FX Volume", "Voice Volume", "Ambiance & Music",
             "Vibration Level", "Reset Volume Values", "Reset Level",  "Return to Menu", "Instructions"};
     // create these voice files
-    private String menuVoice[] = {"inventory", "explain", "soundfx", "voicefx", "R.raw.amfx",
-            "vibration", "reset", "resetlevel" , "returntomenu" ,"help"};
+    private int menuVoice[] = {R.raw.inventory, R.raw.explain, R.raw.soundfx, R.raw.voicefx, R.raw.amfx,
+            R.raw.vibration, R.raw.reset, R.raw.resetlevel , R.raw.returntomenu , R.raw.help};
     private int menuSize[] = {2, 8};
     public String primer = ("android.resource://" + "com.example.echo.echo_v_1_0_2" + "/raw/"); // Incase things happen such as package reference for public
     private Uri hammer;
@@ -143,8 +143,6 @@ public class InGameMenu extends AppCompatActivity {
     }
 
     public boolean onTouchEvent(MotionEvent event) {
-        Runtime r = Runtime.getRuntime();
-        r.gc();
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
                 x1 = event.getX();
@@ -182,7 +180,7 @@ public class InGameMenu extends AppCompatActivity {
                     }
                     else {
                         contextSelectIG = Math.abs((currentSelectIG - 1) % menuSize[currentMenuContextIG]);
-                        playByUriSoundScape(menuVoice[contextSelectIG + loc], volumeControl.voiceFX, volumeControl.voiceFX);
+                        playSoundScape(menuVoice[contextSelectIG + loc], volumeControl.voiceFX, volumeControl.voiceFX);
                         menuText.setText((String) menu[loc + contextSelectIG]);
                         currentSelectIG--;
                     }
@@ -210,7 +208,7 @@ public class InGameMenu extends AppCompatActivity {
                     }
                     else {
                         contextSelectIG = Math.abs((currentSelectIG + 1) % menuSize[currentMenuContextIG]);
-                        playByUriSoundScape(menuVoice[contextSelectIG + loc], volumeControl.voiceFX, volumeControl.voiceFX);
+                        playSoundScape(menuVoice[contextSelectIG + loc], volumeControl.voiceFX, volumeControl.voiceFX);
                         menuText.setText((String) menu[loc + contextSelectIG]);
                         currentSelectIG++;
                     }
@@ -242,7 +240,7 @@ public class InGameMenu extends AppCompatActivity {
                             contextSelectIG = 0;
                     }
                 } else if ((y1 < y2) && (Math.abs(y1 - y2) > 400)) {
-                    playByUriSoundScape(menuVoice[contextSelectIG + loc], volumeControl.voiceFX, volumeControl.voiceFX);
+                    playSoundScape(menuVoice[contextSelectIG + loc], volumeControl.voiceFX, volumeControl.voiceFX);
                 }
                 else if (((Math.abs(x1 - x2) < 50) && (Math.abs(y1 - y2) < 50))) {
                     if (currentMenuContextIG == 3){
@@ -344,6 +342,9 @@ public class InGameMenu extends AppCompatActivity {
                     }
                 }
         }
+        Runtime r = Runtime.getRuntime();
+        r.gc();
+        super.onTouchEvent(event);
         return false;
     }
 
@@ -463,46 +464,6 @@ public class InGameMenu extends AppCompatActivity {
         }
     }
 
-    void play(int resourceID) {
-
-        final MediaPlayer player = MediaPlayer.create(this, resourceID);
-
-        player.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-            @Override
-            public void onCompletion(MediaPlayer mp) {
-                player.release();
-            }
-        });
-
-        player.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
-            @Override
-            public void onPrepared(MediaPlayer mp) {
-                mp.start();
-            }
-        });
-
-    }
-    void playByUri(String soundName) {
-
-
-        hammer = Uri.parse(primer + soundName);
-        final MediaPlayer player = MediaPlayer.create(this, hammer);
-
-        player.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-            @Override
-            public void onCompletion(MediaPlayer mp) {
-                player.release();
-            }
-        });
-
-        player.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
-            @Override
-            public void onPrepared(MediaPlayer mp) {
-                mp.start();
-            }
-        });
-
-    }
 
     void playSoundScape(int resourceID, float left, float right) {
 

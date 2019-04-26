@@ -14,8 +14,6 @@ import java.io.FileOutputStream;
 public class MainActivity extends AppCompatActivity {
     TextView menuText;
     private SoundSettings volumeControl;
-    public String primer = ("android.resource://" + "com.example.echo.echo_v_1_0_2" + "/raw/"); // Incase things happen such as package reference for public
-    private Uri hammer;
     private int currentSelect; //Counter
     private int currentMenuContext; //Selected Menu
     int contextSelect; //Location in arrays
@@ -28,8 +26,8 @@ public class MainActivity extends AppCompatActivity {
     //Omega String
     private String menu[] = {"Start", "Instructions", "Settings", "Sound FX Volume", "Voice Volume", "Ambiance & Music",
             "Vibration Level", "Reset Volume Values", "New Game", "Continue", "Yes", "No"};
-    private String menuVoice[] = {"start", "hel", "settings", "soundfx", "voicefx", "amfx", "vibration", "reset",
-            "newgame", "continuegame", "yes", "no"};
+    private int menuVoice[] = {R.raw.start, R.raw.hel, R.raw.settings, R.raw.soundfx, R.raw.voicefx, R.raw.amfx,
+            R.raw.vibration, R.raw.reset, R.raw.newgame, R.raw.continuegame, R.raw.yes, R.raw.no};
     private int menuSize[] = {3, 5, 2, 2};
     private int loc;
 
@@ -51,7 +49,7 @@ public class MainActivity extends AppCompatActivity {
         playSoundScape(R.raw.intro, volumeControl.soundFX, volumeControl.soundFX);
         /*IMPORTANT*/
         beat = MediaPlayer.create(MainActivity.this, R.raw.beatingitup); //We needed this song in our app
-        beat.setVolume((volumeControl.ambianceFX * 100) / 200, (volumeControl.ambianceFX * 100) / 200);
+        beat.setVolume((volumeControl.ambianceFX * 100) / 400, (volumeControl.ambianceFX * 100) / 400);
         beat.setLooping(true);
         beat.start();
         super.onCreate(savedInstanceState);
@@ -73,6 +71,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onPause() {
         beat.stop();
+        beat.release();
         this.saveSettings();
         super.onPause();
 
@@ -91,7 +90,9 @@ public class MainActivity extends AppCompatActivity {
             volumeControl.ambianceFX = 0.3f;
             volumeControl.vibrationIntensity = 0.6f;
         }
-        beat.setVolume((volumeControl.ambianceFX * 100) / 200, (volumeControl.ambianceFX * 100) / 200);
+        beat = MediaPlayer.create(MainActivity.this, R.raw.beatingitup); //We needed this song in our app
+        beat.setVolume((volumeControl.ambianceFX * 100) / 400, (volumeControl.ambianceFX * 100) / 400);
+        beat.setLooping(true);
         beat.start();
         currentMenuContext = 0;
         currentSelect = 0;
@@ -104,11 +105,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public boolean onTouchEvent(MotionEvent event) {
-        /**
-         * Cleans up Excess Audio Clips - if not released
-         */
-        Runtime r = Runtime.getRuntime();
-        r.gc();
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
                 x1 = event.getX();
@@ -126,13 +122,13 @@ public class MainActivity extends AppCompatActivity {
                 if ((x1 < x2) && (Math.abs(x1 - x2) > 400)) {
                     playSoundScape(R.raw.slide, volumeControl.soundFX, volumeControl.soundFX);
                     contextSelect = Math.abs((currentSelect - 1) % menuSize[currentMenuContext]);
-                    playByUriSoundScape(menuVoice[contextSelect + loc], volumeControl.voiceFX, volumeControl.voiceFX);
+                    playSoundScape(menuVoice[contextSelect + loc], volumeControl.voiceFX, volumeControl.voiceFX);
                     menuText.setText((String) menu[loc + contextSelect]);
                     currentSelect--;
                 } else if ((x1 > x2) && (Math.abs(x1 - x2) > 400)) {
                     playSoundScape(R.raw.slide, volumeControl.soundFX, volumeControl.soundFX);
                     contextSelect = Math.abs((currentSelect + 1) % menuSize[currentMenuContext]);
-                    playByUriSoundScape(menuVoice[contextSelect + loc], volumeControl.voiceFX, volumeControl.voiceFX);
+                    playSoundScape(menuVoice[contextSelect + loc], volumeControl.voiceFX, volumeControl.voiceFX);
                     menuText.setText((String) menu[loc + contextSelect]);
                     currentSelect++;
 
@@ -170,7 +166,7 @@ public class MainActivity extends AppCompatActivity {
                             break;
                     }
                 } else if ((y1 < y2) && (Math.abs(y1 - y2) > 400)) {
-                    playByUriSoundScape(menuVoice[contextSelect + loc], volumeControl.voiceFX, volumeControl.voiceFX);
+                    playSoundScape(menuVoice[contextSelect + loc], volumeControl.voiceFX, volumeControl.voiceFX);
                 } else if (((Math.abs(x1 - x2) < 50) && (Math.abs(y1 - y2) < 50))) {
                     playSoundScape(R.raw.change, volumeControl.soundFX, volumeControl.soundFX);
                     switch (loc + contextSelect) {
@@ -219,7 +215,7 @@ public class MainActivity extends AppCompatActivity {
                                 volumeControl.ambianceFX = 0.3f;
                             }
                             playSoundScape(R.raw.amfx, volumeControl.ambianceFX, volumeControl.ambianceFX);
-                            beat.setVolume((volumeControl.ambianceFX * 100) / 200, (volumeControl.ambianceFX * 100) / 200);
+                            beat.setVolume((volumeControl.ambianceFX * 100) / 400, (volumeControl.ambianceFX * 100) / 400);
                             beat.start();
                             break;
                         case 6:
@@ -237,7 +233,7 @@ public class MainActivity extends AppCompatActivity {
                             volumeControl.voiceFX = 1.0f;
                             volumeControl.ambianceFX = 0.3f;
                             volumeControl.vibrationIntensity = 0.6f;
-                            beat.setVolume((volumeControl.ambianceFX * 100) / 200, (volumeControl.ambianceFX * 100) / 200);
+                            beat.setVolume((volumeControl.ambianceFX * 100) / 400, (volumeControl.ambianceFX * 100) / 400);
                             beat.start();
                             playSoundScape(R.raw.reset, volumeControl.voiceFX, volumeControl.voiceFX);
                             break;
@@ -282,6 +278,11 @@ public class MainActivity extends AppCompatActivity {
                 }
                 break;
         }
+        /**
+         * Cleans up Excess Audio Clips - if not released
+         */
+        Runtime r = Runtime.getRuntime();
+        r.gc();
         return false;
     }
 
@@ -316,47 +317,6 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    void play(int resourceID) {
-
-        final MediaPlayer player = MediaPlayer.create(this, resourceID);
-
-        player.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-            @Override
-            public void onCompletion(MediaPlayer mp) {
-                player.release();
-            }
-        });
-
-        player.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
-            @Override
-            public void onPrepared(MediaPlayer mp) {
-                mp.start();
-            }
-        });
-
-    }
-
-    void playByUri(String soundName) {
-
-        hammer = Uri.parse(primer + soundName);
-        final MediaPlayer player = MediaPlayer.create(this, hammer);
-
-        player.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-            @Override
-            public void onCompletion(MediaPlayer mp) {
-                player.release();
-            }
-        });
-
-        player.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
-            @Override
-            public void onPrepared(MediaPlayer mp) {
-                mp.start();
-            }
-        });
-
-    }
-
     void playSoundScape(int resourceID, float left, float right) {
 
 
@@ -372,30 +332,9 @@ public class MainActivity extends AppCompatActivity {
         player.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
             @Override
             public void onPrepared(MediaPlayer mp) {
-                mp.start();
+                player.start();
             }
         });
 
-    }
-
-    void playByUriSoundScape(String soundName, float left, float right) {
-
-        hammer = Uri.parse(primer + soundName);
-        final MediaPlayer player = MediaPlayer.create(this, hammer);
-        player.setVolume(left, right);
-
-        player.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-            @Override
-            public void onCompletion(MediaPlayer mp) {
-                player.release();
-            }
-        });
-
-        player.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
-            @Override
-            public void onPrepared(MediaPlayer mp) {
-                mp.start();
-            }
-        });
     }
 }

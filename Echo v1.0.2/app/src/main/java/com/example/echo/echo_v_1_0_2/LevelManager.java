@@ -57,6 +57,7 @@ public class LevelManager {
         char location = mMap[position[0]][position[1]].getType();
         switch (location) {
             case 'w':
+                return false;
             case 'd':
                 return false;
             default:
@@ -262,5 +263,9 @@ public class LevelManager {
             }
         }
         return null;
+    }
+
+    public void resetDoors() {
+        mDoors = new ArrayList<Door>();
     }
 }
