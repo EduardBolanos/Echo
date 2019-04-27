@@ -121,6 +121,7 @@ public class GameplayActivity extends AppCompatActivity {
         ending = MediaPlayer.create(GameplayActivity.this, R.raw.beatingitup2);
         ending.setVolume((volumeControl.soundFX*100)/200, (volumeControl.soundFX*100)/200);
 
+        keyJingle = MediaPlayer.create(GameplayActivity.this, R.raw.none);
         player = new Player(this);
         String newGameState = getIntent().getExtras().getString("gameState");
         if(newGameState.equals("yes")){
@@ -132,11 +133,6 @@ public class GameplayActivity extends AppCompatActivity {
         player.setOrientation(levelManager.getPlayerSpawnOrientation());
         player.setPosition(levelManager.getPlayerSpawnPosition());
         navigateToInGameMenu = new Intent(this, InGameMenu.class);
-        if (savedInstanceState != null)
-        {
-            //player.setPosition();
-            //player.setOrientation();
-        }
     }
 
     @Override
@@ -227,7 +223,7 @@ public class GameplayActivity extends AppCompatActivity {
                 }
                 /**
                  * You move forward by swiping up, it plays your "footsteps", and when you
-                 * reach the end. It also plays a good song created by Nick.
+                 * reach the end. Level changes and everything is right in the world.
                  */
                 else {
                     if ((initialInputCoordinate_Y > finalInputCoordinate_Y) && (Math.abs(initialInputCoordinate_Y - finalInputCoordinate_Y) > 400)) {
@@ -311,132 +307,13 @@ public class GameplayActivity extends AppCompatActivity {
             int[] rightPosition = moveFromPosition(rightOrientation, newPosition);
             if(levelManager.getTileAtCoord(newPosition).getType() == 'e')
             {
-               ending.start();
-                try {
-                    Thread.sleep(4000);
-                } catch (InterruptedException ex) {
-                    Thread.currentThread().interrupt();
-                }
-                ending.stop();
-                ending.reset();
-                // LOGIC FOR TUTORIAL
-                switch (levelManager.getCurrentLevel()){
-                    case 1:
-                        narrator.release();
-                        narrator = MediaPlayer.create(this, R.raw.tutonevoice);
-                        narrator.setVolume(volumeControl.voiceFX, volumeControl.voiceFX);
-                        narrator.start();
-                        try {
-                            Thread.sleep(12000);
-                        } catch (InterruptedException ex) {
-                            Thread.currentThread().interrupt();
-                        }
-                        narrator.stop();
-                        break;
-                    case 3:
-                        narrator.release();
-                    narrator = MediaPlayer.create(this, R.raw.tutthreevoice);
-                    narrator.setVolume(volumeControl.voiceFX, volumeControl.voiceFX);
-                    narrator.start();
-                    try {
-                        Thread.sleep(7000);
-                    } catch (InterruptedException ex) {
-                        Thread.currentThread().interrupt();
-                    }
-                    narrator.stop();
-                    break;
-                }
-                levelChange.start();
-                try {
-                    Thread.sleep(6000);
-                } catch (InterruptedException ex) {
-                    Thread.currentThread().interrupt();
-                }
-                levelChange.stop();
-                try {
-                    Thread.sleep(2000);
-                } catch (InterruptedException ex) {
-                    Thread.currentThread().interrupt();
-                }
-                clearInventory = 1;
-                levelChange = MediaPlayer.create(this, R.raw.levelchange);
-                levelChange.setVolume(volumeControl.soundFX, volumeControl.soundFX);
-
-                ending = MediaPlayer.create(GameplayActivity.this, R.raw.beatingitup);
-                ending.setVolume((volumeControl.soundFX*100)/200, (volumeControl.soundFX*100)/200);
-                this.nextLevel();
+              playEndingLogic();
             }
             else{
                 char leftTile = levelManager.getTileAtCoord(leftPosition).getType(); // checks left area
-                if (leftTile == 'w') {
-                    leftSideWallTap.start();
-                    try {
-                        Thread.sleep(100);
-                    } catch (InterruptedException ex) {
-                        Thread.currentThread().interrupt();
-                    }
-                } else if (leftTile == 'f') {
-                    emptySpaceLeft.start();
-                    //stop playing leftSound
-                    try {
-                        Thread.sleep(500);
-                    } catch (InterruptedException ex) {
-                        Thread.currentThread().interrupt();
-                    }
-                } else if (leftTile == 'd') {
-                    echoDoor.setVolume((volumeControl.soundFX*100)/200,0);
-                    echoDoor.start();
-                    try {
-                        Thread.sleep(100);
-                    } catch (InterruptedException ex) {
-                        Thread.currentThread().interrupt();
-                    }
-                }
-                if(levelManager.hasKey(leftPosition)){
-                    hammer = Uri.parse(primer + "keys0" + levelManager.getItemAtPosition(leftPosition).getPassCode());
-                    keyJingle = MediaPlayer.create(GameplayActivity.this, hammer);
-                    keyJingle.start();
-                    try {
-                        Thread.sleep(1000);
-                    } catch (InterruptedException ex) {
-                        Thread.currentThread().interrupt();
-                    }
-                }
+                playWalkingForwardLeftNoise(leftTile, leftPosition);
                 char rightTile = levelManager.getTileAtCoord(rightPosition).getType(); // checks right area
-                if (rightTile == 'w') {
-                    rightSideWallTap.start();
-                    try {
-                        Thread.sleep(100);
-                    } catch (InterruptedException ex) {
-                        Thread.currentThread().interrupt();
-                    }
-                } else if (rightTile == 'f') {
-                    emptySpaceRight.start();
-                    try {
-                        Thread.sleep(500);
-                    } catch (InterruptedException ex) {
-                        Thread.currentThread().interrupt();
-                    }
-                    //stop playing rightSound
-                } else if (rightTile == 'd') {
-                    echoDoor.setVolume(0,(volumeControl.soundFX*100)/200);
-                    echoDoor.start();
-                    try {
-                        Thread.sleep(100);
-                    } catch (InterruptedException ex) {
-                        Thread.currentThread().interrupt();
-                    }
-                }
-                if(levelManager.hasKey(rightPosition)){
-                    hammer = Uri.parse(primer + "keys0" + levelManager.getItemAtPosition(rightPosition).getPassCode());
-                    keyJingle = MediaPlayer.create(GameplayActivity.this, hammer);
-                    keyJingle.start();
-                    try {
-                        Thread.sleep(1000);
-                    } catch (InterruptedException ex) {
-                        Thread.currentThread().interrupt();
-                    }
-                }
+                playWalkingForwardRightNoise(rightTile, rightPosition);
             }
             //if tile is item get item, if tile is end play end
         }
@@ -457,23 +334,7 @@ public class GameplayActivity extends AppCompatActivity {
                     moveForward.start();
                 }
                 else {
-                    slavicDoorHit.setVolume(volumeControl.soundFX,volumeControl.soundFX);
-                    slavicDoorHit.start();
-                    try {
-                        Thread.sleep(1000);
-                    } catch (InterruptedException ex) {
-                        Thread.currentThread().interrupt();
-                    }
-                    doorLocked.setVolume(volumeControl.soundFX,volumeControl.soundFX);
-                    doorLocked.start();
-                    try {
-                        Thread.sleep(3000);
-                    } catch (InterruptedException ex) {
-                        Thread.currentThread().interrupt();
-                    }
-                    hammer = Uri.parse(primer + "keys0" + levelManager.getDoorAtPosition(newPosition).getPasscode());
-                    keyJingle = MediaPlayer.create(GameplayActivity.this, hammer);
-
+                    playDoorHitLogic(newPosition);
                 }
             }
             //if(Map.isLegal(newPosition)) == false  dont move forward play tileSound
@@ -489,6 +350,7 @@ public class GameplayActivity extends AppCompatActivity {
                     Thread.currentThread().interrupt();
                 }
                 hammer = Uri.parse(primer + "keys0" + levelManager.getItemAtPosition(newPosition).getPassCode());
+                keyJingle.release();
                 keyJingle = MediaPlayer.create(GameplayActivity.this, hammer);
                 keyJingle.start();
             }
@@ -496,6 +358,41 @@ public class GameplayActivity extends AppCompatActivity {
             moveForward.reset();
             moveForward.setVolume(volumeControl.soundFX, volumeControl.soundFX);
         }
+    }
+
+    private void playDoorHitLogic(int[] newPosition) {
+        slavicDoorHit.setVolume(volumeControl.soundFX,volumeControl.soundFX);
+        slavicDoorHit.start();
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException ex) {
+            Thread.currentThread().interrupt();
+        }
+        doorLocked.setVolume(volumeControl.soundFX,volumeControl.soundFX);
+        doorLocked.start();
+        try {
+            Thread.sleep(3000);
+        } catch (InterruptedException ex) {
+            Thread.currentThread().interrupt();
+        }
+        hammer = Uri.parse(primer + "keys0" + levelManager.getDoorAtPosition(newPosition).getPasscode());
+        keyJingle.release();
+        keyJingle = MediaPlayer.create(GameplayActivity.this, hammer);
+        keyJingle.start();
+    }
+
+    public void nextLevel(){
+        generateLevelFromConfigFile(levelManager.getLevel(levelManager.getCurrentLevel()), false);
+        player.setOrientation(levelManager.getPlayerSpawnOrientation());
+        player.setPosition(levelManager.getPlayerSpawnPosition());
+        saveGame();
+    }
+
+    public void resetLevel(){
+        generateLevelFromConfigFile(levelManager.getLevel(levelManager.getCurrentLevel()-1), false);
+        player.setOrientation(levelManager.getPlayerSpawnOrientation());
+        player.setPosition(levelManager.getPlayerSpawnPosition());
+        saveGame();
     }
 
     public void echolocate() { // Reason why this is so big is because sounds need to be differentated, AKA
@@ -533,143 +430,11 @@ public class GameplayActivity extends AppCompatActivity {
         }
         backPosition = moveFromPosition(backOrientation, position);
         leftTile = levelManager.getTileAtCoord(leftPosition).getType(); // What is near player's left side?
-        if (leftTile == 'e') {
-            passing.setVolume(volumeControl.soundFX, 0);
-            passing.start();
-            try {
-                Thread.sleep(1000);
-            } catch (InterruptedException ex) {
-                Thread.currentThread().interrupt();
-            }
-        } else if (leftTile == 'w') {
-            hitWall = MediaPlayer.create(GameplayActivity.this, R.raw.wall_collision);
-            hitWall.setVolume(volumeControl.soundFX, 0);
-            hitWall.start();
-            try {
-                Thread.sleep(500);
-            } catch (InterruptedException ex) {
-                Thread.currentThread().interrupt();
-            }
-        } else if (leftTile == 'f') {
-            emptySpaceLeft.start();
-            //stop playing leftSound
-            try {
-                Thread.sleep(500);
-            } catch (InterruptedException ex) {
-                Thread.currentThread().interrupt();
-            }
-        } else if (leftTile == 'd') {
-            echoDoor.setVolume(volumeControl.soundFX,0);
-            echoDoor.start();
-            //stop playing leftSound
-            try {
-                Thread.sleep(300);
-            } catch (InterruptedException ex) {
-                Thread.currentThread().interrupt();
-            }
-        }
-        if(levelManager.hasKey(leftPosition)){
-            hammer = Uri.parse(primer + "keys0" + levelManager.getItemAtPosition(leftPosition).getPassCode());
-            keyJingle = MediaPlayer.create(GameplayActivity.this, hammer);
-            keyJingle.start();
-            try {
-                Thread.sleep(1000);
-            } catch (InterruptedException ex) {
-                Thread.currentThread().interrupt();
-            }
-        }
+        playLeftofPlayer(leftTile, leftPosition);
         rightTile = levelManager.getTileAtCoord(rightPosition).getType(); // What is near the players' right side?
-        if (rightTile == 'e') {
-            passing.setVolume(0, volumeControl.soundFX);
-            passing.start();
-            try {
-                Thread.sleep(1000);
-            } catch (InterruptedException ex) {
-                Thread.currentThread().interrupt();
-            }
-        } else if (rightTile == 'w') {
-            hitWall = MediaPlayer.create(GameplayActivity.this, R.raw.wall_collision);
-            hitWall.setVolume(0, volumeControl.soundFX);
-            hitWall.start();
-            try {
-                Thread.sleep(500);
-            } catch (InterruptedException ex) {
-                Thread.currentThread().interrupt();
-            }
-        } else if (rightTile == 'f') {
-            emptySpaceLeft.setVolume(0, volumeControl.soundFX);
-            emptySpaceLeft.start();
-            try {
-                Thread.sleep(500);
-            } catch (InterruptedException ex) {
-                Thread.currentThread().interrupt();
-            }
-            //stop playing rightSound
-        } else if (rightTile == 'd') {
-            echoDoor.setVolume(0,volumeControl.soundFX);
-            echoDoor.start();
-            try {
-                Thread.sleep(300);
-            } catch (InterruptedException ex) {
-                Thread.currentThread().interrupt();
-            }
-        }
-        if(levelManager.hasKey(rightPosition)){
-            hammer = Uri.parse(primer + "keys0" + levelManager.getItemAtPosition(rightPosition).getPassCode());
-            keyJingle = MediaPlayer.create(GameplayActivity.this, hammer);
-            keyJingle.start();
-            try {
-                Thread.sleep(1000);
-            } catch (InterruptedException ex) {
-                Thread.currentThread().interrupt();
-            }
-        }
+        playRightofPlayer(rightTile, rightPosition);
         char backTile = levelManager.getTileAtCoord(backPosition).getType(); // what is near the player's back?
-        if (backTile == 'e') {
-            passing.setVolume((volumeControl.soundFX*100)/200, (volumeControl.soundFX*100)/200);
-            passing.start();
-            try {
-                Thread.sleep(1000);
-            } catch (InterruptedException ex) {
-                Thread.currentThread().interrupt();
-            }
-        } else if (backTile == 'w') {
-            hitWall = MediaPlayer.create(GameplayActivity.this, R.raw.wall_collision);
-            hitWall.setVolume((volumeControl.soundFX*100)/200, (volumeControl.soundFX*100)/200);
-            hitWall.start();
-            try {
-                Thread.sleep(500);
-            } catch (InterruptedException ex) {
-                Thread.currentThread().interrupt();
-            }
-        } else if (backTile == 'f') {
-            emptySpaceBack.setVolume(volumeControl.soundFX, volumeControl.soundFX);
-            emptySpaceBack.start();
-            try {
-                Thread.sleep(2000);
-            } catch (InterruptedException ex) {
-                Thread.currentThread().interrupt();
-            }
-            //stop playing rightSound
-        } else if (backTile == 'd') {
-            echoDoor.setVolume((volumeControl.soundFX*100)/200,(volumeControl.soundFX*100)/200);
-            echoDoor.start();
-            try {
-                Thread.sleep(300);
-            } catch (InterruptedException ex) {
-                Thread.currentThread().interrupt();
-            }
-        }
-        if(levelManager.hasKey(backPosition)){
-            hammer = Uri.parse(primer + "keys0" + levelManager.getItemAtPosition(backPosition).getPassCode());
-            keyJingle = MediaPlayer.create(GameplayActivity.this, hammer);
-            keyJingle.start();
-            try {
-                Thread.sleep(1000);
-            } catch (InterruptedException ex) {
-                Thread.currentThread().interrupt();
-            }
-        }
+        playBehindPlayer(backTile, backPosition);
         int playOnce = 0;
         int volumePower = 100;
         echo[0].setVolume(volumeControl.soundFX, volumeControl.soundFX); // volume defaults
@@ -696,156 +461,34 @@ public class GameplayActivity extends AppCompatActivity {
             } catch (InterruptedException ex) {
                 Thread.currentThread().interrupt();
             }
-            if (levelManager.getTileAtCoord(newPosition).getType() == 'e') {
-//                echo.stop();
-                passing.setVolume(volumeControl.soundFX, volumeControl.soundFX);
-                passing.start();
-                try {
-                    Thread.sleep(1000);
-                } catch (InterruptedException ex) {
-                    Thread.currentThread().interrupt();
-                }
-            }
-            if(levelManager.hasKey(newPosition)){
-                hammer = Uri.parse(primer + "keys0" + levelManager.getItemAtPosition(newPosition).getPassCode());
-                keyJingle = MediaPlayer.create(GameplayActivity.this, hammer);
-                keyJingle.start();
-                try {
-                    Thread.sleep(1000);
-                } catch (InterruptedException ex) {
-                    Thread.currentThread().interrupt();
-                }
-            }
+            playPassingSounds(newPosition);
             newPosition = moveFromPosition(orientation, newPosition);
         }
         backTile = levelManager.getTileAtCoord(newPosition).getType(); // using backtile as forwardtile,
-         if (backTile == 'w') {
-             //play wall
-             hitWall = MediaPlayer.create(GameplayActivity.this, R.raw.wall_collision);
-             hitWall.setVolume((volumeControl.soundFX * 100) / 200, (volumeControl.soundFX * 100) / 200);
-             // 1/2 volume for forward wall
-             hitWall.start();
-             try {
-                 Thread.sleep(100);
-             } catch (InterruptedException ex) {
-                 Thread.currentThread().interrupt();
-             }
-         } else if (backTile == 'd') {
-            echoDoor.setVolume((volumeControl.soundFX * 100) / 200, (volumeControl.soundFX * 100) / 200);
-            echoDoor.start();
-            try {
-                Thread.sleep(100);
-            } catch (InterruptedException ex) {
-                Thread.currentThread().interrupt();
-            }
-        }
+        playEndForwardTile(backTile);
             if(playOnce == 1) {
                 //go back to legal space
                 newPosition = moveFromPosition(backOrientation, newPosition);
                 //play sounds to identify left
                 leftPosition = moveFromPosition(leftOrientation, newPosition);
-                if(leftPosition[0] == -1){ // some glitch and bug
+                if(leftPosition[0] == -1){ // Just incase, should be wall anyway
                     leftPosition[0] = 0;
                 }
                 if(leftPosition[1] == -1){
                     leftPosition[1] = 0;
                 }
                 leftTile = levelManager.getTileAtCoord(leftPosition).getType();
-                if (leftTile == 'e') {
-                    passing.setVolume((volumeControl.soundFX*100)/200, 0);
-                    passing.start();
-                    try {
-                        Thread.sleep(1000);
-                    } catch (InterruptedException ex) {
-                        Thread.currentThread().interrupt();
-                    }
-                } else if (leftTile == 'w') {
-                    hitWall = MediaPlayer.create(GameplayActivity.this, R.raw.wall_collision);
-                    hitWall.setVolume(volumeControl.soundFX, 0);
-                    hitWall.start();
-                    try {
-                        Thread.sleep(600);
-                    } catch (InterruptedException ex) {
-                        Thread.currentThread().interrupt();
-                    }
-                } else if (leftTile == 'f') {
-                    emptySpaceLeft.setVolume(volumeControl.soundFX, 0);
-                    emptySpaceLeft.start();
-                    //stop playing leftSound
-                    try {
-                        Thread.sleep(300);
-                    } catch (InterruptedException ex) {
-                        Thread.currentThread().interrupt();
-                    }
-                } else if (leftTile == 'd') {
-                    echoDoor.setVolume((volumeControl.soundFX*100)/400,0);
-                    echoDoor.start();
-                    try {
-                        Thread.sleep(600);
-                    } catch (InterruptedException ex) {
-                        Thread.currentThread().interrupt();
-                    }
-                    if(levelManager.hasKey(leftPosition)){
-                        hammer = Uri.parse(primer + "keys0" + levelManager.getItemAtPosition(leftPosition).getPassCode());
-                        keyJingle = MediaPlayer.create(GameplayActivity.this, hammer);
-                        keyJingle.setVolume((volumeControl.soundFX*volumePower)/200,0);
-                        keyJingle.start();
-                        try {
-                            Thread.sleep(1000);
-                        } catch (InterruptedException ex) {
-                            Thread.currentThread().interrupt();
-                        }
-                    }
-                }
+                playEndLeftTile(leftTile, leftPosition, volumePower);
                 //play sounds to identify right
                 rightPosition = moveFromPosition(rightOrientation, newPosition);
+                if(rightPosition[0] == -1){ // Just incase, should be wall anyway
+                    rightPosition[0] = 0;
+                }
+                if(rightPosition[1] == -1){
+                    rightPosition[1] = 0;
+                }
                 rightTile = levelManager.getTileAtCoord(rightPosition).getType();
-                if (rightTile == 'e') {
-                    passing.setVolume(0, (volumeControl.soundFX*100)/200);
-                    passing.start();
-                    try {
-                        Thread.sleep(1000);
-                    } catch (InterruptedException ex) {
-                        Thread.currentThread().interrupt();
-                    }
-                } else if (rightTile == 'w') {
-                    hitWall = MediaPlayer.create(GameplayActivity.this, R.raw.wall_collision);
-                    hitWall.setVolume(0, volumeControl.soundFX);
-                    hitWall.start();
-                    try {
-                        Thread.sleep(600);
-                    } catch (InterruptedException ex) {
-                        Thread.currentThread().interrupt();
-                    }
-                } else if (rightTile == 'f') {
-                    emptySpaceRight.setVolume(0, volumeControl.soundFX);
-                    emptySpaceRight.start();
-                    try {
-                        Thread.sleep(300);
-                    } catch (InterruptedException ex) {
-                        Thread.currentThread().interrupt();
-                    }
-                    //stop playing rightSound
-                } else if (rightTile == 'd') {
-                    echoDoor.setVolume(0,(volumeControl.soundFX*100)/400);
-                    echoDoor.start();
-                    try {
-                        Thread.sleep(600);
-                    } catch (InterruptedException ex) {
-                        Thread.currentThread().interrupt();
-                    }
-                }
-                if(levelManager.hasKey(rightPosition)){
-                    hammer = Uri.parse(primer + "keys0" + levelManager.getItemAtPosition(rightPosition).getPassCode());
-                    keyJingle = MediaPlayer.create(GameplayActivity.this, hammer);
-                    keyJingle.setVolume(0,(volumeControl.soundFX*volumePower)/200);
-                    keyJingle.start();
-                    try {
-                        Thread.sleep(1000);
-                    } catch (InterruptedException ex) {
-                        Thread.currentThread().interrupt();
-                    }
-                }
+                playEndRightTile(rightTile, rightPosition, volumePower);
             }
             echo[0].reset();
             echo[1].reset();
@@ -853,6 +496,412 @@ public class GameplayActivity extends AppCompatActivity {
             hitWall.reset();
             hitWall.setVolume(volumeControl.soundFX, volumeControl.soundFX);
         }
+
+    /*******************************************************************************************************************************************************
+     *Don't look down here, the internals of the code. Clean, but not as clean.
+     */
+
+    private void playWalkingForwardRightNoise(char rightTile, int[] rightPosition) {
+        switch(rightTile){
+            case 'w':
+                rightSideWallTap.start();
+                try {
+                    Thread.sleep(100);
+                } catch (InterruptedException ex) {
+                    Thread.currentThread().interrupt();
+                }
+                break;
+            case 'f':
+                emptySpaceRight.start();
+                try {
+                    Thread.sleep(500);
+                } catch (InterruptedException ex) {
+                    Thread.currentThread().interrupt();
+                }
+                break;
+            case 'd':
+                echoDoor.setVolume(0,(volumeControl.soundFX*100)/200);
+                echoDoor.start();
+                try {
+                    Thread.sleep(100);
+                } catch (InterruptedException ex) {
+                    Thread.currentThread().interrupt();
+                }
+                break;
+        }
+        if(levelManager.hasKey(rightPosition)){
+            hammer = Uri.parse(primer + "keys0" + levelManager.getItemAtPosition(rightPosition).getPassCode());
+            keyJingle.release();
+            keyJingle = MediaPlayer.create(GameplayActivity.this, hammer);
+            keyJingle.start();
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException ex) {
+                Thread.currentThread().interrupt();
+            }
+        }
+    }
+
+    private void playWalkingForwardLeftNoise(char leftTile, int[] leftPosition) {
+        switch(leftTile){
+            case 'w':
+                leftSideWallTap.start();
+                try {
+                    Thread.sleep(100);
+                } catch (InterruptedException ex) {
+                    Thread.currentThread().interrupt();
+                }
+                break;
+            case 'f':
+                emptySpaceLeft.start();
+                //stop playing leftSound
+                try {
+                    Thread.sleep(500);
+                } catch (InterruptedException ex) {
+                    Thread.currentThread().interrupt();
+                }
+                break;
+            case 'd':
+                echoDoor.setVolume((volumeControl.soundFX*100)/200,0);
+                echoDoor.start();
+                try {
+                    Thread.sleep(100);
+                } catch (InterruptedException ex) {
+                    Thread.currentThread().interrupt();
+                }
+                break;
+        }
+        if(levelManager.hasKey(leftPosition)){
+            hammer = Uri.parse(primer + "keys0" + levelManager.getItemAtPosition(leftPosition).getPassCode());
+            keyJingle.release();
+            keyJingle = MediaPlayer.create(GameplayActivity.this, hammer);
+            keyJingle.start();
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException ex) {
+                Thread.currentThread().interrupt();
+            }
+        }
+    }
+
+
+    private void playLeftofPlayer(char leftTile, int[] leftPosition) {
+        switch(leftTile){
+        case'e':
+            passing.setVolume(volumeControl.soundFX, 0);
+            passing.start();
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException ex) {
+                Thread.currentThread().interrupt();
+            }
+            break;
+            case 'w':
+            hitWall = MediaPlayer.create(GameplayActivity.this, R.raw.wall_collision);
+            hitWall.setVolume(volumeControl.soundFX, 0);
+            hitWall.start();
+            try {
+                Thread.sleep(500);
+            } catch (InterruptedException ex) {
+                Thread.currentThread().interrupt();
+            }
+            break;
+            case 'f':
+            emptySpaceLeft.start();
+            //stop playing leftSound
+            try {
+                Thread.sleep(500);
+            } catch (InterruptedException ex) {
+                Thread.currentThread().interrupt();
+            }
+            break;
+            case 'd':
+            echoDoor.setVolume(volumeControl.soundFX,0);
+            echoDoor.start();
+            try {
+                Thread.sleep(300);
+            } catch (InterruptedException ex) {
+                Thread.currentThread().interrupt();
+            }
+            break;
+        }
+        if(levelManager.hasKey(leftPosition)){
+            hammer = Uri.parse(primer + "keys0" + levelManager.getItemAtPosition(leftPosition).getPassCode());
+            keyJingle.release();
+            keyJingle = MediaPlayer.create(GameplayActivity.this, hammer);
+            keyJingle.start();
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException ex) {
+                Thread.currentThread().interrupt();
+            }
+        }
+    }
+
+    private void playRightofPlayer(char rightTile, int[] rightPosition) {
+        switch(rightTile){
+            case'e':
+            passing.setVolume(0, volumeControl.soundFX);
+            passing.start();
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException ex) {
+                Thread.currentThread().interrupt();
+            }
+            break;
+            case'w':
+            hitWall = MediaPlayer.create(GameplayActivity.this, R.raw.wall_collision);
+            hitWall.setVolume(0, volumeControl.soundFX);
+            hitWall.start();
+            try {
+                Thread.sleep(500);
+            } catch (InterruptedException ex) {
+                Thread.currentThread().interrupt();
+            }
+            break;
+            case'f':
+            emptySpaceLeft.setVolume(0, volumeControl.soundFX);
+            emptySpaceLeft.start();
+            try {
+                Thread.sleep(500);
+            } catch (InterruptedException ex) {
+                Thread.currentThread().interrupt();
+            }
+            break;
+            case'd':
+            echoDoor.setVolume(0,volumeControl.soundFX);
+            echoDoor.start();
+            try {
+                Thread.sleep(300);
+            } catch (InterruptedException ex) {
+                Thread.currentThread().interrupt();
+            }
+            break;
+        }
+        if(levelManager.hasKey(rightPosition)){
+            hammer = Uri.parse(primer + "keys0" + levelManager.getItemAtPosition(rightPosition).getPassCode());
+            keyJingle.release();
+            keyJingle = MediaPlayer.create(GameplayActivity.this, hammer);
+            keyJingle.start();
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException ex) {
+                Thread.currentThread().interrupt();
+            }
+        }
+    }
+
+    private void playBehindPlayer(char backTile, int[] backPosition) {
+        switch(backTile){
+            case'e':
+            passing.setVolume((volumeControl.soundFX*100)/200, (volumeControl.soundFX*100)/200);
+            passing.start();
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException ex) {
+                Thread.currentThread().interrupt();
+            }
+            break;
+            case'w':
+            hitWall = MediaPlayer.create(GameplayActivity.this, R.raw.wall_collision);
+            hitWall.setVolume((volumeControl.soundFX*100)/200, (volumeControl.soundFX*100)/200);
+            hitWall.start();
+            try {
+                Thread.sleep(500);
+            } catch (InterruptedException ex) {
+                Thread.currentThread().interrupt();
+            }
+            break;
+            case 'f':
+            emptySpaceBack.setVolume(volumeControl.soundFX, volumeControl.soundFX);
+            emptySpaceBack.start();
+            try {
+                Thread.sleep(2000);
+            } catch (InterruptedException ex) {
+                Thread.currentThread().interrupt();
+            }
+            break;
+            case'd':
+            echoDoor.setVolume((volumeControl.soundFX*100)/200,(volumeControl.soundFX*100)/200);
+            echoDoor.start();
+            try {
+                Thread.sleep(300);
+            } catch (InterruptedException ex) {
+                Thread.currentThread().interrupt();
+            }
+            break;
+        }
+        if(levelManager.hasKey(backPosition)){
+            hammer = Uri.parse(primer + "keys0" + levelManager.getItemAtPosition(backPosition).getPassCode());
+            keyJingle.release();
+            keyJingle = MediaPlayer.create(GameplayActivity.this, hammer);
+            keyJingle.start();
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException ex) {
+                Thread.currentThread().interrupt();
+            }
+        }
+    }
+
+    private void playPassingSounds(int[] newPosition) {
+        if (levelManager.getTileAtCoord(newPosition).getType() == 'e') {
+//                echo.stop();
+            passing.setVolume(volumeControl.soundFX, volumeControl.soundFX);
+            passing.start();
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException ex) {
+                Thread.currentThread().interrupt();
+            }
+        }
+        if(levelManager.hasKey(newPosition)){
+            hammer = Uri.parse(primer + "keys0" + levelManager.getItemAtPosition(newPosition).getPassCode());
+            keyJingle.release();
+            keyJingle = MediaPlayer.create(GameplayActivity.this, hammer);
+            keyJingle.start();
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException ex) {
+                Thread.currentThread().interrupt();
+            }
+        }
+    }
+
+    private void playEndForwardTile(char forwardTile) {
+        switch (forwardTile) {
+            case 'w':
+                //play wall
+                hitWall = MediaPlayer.create(GameplayActivity.this, R.raw.wall_collision);
+                hitWall.setVolume((volumeControl.soundFX * 100) / 200, (volumeControl.soundFX * 100) / 200);
+                // 1/2 volume for forward wall
+                hitWall.start();
+                try {
+                    Thread.sleep(100);
+                } catch (InterruptedException ex) {
+                    Thread.currentThread().interrupt();
+                }
+                break;
+            case 'd':
+            echoDoor.setVolume((volumeControl.soundFX * 100) / 200, (volumeControl.soundFX * 100) / 200);
+            echoDoor.start();
+            try {
+                Thread.sleep(100);
+            } catch (InterruptedException ex) {
+                Thread.currentThread().interrupt();
+            }
+        break;
+    }
+    }
+
+    private void playEndLeftTile(char leftTile, int[] leftPosition, int volumePower) {
+        switch (leftTile) {
+            case'e':
+                passing.setVolume((volumeControl.soundFX * 100) / 200, 0);
+                passing.start();
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException ex) {
+                    Thread.currentThread().interrupt();
+                }
+                break;
+             case 'w':
+                hitWall = MediaPlayer.create(GameplayActivity.this, R.raw.wall_collision);
+                hitWall.setVolume(volumeControl.soundFX, 0);
+                hitWall.start();
+                try {
+                    Thread.sleep(600);
+                } catch (InterruptedException ex) {
+                    Thread.currentThread().interrupt();
+                }
+                break;
+             case 'f':
+                emptySpaceLeft.setVolume(volumeControl.soundFX, 0);
+                emptySpaceLeft.start();
+                //stop playing leftSound
+                try {
+                    Thread.sleep(300);
+                } catch (InterruptedException ex) {
+                    Thread.currentThread().interrupt();
+                }
+                break;
+            case 'd':
+                echoDoor.setVolume((volumeControl.soundFX * 100) / 400, 0);
+                echoDoor.start();
+                try {
+                    Thread.sleep(600);
+                } catch (InterruptedException ex) {
+                    Thread.currentThread().interrupt();
+                }
+            break;
+        }
+        if(levelManager.hasKey(leftPosition)){
+            hammer = Uri.parse(primer + "keys0" + levelManager.getItemAtPosition(leftPosition).getPassCode());
+            keyJingle.release();
+            keyJingle = MediaPlayer.create(GameplayActivity.this, hammer);
+            keyJingle.setVolume((volumeControl.soundFX*volumePower)/200,0);
+            keyJingle.start();
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException ex) {
+                Thread.currentThread().interrupt();
+            }
+        }
+    }
+
+    private void playEndRightTile(char rightTile, int[] rightPosition, int volumePower) {
+        switch (rightTile) {
+            case 'e':
+                passing.setVolume(0, (volumeControl.soundFX * 100) / 200);
+                passing.start();
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException ex) {
+                    Thread.currentThread().interrupt();
+                }
+                break;
+            case 'w':
+            hitWall = MediaPlayer.create(GameplayActivity.this, R.raw.wall_collision);
+            hitWall.setVolume(0, volumeControl.soundFX);
+            hitWall.start();
+            try {
+                Thread.sleep(600);
+            } catch (InterruptedException ex) {
+                Thread.currentThread().interrupt();
+            }
+            break;
+            case'f':
+            emptySpaceRight.setVolume(0, volumeControl.soundFX);
+            emptySpaceRight.start();
+            try {
+                Thread.sleep(300);
+            } catch (InterruptedException ex) {
+                Thread.currentThread().interrupt();
+            }
+            break;
+            case 'd':
+            echoDoor.setVolume(0, (volumeControl.soundFX * 100) / 400);
+            echoDoor.start();
+            try {
+                Thread.sleep(600);
+            } catch (InterruptedException ex) {
+                Thread.currentThread().interrupt();
+            }
+            break;
+        }
+        if(levelManager.hasKey(rightPosition)){
+            hammer = Uri.parse(primer + "keys0" + levelManager.getItemAtPosition(rightPosition).getPassCode());
+            keyJingle.release();
+            keyJingle = MediaPlayer.create(GameplayActivity.this, hammer);
+            keyJingle.setVolume(0,(volumeControl.soundFX*volumePower)/200);
+            keyJingle.start();
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException ex) {
+                Thread.currentThread().interrupt();
+            }
+        }
+    }
 
     public int[] moveFromPosition(int orientation, int[] position){
         int[] newPosition = new int[2];
@@ -876,42 +925,76 @@ public class GameplayActivity extends AppCompatActivity {
         }
         return newPosition;
     }
-    public void initializeCurrentLevel()
-    {
-        // generate the current level and its items from the corresponding text config file
-        ///generateLevelFromConfigFile();
 
-        // start playing the ambient sfx for the current level
-        // TODO logic here
+    private void playEndingLogic() {
+        ending.start();
+        try {
+            Thread.sleep(4000);
+        } catch (InterruptedException ex) {
+            Thread.currentThread().interrupt();
+        }
+        ending.stop();
+        ending.reset();
+        // LOGIC FOR TUTORIAL
+        playTutorialLogicForEnd();
+        levelChange.start();
+        try {
+            Thread.sleep(6000);
+        } catch (InterruptedException ex) {
+            Thread.currentThread().interrupt();
+        }
+        levelChange.stop();
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException ex) {
+            Thread.currentThread().interrupt();
+        }
+        clearInventory = 1;
+        levelChange = MediaPlayer.create(this, R.raw.levelchange);
+        levelChange.setVolume(volumeControl.soundFX, volumeControl.soundFX);
 
-
-
+        ending = MediaPlayer.create(GameplayActivity.this, R.raw.beatingitup);
+        ending.setVolume((volumeControl.soundFX*100)/200, (volumeControl.soundFX*100)/200);
+        this.nextLevel();
     }
 
-    public void completedCurrentLevel()
-    {
-        // play goal narration
-
-
+    private void playTutorialLogicForEnd() {
+        switch (levelManager.getCurrentLevel()){
+            case 1:
+                narrator.release();
+                narrator = MediaPlayer.create(this, R.raw.tutonevoice);
+                narrator.setVolume(volumeControl.voiceFX, volumeControl.voiceFX);
+                narrator.start();
+                try {
+                    Thread.sleep(12000);
+                } catch (InterruptedException ex) {
+                    Thread.currentThread().interrupt();
+                }
+                narrator.stop();
+                break;
+            case 3:
+                narrator.release();
+                narrator = MediaPlayer.create(this, R.raw.tutthreevoice);
+                narrator.setVolume(volumeControl.voiceFX, volumeControl.voiceFX);
+                narrator.start();
+                try {
+                    Thread.sleep(7000);
+                } catch (InterruptedException ex) {
+                    Thread.currentThread().interrupt();
+                }
+                narrator.stop();
+                break;
+        }
     }
 
     public void generateLevelFromConfigFile(String levelName, boolean saveGameStatus) {
         // logic from level.loadLevel() should be transferred here.
         // save determines if in asset or file
-        int data = 0;
-        String concatinator = "";
-        int[] playerPos = new int[2];
-        int state = 0;
-        int locX = 0;
-        int locY = 0;
-        int bypass = 0;
-        ArrayList<Item> refer = new ArrayList<Item>();
-        int keyLoc;
-        Tile map[][] = null;
         InputStream asset = null;
         FileInputStream assetTwo = null;
-        ArrayList<Integer> passCodes = new ArrayList<Integer>();
-        levelManager.resetDoors();
+        levelManager.nullLevelManager();
+        levelManager = null;
+        levelManager = LevelManager.setNewLevelManager(this);
         if(!saveGameStatus) {
             try {
                 asset = this.getAssets().open(levelName);
@@ -923,242 +1006,14 @@ public class GameplayActivity extends AppCompatActivity {
             } catch (java.io.IOException e) {
             }
         }
-
-        if (asset != null || assetTwo != null) {
-            while (data != -1) {
-                if(!saveGameStatus) {
-                    try {
-                        data = asset.read();
-                    } catch (java.io.IOException e) {
-                    }
-                }else{
-                    try {
-                        data = assetTwo.read();
-                    } catch (java.io.IOException e) {
-                    }
-                }
-                if (((char) data != '\n' && ((char) data > 31))) {
-                    switch (state) {
-                        case 0:
-                            if (data != 35) {
-                                concatinator = concatinator + ((char) data);
-                            } else {
-                                levelManager.setCurrentLevel(Integer.parseInt(concatinator));
-                                concatinator = "";
-                                state = 1;
-                            }
-                            break;
-                        case 1:
-                            if (data != 35) {
-                                if (bypass == 1) {
-                                    concatinator = concatinator + ((char) data);
-                                } else {
-                                    if (data != 32 && bypass == 0) {
-                                        concatinator = concatinator + ((char) data);
-                                    } else {
-                                        levelManager.sizeX = Integer.parseInt(concatinator);
-                                        concatinator = "";
-                                        bypass = 1;
-                                    }
-                                }
-                            } else {
-                                levelManager.sizeY = Integer.parseInt(concatinator);
-                                map = new Tile[levelManager.sizeX][levelManager.sizeY];
-                                locY = levelManager.sizeY - 1;
-                                concatinator = "";
-                                state = 2;
-                            }
-                            break;
-                        case 2:
-                            if (data != 35) {
-                                switch (data) {
-                                    case 'f': // a walkable floor
-                                        map[locX][locY] = levelManager.floor;
-                                        break;
-                                    case 'e': // the goal
-                                        map[locX][locY] = levelManager.end;
-                                        int[] ep = {locX, locY};
-                                        levelManager.setPlayerSpawnPosition(ep);
-                                        break;
-                                    case 'w': // adds a wall
-                                        map[locX][locY] = levelManager.wall;
-                                        break;
-                                    case 'P': // initiates player spawn
-                                        map[locX][locY] = levelManager.floor;
-                                        playerPos[0] = locX; playerPos[1] = locY;
-                                        levelManager.setPlayerSpawnPosition(playerPos);
-                                        break;
-                                    case 'd': // adds a door
-                                        map[locX][locY] = levelManager.door;
-                                        while (data != ')') {
-                                            if (!saveGameStatus) {
-                                                try {
-                                                    data = asset.read();
-                                                } catch (java.io.IOException e) {
-                                                }
-                                            } else {
-                                                try {
-                                                    data = assetTwo.read();
-                                                } catch (java.io.IOException e) {
-                                                }
-                                            }
-                                            if (data != '(' && data != ')') {
-                                                concatinator = concatinator + ((char) data);
-                                            } else if (data != '(') {
-                                                int[] doorPos = {locX, locY};
-                                                StringBuilder doorCode = new StringBuilder();
-                                                doorCode.append(concatinator);
-                                                Door aDoor = new Door(doorPos, doorCode.toString());
-                                                levelManager.addDoor(aDoor);
-                                                concatinator = "";
-                                            }
-                                        }
-                                        break;
-                                    case 'k':
-                                        map[locX][locY] = levelManager.floor;
-                                        while (data != ')') {
-                                            if (!saveGameStatus) {
-                                                try {
-                                                    data = asset.read();
-                                                } catch (java.io.IOException e) {
-                                                }
-                                            } else {
-                                                try {
-                                                    data = assetTwo.read();
-                                                } catch (java.io.IOException e) {
-                                                }
-                                            }
-                                            if (data != '(' && data != ')') {
-                                                concatinator = concatinator + ((char) data);
-                                            } else if (data != '(') {
-                                                if(data == 'P'){
-                                                    map[locX][locY] = levelManager.floor;
-                                                    playerPos[0] = locX; playerPos[1] = locY;
-                                                    levelManager.setPlayerSpawnPosition(playerPos);
-                                                }
-                                                int[] keyPos = {locX, locY};
-                                                StringBuilder keyCode = new StringBuilder();
-                                                keyCode.append(concatinator);
-                                                Item aKey = new Item(keyCode.toString(), keyPos, 0); // 0 is key
-                                                refer.add(aKey);
-                                                concatinator = "";
-                                            }
-                                        }
-                                        break;
-
-                                }
-                                locX++;
-                            } else {
-                                locY--;
-                                locX = 0;
-                            }
-                            if (locY < 0) {
-                                levelManager.setMap(map);
-                                state = 3;
-                            }
-                            break;
-                        case 3:
-                            concatinator = "";
-                            concatinator = concatinator + ((char) data);
-                            levelManager.setPlayerSpawnOrientation(Integer.parseInt(concatinator));
-                            concatinator = "";
-                            if (!saveGameStatus) {// plays a new level intro
-                                try {
-                                    data = asset.read();
-                                } catch (java.io.IOException e) {
-                                }
-                                while (data != -1) {
-                                    try {
-                                        data = asset.read();
-                                    } catch (java.io.IOException e) {
-                                    }
-                                    if (((char) data != '\n' && ((char) data > 31))) {
-                                        if (data != 35) {
-                                            concatinator = concatinator + ((char) data);
-                                        } else {
-                                            hammer = Uri.parse(primer + concatinator); // intro lines
-                                            narrator.release();
-                                            narrator = MediaPlayer.create(this, hammer);
-                                            narrator.setVolume(volumeControl.voiceFX, volumeControl.voiceFX);
-                                            narrator.start();
-                                            concatinator = "";
-                                            data = -1;
-                                        }
-                                    }
-                                }
-                            }
-                            if (refer.size() > 0) {
-                                if (saveGameStatus) {
-                                    try {
-                                        data = assetTwo.read();
-                                    } catch (java.io.IOException e) {
-                                    }
-                                }
-                            }
-                            concatinator = "";
-                            state = 0;
-                            keyLoc = 0;
-                            int end = 1;
-                            for (int x = 0; x < refer.size(); x++) { // adding items
-                                end = 1;
-                                while (end == 1) {
-                                    if (!saveGameStatus) {
-                                        try {
-                                            data = asset.read();
-                                        } catch (java.io.IOException e) {
-                                        }
-                                    } else {
-                                        try {
-                                            data = assetTwo.read();
-                                        } catch (java.io.IOException e) {
-                                        }
-                                    }
-                                    if (((char) data != '\n' && ((char) data > 31))) {
-                                        if (data != 35) {
-                                            concatinator = concatinator + ((char) data);
-                                        } else {
-                                            switch (state) {
-                                                case 0:
-                                                    for (int y = 0; y < refer.size(); y++) {
-                                                        keyLoc = y;
-                                                        if(refer.get(y).getPassCode().equals(concatinator)){
-                                                            break;
-                                                        }
-                                                    }
-                                                    concatinator = "";
-                                                    state = 1;
-                                                    break;
-                                                case 1:
-                                                    refer.get(keyLoc).setName(concatinator);
-                                                    concatinator = "";
-                                                    state = 2;
-                                                    break;
-                                                case 2:
-                                                    refer.get(keyLoc).setAuditoryId(concatinator);
-                                                    concatinator = "";
-                                                    state = 3;
-                                                    break;
-                                                case 3:
-                                                    concatinator = "";
-                                                    state = 4;
-                                                    break;
-                                                case 4:
-                                                    refer.get(keyLoc).setStatus(Integer.parseInt(concatinator));
-                                                    concatinator = "";
-                                                    state = 0;
-                                                    keyLoc = 0;
-                                                    end = 0;
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                            levelManager.setItemsToSpawn(refer);
-                            data = -1;
-                    }
-                    }
-                }
-            }
+        String narration = levelManager.loadLevel(asset, assetTwo, saveGameStatus);
+        if(narration != null) {
+            hammer = Uri.parse(primer + narration); // intro lines
+            narrator.release();
+            narrator = MediaPlayer.create(this, hammer);
+            narrator.setVolume(volumeControl.voiceFX, volumeControl.voiceFX);
+            narrator.start();
+        }
 
         }
 
@@ -1238,7 +1093,7 @@ public class GameplayActivity extends AppCompatActivity {
                         saveGame.write('d');
                         saveGame.write('(');
                         for(int i = 0; i < levelManager.getDoorArraySize(); i++){
-                            if(levelManager.getDoor(i).mLocation[0] == x && levelManager.getDoor(i).mLocation[1] == y){
+                            if(levelManager.getDoor(i).getmLocation()[0] == x && levelManager.getDoor(i).getmLocation()[1] == y){
                                 parser = levelManager.getDoor(i).getPasscode();
                                 stringSizeTracker = 0;
                                 while (stringSizeTracker < parser.length()) {
@@ -1408,15 +1263,4 @@ public class GameplayActivity extends AppCompatActivity {
              e.printStackTrace();
          }
      }
-    public void nextLevel(){
-        generateLevelFromConfigFile(levelManager.getLevel(levelManager.getCurrentLevel()), false);
-        player.setOrientation(levelManager.getPlayerSpawnOrientation());
-        player.setPosition(levelManager.getPlayerSpawnPosition());
-    }
-
-    public void resetLevel(){
-        generateLevelFromConfigFile(levelManager.getLevel(levelManager.getCurrentLevel()-1), false);
-        player.setOrientation(levelManager.getPlayerSpawnOrientation());
-        player.setPosition(levelManager.getPlayerSpawnPosition());
-    }
 }

@@ -283,6 +283,7 @@ public class MainActivity extends AppCompatActivity {
          */
         Runtime r = Runtime.getRuntime();
         r.gc();
+        super.onTouchEvent(event);
         return false;
     }
 
@@ -328,7 +329,6 @@ public class MainActivity extends AppCompatActivity {
                 player.release();
             }
         });
-
         player.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
             @Override
             public void onPrepared(MediaPlayer mp) {

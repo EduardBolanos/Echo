@@ -1,7 +1,7 @@
 package com.example.echo.echo_v_1_0_2;
 
 class Door {
-        protected int mLocation[];
+        private int mLocation[];
         private String mPasscode;
     public Door(int location[], String passcode){
         mLocation = location;
@@ -10,5 +10,8 @@ class Door {
 
     public String getPasscode() {
         return mPasscode;
+    }
+    public int[] getmLocation(){
+        return mLocation;
     }
 }

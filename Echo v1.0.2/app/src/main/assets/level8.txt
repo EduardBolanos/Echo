@@ -1,16 +1,17 @@
-5#
-10 10#
-wwwwwwwwww#
-wwwwwwwwww#
-wwwwewwwww#
-wwwwfwwwww#
-wwwwd(1)wwwww#
-wffd(2)k(1)wwwww#
-wk(2)wwwwwwww#
-wfwwwwwwww#
-wPwwwwwwww#
-wwwwwwwwww#
+7#
+9 9#
+
+
+wwwwwwwww#
+wwwwewwww#
+wwwwd(2)wwww#
+wwwk(3)fk(2)www#
+wwwwfwwww#
+wwwwfwwww#
+wwwwPwwww#
+wwwwwwwww#
+wwwwwwwww#
 0#
 none#
-1#Ain't no Rusty Key#notrusty#none#0#
-2#Wooden Key#woodkey#none#0#
+2#Ain't no Rusty Key#notrusty#none#0#
+3#Rusty Key#rustykey#none#0#
