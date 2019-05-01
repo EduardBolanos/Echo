@@ -8,6 +8,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.MotionEvent;
 import android.widget.TextView;
 
+import com.skyfishjy.library.RippleBackground;
+
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 
@@ -17,7 +19,7 @@ public class InGameMenu extends AppCompatActivity {
     private int contextSelectIG; //Location in arrays, ex
     //Omega String
     private String menu[] = {"Inventory", "Settings and Navigation", "Sound FX Volume", "Voice Volume", "Ambiance & Music",
-            "Vibration Level", "Reset Volume Values", "Reset Level",  "Return to Menu", "Instructions"};
+            "Vibration Level", "Reset Volume", "Reset Level",  "Return to Menu", "Instructions"};
     // create these voice files
     private int menuVoice[] = {R.raw.inventory, R.raw.explain, R.raw.soundfx, R.raw.voicefx, R.raw.amfx,
             R.raw.vibration, R.raw.reset, R.raw.resetlevel , R.raw.returntomenu , R.raw.help};
@@ -34,6 +36,7 @@ public class InGameMenu extends AppCompatActivity {
     float x1, x2, y1, y2;
     TextView menuText;
     SoundSettings volumeControl; // Dunno
+    RippleBackground rippleBackground;
     /**
      * TEST: Use this code for only as a last resort
      */
@@ -57,6 +60,7 @@ public class InGameMenu extends AppCompatActivity {
             volumeControl.ambianceFX = 0.3f;
             volumeControl.vibrationIntensity = 0.6f;
         }
+        playSoundScape(R.raw.inventory,volumeControl.voiceFX, volumeControl.voiceFX);
         menuText = (TextView) findViewById(R.id.textView); // Make sure to change this to new activity counterpart, unless same
         currentSelectIG = 0;
         currentMenuContextIG = 0;
@@ -243,6 +247,8 @@ public class InGameMenu extends AppCompatActivity {
                     playSoundScape(menuVoice[contextSelectIG + loc], volumeControl.voiceFX, volumeControl.voiceFX);
                 }
                 else if (((Math.abs(x1 - x2) < 50) && (Math.abs(y1 - y2) < 50))) {
+                    rippleBackground = (RippleBackground)findViewById(R.id.content3);
+                    rippleBackground.startRippleAnimation();
                     if (currentMenuContextIG == 3){
                        // goto previous and send back data if needed for the item
                     }
@@ -340,6 +346,22 @@ public class InGameMenu extends AppCompatActivity {
                                 break;
                         }
                     }
+                    new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            try {
+                                Thread.sleep(2000);
+                            } catch (InterruptedException ex) {
+                                Thread.currentThread().interrupt();
+                            }
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    rippleBackground.stopRippleAnimation();
+                                }
+                            });
+                        }
+                    }).start();
                 }
         }
         Runtime r = Runtime.getRuntime();

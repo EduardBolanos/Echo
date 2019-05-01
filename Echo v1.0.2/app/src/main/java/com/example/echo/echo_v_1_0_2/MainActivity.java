@@ -6,7 +6,10 @@ import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.MotionEvent;
+import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.skyfishjy.library.RippleBackground;
 
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -20,6 +23,7 @@ public class MainActivity extends AppCompatActivity {
     boolean gameState = true; //new and continue
     Intent gameplayActivity;
     private MediaPlayer beat;
+    RippleBackground rippleBackground;
 
 
     float x1, x2, y1, y2;
@@ -168,6 +172,8 @@ public class MainActivity extends AppCompatActivity {
                 } else if ((y1 < y2) && (Math.abs(y1 - y2) > 400)) {
                     playSoundScape(menuVoice[contextSelect + loc], volumeControl.voiceFX, volumeControl.voiceFX);
                 } else if (((Math.abs(x1 - x2) < 50) && (Math.abs(y1 - y2) < 50))) {
+                    rippleBackground = (RippleBackground)findViewById(R.id.content2);
+                    rippleBackground.startRippleAnimation();
                     playSoundScape(R.raw.change, volumeControl.soundFX, volumeControl.soundFX);
                     switch (loc + contextSelect) {
                         case 0:
@@ -275,6 +281,22 @@ public class MainActivity extends AppCompatActivity {
                             menuText.setText((String) menu[8]);
                             break;
                     }
+                    new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            try {
+                                Thread.sleep(2000);
+                            } catch (InterruptedException ex) {
+                                Thread.currentThread().interrupt();
+                            }
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    rippleBackground.stopRippleAnimation();
+                                }
+                            });
+                        }
+                    }).start();
                 }
                 break;
         }

@@ -7,6 +7,10 @@ import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.MotionEvent;
+import android.view.View;
+import android.widget.ImageView;
+
+import com.skyfishjy.library.RippleBackground;
 
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -389,9 +393,27 @@ public class GameplayActivity extends AppCompatActivity {
             //play wall hit
             if(levelManager.getTileAtCoord(newPosition).getType() == 'w')
             {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        findViewById(R.id.oof).setVisibility(View.VISIBLE);
+                    }
+                });
+
                 hitWall = MediaPlayer.create(GameplayActivity.this, R.raw.wall_collision);
                 hitWall.setVolume(volumeControl.soundFX,volumeControl.soundFX);
                 hitWall.start();
+
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException ex) {
+                    Thread.currentThread().interrupt(); }
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        findViewById(R.id.oof).setVisibility(View.INVISIBLE);
+                    }
+                });
             }
             else if(levelManager.getTileAtCoord(newPosition).getType() == 'd')
             {
@@ -422,7 +444,6 @@ public class GameplayActivity extends AppCompatActivity {
                 keyJingle.start();
             }
             //other then that, you have already picked it up
-            moveForward.reset();
             moveForward.setVolume(volumeControl.soundFX, volumeControl.soundFX);
         }
     }
@@ -476,6 +497,7 @@ public class GameplayActivity extends AppCompatActivity {
         int orientation = player.getOrientation();
         newPosition = moveFromPosition(orientation, position);
         int leftOrientation;
+
         if (orientation == 0) {
             leftOrientation = 3;
         } else {
@@ -507,6 +529,15 @@ public class GameplayActivity extends AppCompatActivity {
         echo[0].setVolume(volumeControl.soundFX, volumeControl.soundFX); // volume defaults
         echo[1].setVolume(volumeControl.soundFX, volumeControl.soundFX);
         echo[2].setVolume(volumeControl.soundFX, volumeControl.soundFX);
+        if(levelManager.isLegal(newPosition)) {
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    RippleBackground rippleBackground = (RippleBackground) findViewById(R.id.content);
+                    rippleBackground.startRippleAnimation();
+                }
+            });
+        }
         while (levelManager.isLegal(newPosition)) //is legal?
         {
             playOnce = 1;
@@ -531,6 +562,15 @@ public class GameplayActivity extends AppCompatActivity {
             playPassingSounds(newPosition);
             newPosition = moveFromPosition(orientation, newPosition);
         }
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                RippleBackground rippleBackground=(RippleBackground)findViewById(R.id.content);
+                if (rippleBackground.isRippleAnimationRunning()) {
+                    rippleBackground.stopRippleAnimation();
+                }
+            }
+        });
         backTile = levelManager.getTileAtCoord(newPosition).getType(); // using backtile as forwardtile,
         playEndForwardTile(backTile);
             if(playOnce == 1) {
@@ -557,7 +597,6 @@ public class GameplayActivity extends AppCompatActivity {
                 rightTile = levelManager.getTileAtCoord(rightPosition).getType();
                 playEndRightTile(rightTile, rightPosition, volumePower);
             }
-            hitWall.reset();
             hitWall.setVolume(volumeControl.soundFX, volumeControl.soundFX);
         }
 
@@ -568,12 +607,24 @@ public class GameplayActivity extends AppCompatActivity {
     private void playWalkingForwardRightNoise(char rightTile, int[] rightPosition) {
         switch(rightTile){
             case 'w':
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        findViewById(R.id.rightIndicator).setVisibility(View.VISIBLE);
+                    }
+                });
                 rightSideWallTap.start();
                 try {
-                    Thread.sleep(100);
+                    Thread.sleep(250);
                 } catch (InterruptedException ex) {
                     Thread.currentThread().interrupt();
                 }
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        findViewById(R.id.rightIndicator).setVisibility(View.INVISIBLE);
+                    }
+                });
                 break;
             case 'f':
                 emptySpaceRight.start();
@@ -609,12 +660,24 @@ public class GameplayActivity extends AppCompatActivity {
     private void playWalkingForwardLeftNoise(char leftTile, int[] leftPosition) {
         switch(leftTile){
             case 'w':
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        findViewById(R.id.leftIndicator).setVisibility(View.VISIBLE);
+                    }
+                });
                 leftSideWallTap.start();
                 try {
-                    Thread.sleep(100);
+                    Thread.sleep(250);
                 } catch (InterruptedException ex) {
                     Thread.currentThread().interrupt();
                 }
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        findViewById(R.id.leftIndicator).setVisibility(View.INVISIBLE);
+                    }
+                });
                 break;
             case 'f':
                 emptySpaceLeft.start();
