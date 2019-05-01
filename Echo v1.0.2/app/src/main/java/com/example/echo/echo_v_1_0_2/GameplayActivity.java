@@ -10,13 +10,13 @@ import android.view.MotionEvent;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.InputStream;
-import java.util.ArrayList;
 
 public class GameplayActivity extends AppCompatActivity {
 
    private LevelManager levelManager;
    private SoundSettings volumeControl;
    private MediaPlayer turn;
+   private MediaPlayer ambiance;
    private MediaPlayer moveForward;
    private MediaPlayer ending;
    private MediaPlayer hitWall;
@@ -67,12 +67,16 @@ public class GameplayActivity extends AppCompatActivity {
         Nick = new ChopstickMan();
         Nick.Stern = true;
 
+        ambiance = MediaPlayer.create(this, R.raw.backgroundcries);
+        ambiance.setLooping(true);
+        ambiance.setVolume((volumeControl.ambianceFX * 100) / 400, (volumeControl.ambianceFX * 100) / 400);
+        ambiance.start();
 
         narrator = MediaPlayer.create(GameplayActivity.this, R.raw.none);
         turn = MediaPlayer.create(GameplayActivity.this, R.raw.swooshleft);
 
         moveForward = MediaPlayer.create(GameplayActivity.this, R.raw.genericfootsteps);
-        moveForward.setVolume(volumeControl.soundFX, volumeControl.soundFX);
+        moveForward.setVolume((volumeControl.ambianceFX * 100) / 200, (volumeControl.ambianceFX * 100) / 200);
 
         hitWall = MediaPlayer.create(GameplayActivity.this, R.raw.wall_collision);
         hitWall.setVolume(volumeControl.soundFX, volumeControl.soundFX);
@@ -83,17 +87,16 @@ public class GameplayActivity extends AppCompatActivity {
         doorUnlocking = MediaPlayer.create(GameplayActivity.this, R.raw.unlockingdoor);
         doorUnlocking.setVolume(volumeControl.soundFX,volumeControl.soundFX);
 
-        doorLocked = MediaPlayer.create(GameplayActivity.this, R.raw.doorlocked);
+        doorLocked = MediaPlayer.create(GameplayActivity.this, R.raw.doortry);
         doorLocked.setVolume(volumeControl.soundFX,volumeControl.soundFX);
 
         slavicDoorHit = MediaPlayer.create(GameplayActivity.this, R.raw.slav01);
         slavicDoorHit.setVolume(volumeControl.soundFX,volumeControl.soundFX);
 
-        pickup = MediaPlayer.create(GameplayActivity.this, R.raw.okay);
+        pickup = MediaPlayer.create(GameplayActivity.this, R.raw.pickup);
         pickup.setVolume(volumeControl.soundFX,volumeControl.soundFX);
 
-        //TODO add the door noise correctly
-        echoDoor = MediaPlayer.create(GameplayActivity.this, R.raw.yeah);
+        echoDoor = MediaPlayer.create(GameplayActivity.this, R.raw.neardoor);
         echoDoor.setVolume(volumeControl.soundFX,volumeControl.soundFX);
 
 
@@ -132,6 +135,7 @@ public class GameplayActivity extends AppCompatActivity {
         String newGameState = getIntent().getExtras().getString("gameState");
         if(newGameState.equals("yes")){
         generateLevelFromConfigFile( levelManager.getLevel(0), false);
+        clearInventory = 1;
         }
         else if(newGameState.equals("no")){
             generateLevelFromConfigFile("saveGame", true);
@@ -145,6 +149,8 @@ public class GameplayActivity extends AppCompatActivity {
     protected void onPause(){
         this.saveGame();
         this.saveItems();
+        ambiance.stop();
+        ambiance.release();
         narrator.release();
         clearInventory = 0;
         super.onPause();
@@ -175,6 +181,10 @@ public class GameplayActivity extends AppCompatActivity {
             }
             this.generateLevelFromConfigFile("saveGame",true);
             narrator = MediaPlayer.create(this, R.raw.none);
+            ambiance = MediaPlayer.create(this, R.raw.backgroundcries);
+            ambiance.setLooping(true);
+            ambiance.setVolume((volumeControl.ambianceFX * 100) / 400, (volumeControl.ambianceFX * 100) / 400);
+            ambiance.start();
         if (requestCode == 1234 && resultCode == RESULT_OK && data != null) {
             boolean test = data.getBooleanExtra("resetLevel", false);
             if(test){
@@ -182,6 +192,9 @@ public class GameplayActivity extends AppCompatActivity {
             }
             test = data.getBooleanExtra("ShutOffState", false);
             if(test){
+                ambiance.stop();
+                ambiance.release();
+                narrator.release();
                 finish();
             }
         }
@@ -207,36 +220,16 @@ public class GameplayActivity extends AppCompatActivity {
                              * The echolocate capability as explained in the SRS documentation
                              */
                             // TODO LOGIC for TUTORIAL
-                            if (levelManager.getCurrentLevel() == 1) {
-                                if ((initialInputCoordinate_Y > finalInputCoordinate_Y) && (Math.abs(initialInputCoordinate_Y - finalInputCoordinate_Y) > 400)) {
-                                    attemptMoveForward();
-                                } else if ((finalInputCoordinate_Y > initialInputCoordinate_Y) && (Math.abs(finalInputCoordinate_Y - initialInputCoordinate_Y) > 400)) {
-                                    startActivityForResult(navigateToInGameMenu, 1234);
-                                }
-
-                            } else if (levelManager.getCurrentLevel() == 2) {
-                                if ((initialInputCoordinate_Y > finalInputCoordinate_Y) && (Math.abs(initialInputCoordinate_Y - finalInputCoordinate_Y) > 400)) {
-                                    if (flags[0] == 1) {
-                                        attemptMoveForward();
-                                    }
-                                } else if (((Math.abs(initialInputCoordinate_X - finalInputCoordinate_X) < 50) && (Math.abs(initialInputCoordinate_Y - finalInputCoordinate_Y) < 50))) {
-                                    echolocate();
-                                    if (flags[0] == 0) {
-                                        narrator.release();
-                                        narrator = MediaPlayer.create(GameplayActivity.this, R.raw.twovoice);
-                                        narrator.start();
-                                        flags[0] = 1;
-                                        // HERE
-                                    } else if ((finalInputCoordinate_Y > initialInputCoordinate_Y) && (Math.abs(finalInputCoordinate_Y - initialInputCoordinate_Y) > 400)) {
-                                        startActivityForResult(navigateToInGameMenu, 1234);
-                                    }
-                                }
-                            }
+                            switch (levelManager.getCurrentLevel()){
+                                case 1:
+                                case 2:
+                                    doTutorialCommands();
+                                    break;
                             /**
                              * You move forward by swiping up, it plays your "footsteps", and when you
                              * reach the end. Level changes and everything is right in the world.
                              */
-                            else {
+                            default:
                                 if ((initialInputCoordinate_Y > finalInputCoordinate_Y) && (Math.abs(initialInputCoordinate_Y - finalInputCoordinate_Y) > 400)) {
                                     attemptMoveForward();
                                 } else if ((initialInputCoordinate_X > finalInputCoordinate_X) && (Math.abs(initialInputCoordinate_X - finalInputCoordinate_X) > 400)) {
@@ -260,6 +253,68 @@ public class GameplayActivity extends AppCompatActivity {
         return false;
     }
 
+    public void doTutorialCommands() {
+        switch(levelManager.getCurrentLevel()) {
+            case 1:
+            if ((initialInputCoordinate_Y > finalInputCoordinate_Y) && (Math.abs(initialInputCoordinate_Y - finalInputCoordinate_Y) > 400)) {
+                attemptMoveForward();
+                switch (flags[0]){
+                    case 0:
+                        narrator.release();
+                        narrator = MediaPlayer.create(GameplayActivity.this, R.raw.tutonepartone);
+                        narrator.start();
+                        flags[0] = 1;
+                        break;
+                    case 1:
+                        narrator.release();
+                        narrator = MediaPlayer.create(GameplayActivity.this, R.raw.tutoneparttwo);
+                        narrator.start();
+                        flags[0] = 2;
+                        break;
+                    case 2:
+                        narrator.release();
+                        narrator = MediaPlayer.create(GameplayActivity.this, R.raw.tutonepartthree);
+                        narrator.start();
+                        flags[0] = 3;
+                        break;
+                }
+            } else if ((finalInputCoordinate_Y > initialInputCoordinate_Y) && (Math.abs(finalInputCoordinate_Y - initialInputCoordinate_Y) > 400)) {
+                startActivityForResult(navigateToInGameMenu, 1234);
+            }
+            break;
+
+            case 2:
+            if ((initialInputCoordinate_Y > finalInputCoordinate_Y) && (Math.abs(initialInputCoordinate_Y - finalInputCoordinate_Y) > 400)) {
+                if (flags[1] == 3) {
+                    attemptMoveForward();
+                }
+            } else if (((Math.abs(initialInputCoordinate_X - finalInputCoordinate_X) < 50) && (Math.abs(initialInputCoordinate_Y - finalInputCoordinate_Y) < 50))) {
+                echolocate();
+                switch(flags[1]) {
+                    case 0:
+                        narrator.release();
+                        narrator = MediaPlayer.create(GameplayActivity.this, R.raw.tuttwopartone);
+                        narrator.start();
+                        flags[1] = 1;
+                        break;
+                    case 1:
+                        narrator.release();
+                        narrator = MediaPlayer.create(GameplayActivity.this, R.raw.tuttwoparttwo);
+                        narrator.start();
+                        flags[1] = 2;
+                        break;
+                    case 2:
+                        narrator.release();
+                        narrator = MediaPlayer.create(GameplayActivity.this, R.raw.tuttwopartthree);
+                        narrator.start();
+                        flags[1] = 3;
+                        break;
+                }
+                } else if ((finalInputCoordinate_Y > initialInputCoordinate_Y) && (Math.abs(finalInputCoordinate_Y - initialInputCoordinate_Y) > 400)) {
+                    startActivityForResult(navigateToInGameMenu, 1234);
+                }
+            }
+        }
 
 
     public void turnLeft()
@@ -273,6 +328,7 @@ public class GameplayActivity extends AppCompatActivity {
             player.setOrientation((player.getOrientation())-1);
         }
         //play turn
+        turn.release();
         turn = MediaPlayer.create(this, R.raw.swooshleft);
         turn.setVolume(volumeControl.soundFX, 0);
         turn.start();
@@ -290,6 +346,7 @@ public class GameplayActivity extends AppCompatActivity {
             player.setOrientation((player.getOrientation())+1);
         }
         //play turn
+        turn.release();
         turn = MediaPlayer.create(this, R.raw.swooshright);
         turn.setVolume(0, volumeControl.soundFX);
         turn.start();
@@ -356,7 +413,6 @@ public class GameplayActivity extends AppCompatActivity {
         }
         if(levelManager.hasKey(newPosition)){
             if(levelManager.pickUpKey(newPosition)) {
-                // TODO Maybe pickup noise?, temp pickup noise btw
                 pickup.setVolume(volumeControl.soundFX,volumeControl.soundFX);
                 pickup.start();
                 try {
@@ -505,9 +561,6 @@ public class GameplayActivity extends AppCompatActivity {
                 rightTile = levelManager.getTileAtCoord(rightPosition).getType();
                 playEndRightTile(rightTile, rightPosition, volumePower);
             }
-            echo[0].reset();
-            echo[1].reset();
-            echo[2].reset();
             hitWall.reset();
             hitWall.setVolume(volumeControl.soundFX, volumeControl.soundFX);
         }
@@ -977,11 +1030,11 @@ public class GameplayActivity extends AppCompatActivity {
         switch (levelManager.getCurrentLevel()){
             case 1:
                 narrator.release();
-                narrator = MediaPlayer.create(this, R.raw.tutonevoice);
+                narrator = MediaPlayer.create(this, R.raw.tutonepartfour);
                 narrator.setVolume(volumeControl.voiceFX, volumeControl.voiceFX);
                 narrator.start();
                 try {
-                    Thread.sleep(12000);
+                    Thread.sleep(3000);
                 } catch (InterruptedException ex) {
                     Thread.currentThread().interrupt();
                 }

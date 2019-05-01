@@ -46,7 +46,7 @@ public class MainActivity extends AppCompatActivity {
             volumeControl.vibrationIntensity = 0.6f;
         }
         gameplayActivity = new Intent(this, GameplayActivity.class);
-        playSoundScape(R.raw.intro, volumeControl.soundFX, volumeControl.soundFX);
+        playSoundScape(R.raw.intro, (volumeControl.voiceFX * 100) / 200, (volumeControl.voiceFX * 100) / 200);
         /*IMPORTANT*/
         beat = MediaPlayer.create(MainActivity.this, R.raw.beatingitup); //We needed this song in our app
         beat.setVolume((volumeControl.ambianceFX * 100) / 400, (volumeControl.ambianceFX * 100) / 400);
