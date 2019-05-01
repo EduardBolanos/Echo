@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.skyfishjy.library.RippleBackground;
 
@@ -40,7 +41,9 @@ public class GameplayActivity extends AppCompatActivity {
    private MediaPlayer keyJingle;
    private MediaPlayer pickup;
    private MediaPlayer echoDoor;
+   private int deathState;
    public ChopstickMan Nick;
+   Toast toast;
 
    private int flags[] = {0,0,0,0,0,0,0,0,0,0,0};
     String primer = ("android.resource://" + "com.example.echo.echo_v_1_0_2" + "/raw/");
@@ -102,6 +105,7 @@ public class GameplayActivity extends AppCompatActivity {
         echoDoor = MediaPlayer.create(GameplayActivity.this, R.raw.neardoor);
         echoDoor.setVolume(volumeControl.soundFX,volumeControl.soundFX);
 
+        deathState = 3;
 
         echo = new MediaPlayer[3]; // forward echo
         echo[0] = new MediaPlayer();
@@ -403,7 +407,6 @@ public class GameplayActivity extends AppCompatActivity {
                 hitWall = MediaPlayer.create(GameplayActivity.this, R.raw.wall_collision);
                 hitWall.setVolume(volumeControl.soundFX,volumeControl.soundFX);
                 hitWall.start();
-
                 try {
                     Thread.sleep(1000);
                 } catch (InterruptedException ex) {
@@ -411,6 +414,7 @@ public class GameplayActivity extends AppCompatActivity {
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
+                        hitWallDeathLogic();
                         findViewById(R.id.oof).setVisibility(View.INVISIBLE);
                     }
                 });
@@ -424,7 +428,20 @@ public class GameplayActivity extends AppCompatActivity {
                     moveForward.start();
                 }
                 else {
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            findViewById(R.id.oof).setVisibility(View.VISIBLE);
+                        }
+                    });
                     playDoorHitLogic(newPosition);
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            playDoorHitDeathLogic();
+                            findViewById(R.id.oof).setVisibility(View.INVISIBLE);
+                        }
+                    });
                 }
             }
             //if(Map.isLegal(newPosition)) == false  dont move forward play tileSound
@@ -445,6 +462,58 @@ public class GameplayActivity extends AppCompatActivity {
             }
             //other then that, you have already picked it up
             moveForward.setVolume(volumeControl.soundFX, volumeControl.soundFX);
+        }
+    }
+
+    private void playDoorHitDeathLogic() {
+        switch (deathState){
+            case 3:
+                toast = Toast.makeText(this,"This is a locked door. You need a key.",Toast.LENGTH_SHORT);
+                toast.show();
+                deathState = 2;
+                break;
+            case 2:
+                toast = Toast.makeText(this,"A door is here. So is your head. You need a key.",Toast.LENGTH_SHORT);
+                toast.show();
+                deathState = 1;
+                break;
+            case 1:
+                toast = Toast.makeText(this,"You don't feel like you can take another headbang on this door. You need a key.",Toast.LENGTH_SHORT);
+                toast.show();
+                deathState = 0;
+                break;
+            case 0:
+                toast = Toast.makeText(this,"You pass out trying to walk into a door.",Toast.LENGTH_SHORT);
+                toast.show();
+                //TODO DEATH NOISE
+                resetLevel();
+                break;
+        }
+    }
+
+    private void hitWallDeathLogic() {
+        switch (deathState){
+            case 3:
+                toast = Toast.makeText(this,"You bumped your head. Be more careful.",Toast.LENGTH_SHORT);
+                toast.show();
+                deathState = 2;
+                break;
+            case 2:
+                toast = Toast.makeText(this,"Your head is hurting bad.",Toast.LENGTH_SHORT);
+                toast.show();
+                deathState = 1;
+                break;
+            case 1:
+                toast = Toast.makeText(this,"You don't feel like you can take anymore head trauma.",Toast.LENGTH_SHORT);
+                toast.show();
+                deathState = 0;
+                break;
+            case 0:
+                toast = Toast.makeText(this,"You pass out. Humpty Dumpty.",Toast.LENGTH_SHORT);
+                toast.show();
+                //TODO DEATH NOISE
+                resetLevel();
+                break;
         }
     }
 
@@ -470,6 +539,7 @@ public class GameplayActivity extends AppCompatActivity {
     }
 
     public void nextLevel(){
+        deathState = 3;
         generateLevelFromConfigFile(levelManager.getLevel(levelManager.getCurrentLevel()), false);
         player.setOrientation(levelManager.getPlayerSpawnOrientation());
         player.setPosition(levelManager.getPlayerSpawnPosition());
@@ -477,10 +547,18 @@ public class GameplayActivity extends AppCompatActivity {
     }
 
     public void resetLevel(){
+        deathState = 3;
         generateLevelFromConfigFile(levelManager.getLevel(levelManager.getCurrentLevel()-1), false);
         player.setOrientation(levelManager.getPlayerSpawnOrientation());
         player.setPosition(levelManager.getPlayerSpawnPosition());
         saveGame();
+    }
+
+    public void startTutorialLevel(){ // SOME CONDITIONS HERE
+        deathState = 3;
+        //generateLevelFromConfigFile(levelManager.getLevel(levelManager.getCurrentLevel()), false); STUB
+        player.setOrientation(levelManager.getPlayerSpawnOrientation());
+        player.setPosition(levelManager.getPlayerSpawnPosition());
     }
 
     public void echolocate() { // Reason why this is so big is because sounds need to be differentated, AKA

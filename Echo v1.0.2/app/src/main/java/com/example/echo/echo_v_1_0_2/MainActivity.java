@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.view.MotionEvent;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.skyfishjy.library.RippleBackground;
 
@@ -24,6 +25,7 @@ public class MainActivity extends AppCompatActivity {
     Intent gameplayActivity;
     private MediaPlayer beat;
     RippleBackground rippleBackground;
+    Toast toast;
 
 
     float x1, x2, y1, y2;
@@ -49,6 +51,8 @@ public class MainActivity extends AppCompatActivity {
             volumeControl.ambianceFX = 0.3f;
             volumeControl.vibrationIntensity = 0.6f;
         }
+        toast = Toast.makeText(this,"Welcome to ECHO!",Toast.LENGTH_SHORT);
+        toast.show();
         gameplayActivity = new Intent(this, GameplayActivity.class);
         playSoundScape(R.raw.intro, (volumeControl.voiceFX * 100) / 200, (volumeControl.voiceFX * 100) / 200);
         /*IMPORTANT*/
