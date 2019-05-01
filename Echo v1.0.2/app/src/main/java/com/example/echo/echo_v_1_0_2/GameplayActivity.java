@@ -3,6 +3,7 @@ package com.example.echo.echo_v_1_0_2;
 import android.content.Intent;
 import android.media.MediaPlayer;
 import android.net.Uri;
+import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.MotionEvent;
@@ -37,7 +38,6 @@ public class GameplayActivity extends AppCompatActivity {
    private MediaPlayer echoDoor;
    public ChopstickMan Nick;
 
-   private int clearInventory;
    private int flags[] = {0,0,0,0,0,0,0,0,0,0,0};
     String primer = ("android.resource://" + "com.example.echo.echo_v_1_0_2" + "/raw/");
     Uri hammer;
@@ -49,9 +49,8 @@ public class GameplayActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_gameplay);
-        levelManager = LevelManager.get(this);
+        levelManager = new LevelManager(this);
         volumeControl = new SoundSettings();
-        clearInventory = 0;
         FileInputStream settings;
         try {
             settings = openFileInput("settings");
@@ -134,8 +133,8 @@ public class GameplayActivity extends AppCompatActivity {
         player = new Player(this);
         String newGameState = getIntent().getExtras().getString("gameState");
         if(newGameState.equals("yes")){
-        generateLevelFromConfigFile( levelManager.getLevel(0), false);
-        clearInventory = 1;
+            generateLevelFromConfigFile( levelManager.getLevel(0), false);
+       // generateLevelFromConfigFile( "level7.txt", false);
         }
         else if(newGameState.equals("no")){
             generateLevelFromConfigFile("saveGame", true);
@@ -152,7 +151,6 @@ public class GameplayActivity extends AppCompatActivity {
         ambiance.stop();
         ambiance.release();
         narrator.release();
-        clearInventory = 0;
         super.onPause();
 
         // WE SHOULD HAVE SOME TEXT TO SPEECH NARRATION THAT INFORMS THE PLAYER THE APP IS PAUSING
@@ -179,12 +177,12 @@ public class GameplayActivity extends AppCompatActivity {
                 volumeControl.ambianceFX = 0.3f;
                 volumeControl.vibrationIntensity = 0.6f;
             }
-            this.generateLevelFromConfigFile("saveGame",true);
             narrator = MediaPlayer.create(this, R.raw.none);
             ambiance = MediaPlayer.create(this, R.raw.backgroundcries);
             ambiance.setLooping(true);
             ambiance.setVolume((volumeControl.ambianceFX * 100) / 400, (volumeControl.ambianceFX * 100) / 400);
             ambiance.start();
+            Nick.Stern = true;
         if (requestCode == 1234 && resultCode == RESULT_OK && data != null) {
             boolean test = data.getBooleanExtra("resetLevel", false);
             if(test){
@@ -211,42 +209,44 @@ public class GameplayActivity extends AppCompatActivity {
                 finalInputCoordinate_X = event.getX();
                 finalInputCoordinate_Y = event.getY();
                 if (Nick.Stern) {
-                    Nick.Stern = false;
-                    new Thread(new Runnable() {
-                        @Override
-                        public void run() {
+                    if ((finalInputCoordinate_Y > initialInputCoordinate_Y) && (Math.abs(finalInputCoordinate_Y - initialInputCoordinate_Y) > 400)) {
+                        startActivityForResult(navigateToInGameMenu, 1234);
+                    } else {
+                        Nick.Stern = false;
+                        new Thread(new Runnable() {
+                            @Override
+                            public void run() {
 
-                            /**
-                             * The echolocate capability as explained in the SRS documentation
-                             */
-                            // TODO LOGIC for TUTORIAL
-                            switch (levelManager.getCurrentLevel()){
-                                case 1:
-                                case 2:
-                                    doTutorialCommands();
-                                    break;
-                            /**
-                             * You move forward by swiping up, it plays your "footsteps", and when you
-                             * reach the end. Level changes and everything is right in the world.
-                             */
-                            default:
-                                if ((initialInputCoordinate_Y > finalInputCoordinate_Y) && (Math.abs(initialInputCoordinate_Y - finalInputCoordinate_Y) > 400)) {
-                                    attemptMoveForward();
-                                } else if ((initialInputCoordinate_X > finalInputCoordinate_X) && (Math.abs(initialInputCoordinate_X - finalInputCoordinate_X) > 400)) {
-                                    turnLeft();
-                                } else if ((finalInputCoordinate_X > initialInputCoordinate_X) && (Math.abs(finalInputCoordinate_X - initialInputCoordinate_X) > 400)) {
-                                    turnRight();
-                                } else if ((finalInputCoordinate_Y > initialInputCoordinate_Y) && (Math.abs(finalInputCoordinate_Y - initialInputCoordinate_Y) > 400)) {
-                                    startActivityForResult(navigateToInGameMenu, 1234);
-                                } else if (((Math.abs(initialInputCoordinate_X - finalInputCoordinate_X) < 50) && (Math.abs(initialInputCoordinate_Y - finalInputCoordinate_Y) < 50))) {
-                                    echolocate();
+                                /**
+                                 * The echolocate capability as explained in the SRS documentation
+                                 */
+                                // TODO LOGIC for TUTORIAL
+                                switch (levelManager.getCurrentLevel()) {
+                                    case 1:
+                                    case 2:
+                                        doTutorialCommands();
+                                        break;
+                                    /**
+                                     * You move forward by swiping up, it plays your "footsteps", and when you
+                                     * reach the end. Level changes and everything is right in the world.
+                                     */
+                                    default:
+                                        if ((initialInputCoordinate_Y > finalInputCoordinate_Y) && (Math.abs(initialInputCoordinate_Y - finalInputCoordinate_Y) > 400)) {
+                                            attemptMoveForward();
+                                        } else if ((initialInputCoordinate_X > finalInputCoordinate_X) && (Math.abs(initialInputCoordinate_X - finalInputCoordinate_X) > 400)) {
+                                            turnLeft();
+                                        } else if ((finalInputCoordinate_X > initialInputCoordinate_X) && (Math.abs(finalInputCoordinate_X - initialInputCoordinate_X) > 400)) {
+                                            turnRight();
+                                        } else if (((Math.abs(initialInputCoordinate_X - finalInputCoordinate_X) < 50) && (Math.abs(initialInputCoordinate_Y - finalInputCoordinate_Y) < 50))) {
+                                            echolocate();
+                                        }
                                 }
+                                Nick.Stern = true;
+                                Runtime r = Runtime.getRuntime();
+                                r.gc();
                             }
-                            Nick.Stern = true;
-                            Runtime r = Runtime.getRuntime();
-                            r.gc();
-                        }
-                    }).start();
+                        }).start();
+                    }
                 }
         }
         super.onTouchEvent(event);
@@ -278,8 +278,6 @@ public class GameplayActivity extends AppCompatActivity {
                         flags[0] = 3;
                         break;
                 }
-            } else if ((finalInputCoordinate_Y > initialInputCoordinate_Y) && (Math.abs(finalInputCoordinate_Y - initialInputCoordinate_Y) > 400)) {
-                startActivityForResult(navigateToInGameMenu, 1234);
             }
             break;
 
@@ -290,7 +288,7 @@ public class GameplayActivity extends AppCompatActivity {
                 }
             } else if (((Math.abs(initialInputCoordinate_X - finalInputCoordinate_X) < 50) && (Math.abs(initialInputCoordinate_Y - finalInputCoordinate_Y) < 50))) {
                 echolocate();
-                switch(flags[1]) {
+                switch (flags[1]) {
                     case 0:
                         narrator.release();
                         narrator = MediaPlayer.create(GameplayActivity.this, R.raw.tuttwopartone);
@@ -310,9 +308,7 @@ public class GameplayActivity extends AppCompatActivity {
                         flags[1] = 3;
                         break;
                 }
-                } else if ((finalInputCoordinate_Y > initialInputCoordinate_Y) && (Math.abs(finalInputCoordinate_Y - initialInputCoordinate_Y) > 400)) {
-                    startActivityForResult(navigateToInGameMenu, 1234);
-                }
+            }
             }
         }
 
@@ -1017,7 +1013,6 @@ public class GameplayActivity extends AppCompatActivity {
         } catch (InterruptedException ex) {
             Thread.currentThread().interrupt();
         }
-        clearInventory = 1;
         levelChange = MediaPlayer.create(this, R.raw.levelchange);
         levelChange.setVolume(volumeControl.soundFX, volumeControl.soundFX);
 
@@ -1062,7 +1057,7 @@ public class GameplayActivity extends AppCompatActivity {
         FileInputStream assetTwo = null;
         levelManager.nullLevelManager();
         levelManager = null;
-        levelManager = LevelManager.setNewLevelManager(this);
+        levelManager = new LevelManager(this);
         if(!saveGameStatus) {
             try {
                 asset = this.getAssets().open(levelName);
@@ -1254,9 +1249,6 @@ public class GameplayActivity extends AppCompatActivity {
          int stringSizeTracker = 0;
          try {
              saveItems = openFileOutput("items", this.MODE_PRIVATE);
-             if(clearInventory == 1){
-                 saveItems.write('R');
-             }
              for(int x = 0; x < levelManager.getItemArraySize(); x++){
                  parser = levelManager.getItem(x).getPassCode();
                  stringSizeTracker = 0;

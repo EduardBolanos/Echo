@@ -163,7 +163,7 @@ public class InGameMenu extends AppCompatActivity {
                         currentNode = currentNode.getPrevious();
                         playByUriSoundScape(currentNode.getData().getAuditoryId(),volumeControl.voiceFX,volumeControl.voiceFX);
                         //TODO key sound logic
-                        playByUriSoundScape("keys0" + currentNode.getData().getPassCode(),volumeControl.soundFX,volumeControl.soundFX);
+                        playByUriSoundScape(("keys0" + currentNode.getData().getPassCode()),volumeControl.soundFX,volumeControl.soundFX);
                         try {
                             Thread.sleep(2000);
                         } catch (InterruptedException ex) {
@@ -191,7 +191,7 @@ public class InGameMenu extends AppCompatActivity {
                         currentNode = currentNode.getNext();
                         playByUriSoundScape(currentNode.getData().getAuditoryId(),volumeControl.voiceFX,volumeControl.voiceFX);
                         //TODO key sound logic
-                        playByUriSoundScape("keys0" + currentNode.getData().getPassCode(),volumeControl.soundFX,volumeControl.soundFX);
+                        playByUriSoundScape(("keys0" + currentNode.getData().getPassCode()),volumeControl.soundFX,volumeControl.soundFX);
                         try {
                             Thread.sleep(2000);
                         } catch (InterruptedException ex) {
@@ -255,7 +255,7 @@ public class InGameMenu extends AppCompatActivity {
                                     currentMenuContextIG = 2;
                                     playByUriSoundScape(currentNode.getData().getAuditoryId(),volumeControl.voiceFX,volumeControl.voiceFX);
                                     //TODO key sound logic
-                                    playByUriSoundScape("keys0" + currentNode.getData().getPassCode(),volumeControl.soundFX,volumeControl.soundFX);
+                                    playByUriSoundScape(("keys0" + currentNode.getData().getPassCode()),volumeControl.soundFX,volumeControl.soundFX);
                                     try {
                                         Thread.sleep(2000);
                                     } catch (InterruptedException ex) {
@@ -389,6 +389,10 @@ public class InGameMenu extends AppCompatActivity {
         String name = "";
         String audio = "";
         int status = 0;
+        nodeSize = 0;
+        childNode = null;
+        currentNode = null;
+        fatherNode = null;
 
         try {
             items = openFileInput("items");
@@ -396,19 +400,7 @@ public class InGameMenu extends AppCompatActivity {
                 data = items.read();
             } catch (java.io.IOException e) {
             }
-            if(data == 'R'){
-                nodeSize = 0;
-                childNode = null;
-                currentNode = null;
-                fatherNode = null;
-                Runtime r = Runtime.getRuntime();
-                r.gc();
-            }
-            try {
-                data = items.read();
-            } catch (java.io.IOException e) {
-            }
-            while (data != '@') {
+            while (data != '@' && data != -1) {
 
                 if (((char) data != '\n' && ((char) data > 31))) {
                     if (data != 35) {
@@ -446,8 +438,6 @@ public class InGameMenu extends AppCompatActivity {
                                 newNode = new ItemNode(newItem, null, null);
                                 if(status == 1){
                                     addItem(newNode);
-                                } else{
-                                    removeItem(newNode);
                                 }
                                 concatinator = "";
                                 state = 0;

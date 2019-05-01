@@ -11,8 +11,6 @@ import java.util.ArrayList;
 
 public class LevelManager {
 
-    private static LevelManager sLevelManager;
-
     private ArrayList<String> mLevels;
     private ArrayList<Door> mDoors;
     private int mCurrentLevel;
@@ -28,7 +26,7 @@ public class LevelManager {
 
     private ArrayList<Item> mItemsToSpawn;
 
-    private LevelManager(Context context)
+    public LevelManager(Context context)
     {
         mLevels = new ArrayList<String>();
         for(int x = 1; x < 20; x++){
@@ -42,18 +40,6 @@ public class LevelManager {
         end = new Tile('e');
         door = new Tile('d');
 
-    }
-    // generate singleton if it has not already been generated
-    public static LevelManager get(Context context)
-    {
-        if (sLevelManager == null)
-        {
-            sLevelManager = new LevelManager(context);
-        }
-        return sLevelManager;
-    }
-    public static LevelManager setNewLevelManager(Context context){
-        return (new LevelManager(context));
     }
 
     public boolean isLegal(int position[])
