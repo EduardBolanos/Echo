@@ -35,6 +35,7 @@ public class GameplayActivity extends AppCompatActivity {
    private MediaPlayer keyJingle;
    private MediaPlayer pickup;
    private MediaPlayer echoDoor;
+   public ChopstickMan Nick;
 
    private int clearInventory;
    private int flags[] = {0,0,0,0,0,0,0,0,0,0,0};
@@ -62,6 +63,11 @@ public class GameplayActivity extends AppCompatActivity {
             volumeControl.ambianceFX = 0.3f;
             volumeControl.vibrationIntensity = 0.6f;
         }
+
+        Nick = new ChopstickMan();
+        Nick.Stern = true;
+
+
         narrator = MediaPlayer.create(GameplayActivity.this, R.raw.none);
         turn = MediaPlayer.create(GameplayActivity.this, R.raw.swooshleft);
 
@@ -191,56 +197,65 @@ public class GameplayActivity extends AppCompatActivity {
             case MotionEvent.ACTION_UP:
                 finalInputCoordinate_X = event.getX();
                 finalInputCoordinate_Y = event.getY();
-                /**
-                 * The echolocate capability as explained in the SRS documentation
-                 */
-                // TODO LOGIC for TUTORIAL
-                if(levelManager.getCurrentLevel() == 1){
-                    if ((initialInputCoordinate_Y > finalInputCoordinate_Y) && (Math.abs(initialInputCoordinate_Y - finalInputCoordinate_Y) > 400)) {
-                        attemptMoveForward();
-                    } else if ((finalInputCoordinate_Y > initialInputCoordinate_Y) && (Math.abs(finalInputCoordinate_Y - initialInputCoordinate_Y) > 400)) {
-                    startActivityForResult(navigateToInGameMenu, 1234);
-                }
+                if (Nick.Stern) {
+                    Nick.Stern = false;
+                    new Thread(new Runnable() {
+                        @Override
+                        public void run() {
 
-                }else if(levelManager.getCurrentLevel() == 2){
-                    if ((initialInputCoordinate_Y > finalInputCoordinate_Y) && (Math.abs(initialInputCoordinate_Y - finalInputCoordinate_Y) > 400)) {
-                        if (flags[0] == 1) {
-                            attemptMoveForward();
+                            /**
+                             * The echolocate capability as explained in the SRS documentation
+                             */
+                            // TODO LOGIC for TUTORIAL
+                            if (levelManager.getCurrentLevel() == 1) {
+                                if ((initialInputCoordinate_Y > finalInputCoordinate_Y) && (Math.abs(initialInputCoordinate_Y - finalInputCoordinate_Y) > 400)) {
+                                    attemptMoveForward();
+                                } else if ((finalInputCoordinate_Y > initialInputCoordinate_Y) && (Math.abs(finalInputCoordinate_Y - initialInputCoordinate_Y) > 400)) {
+                                    startActivityForResult(navigateToInGameMenu, 1234);
+                                }
+
+                            } else if (levelManager.getCurrentLevel() == 2) {
+                                if ((initialInputCoordinate_Y > finalInputCoordinate_Y) && (Math.abs(initialInputCoordinate_Y - finalInputCoordinate_Y) > 400)) {
+                                    if (flags[0] == 1) {
+                                        attemptMoveForward();
+                                    }
+                                } else if (((Math.abs(initialInputCoordinate_X - finalInputCoordinate_X) < 50) && (Math.abs(initialInputCoordinate_Y - finalInputCoordinate_Y) < 50))) {
+                                    echolocate();
+                                    if (flags[0] == 0) {
+                                        narrator.release();
+                                        narrator = MediaPlayer.create(GameplayActivity.this, R.raw.twovoice);
+                                        narrator.start();
+                                        flags[0] = 1;
+                                        // HERE
+                                    } else if ((finalInputCoordinate_Y > initialInputCoordinate_Y) && (Math.abs(finalInputCoordinate_Y - initialInputCoordinate_Y) > 400)) {
+                                        startActivityForResult(navigateToInGameMenu, 1234);
+                                    }
+                                }
+                            }
+                            /**
+                             * You move forward by swiping up, it plays your "footsteps", and when you
+                             * reach the end. Level changes and everything is right in the world.
+                             */
+                            else {
+                                if ((initialInputCoordinate_Y > finalInputCoordinate_Y) && (Math.abs(initialInputCoordinate_Y - finalInputCoordinate_Y) > 400)) {
+                                    attemptMoveForward();
+                                } else if ((initialInputCoordinate_X > finalInputCoordinate_X) && (Math.abs(initialInputCoordinate_X - finalInputCoordinate_X) > 400)) {
+                                    turnLeft();
+                                } else if ((finalInputCoordinate_X > initialInputCoordinate_X) && (Math.abs(finalInputCoordinate_X - initialInputCoordinate_X) > 400)) {
+                                    turnRight();
+                                } else if ((finalInputCoordinate_Y > initialInputCoordinate_Y) && (Math.abs(finalInputCoordinate_Y - initialInputCoordinate_Y) > 400)) {
+                                    startActivityForResult(navigateToInGameMenu, 1234);
+                                } else if (((Math.abs(initialInputCoordinate_X - finalInputCoordinate_X) < 50) && (Math.abs(initialInputCoordinate_Y - finalInputCoordinate_Y) < 50))) {
+                                    echolocate();
+                                }
+                            }
+                            Nick.Stern = true;
+                            Runtime r = Runtime.getRuntime();
+                            r.gc();
                         }
-                    }
-                    else if (((Math.abs(initialInputCoordinate_X - finalInputCoordinate_X) < 50) && (Math.abs(initialInputCoordinate_Y - finalInputCoordinate_Y) < 50))) {
-                        echolocate();
-                        if(flags[0] == 0){
-                            narrator.release();
-                            narrator = MediaPlayer.create(GameplayActivity.this, R.raw.twovoice);
-                            narrator.start();
-                            flags[0] = 1;
-                            // HERE
-                        } else if ((finalInputCoordinate_Y > initialInputCoordinate_Y) && (Math.abs(finalInputCoordinate_Y - initialInputCoordinate_Y) > 400)) {
-                            startActivityForResult(navigateToInGameMenu, 1234);
-                        }
-                    }
-                }
-                /**
-                 * You move forward by swiping up, it plays your "footsteps", and when you
-                 * reach the end. Level changes and everything is right in the world.
-                 */
-                else {
-                    if ((initialInputCoordinate_Y > finalInputCoordinate_Y) && (Math.abs(initialInputCoordinate_Y - finalInputCoordinate_Y) > 400)) {
-                        attemptMoveForward();
-                    } else if ((initialInputCoordinate_X > finalInputCoordinate_X) && (Math.abs(initialInputCoordinate_X - finalInputCoordinate_X) > 400)) {
-                        turnLeft();
-                    } else if ((finalInputCoordinate_X > initialInputCoordinate_X) && (Math.abs(finalInputCoordinate_X - initialInputCoordinate_X) > 400)) {
-                        turnRight();
-                    } else if ((finalInputCoordinate_Y > initialInputCoordinate_Y) && (Math.abs(finalInputCoordinate_Y - initialInputCoordinate_Y) > 400)) {
-                        startActivityForResult(navigateToInGameMenu, 1234);
-                    } else if (((Math.abs(initialInputCoordinate_X - finalInputCoordinate_X) < 50) && (Math.abs(initialInputCoordinate_Y - finalInputCoordinate_Y) < 50))) {
-                        echolocate();
-                    }
+                    }).start();
                 }
         }
-        Runtime r = Runtime.getRuntime();
-        r.gc();
         super.onTouchEvent(event);
         return false;
     }
