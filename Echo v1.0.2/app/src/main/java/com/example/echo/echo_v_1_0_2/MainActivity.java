@@ -31,10 +31,13 @@ public class MainActivity extends AppCompatActivity {
     float x1, x2, y1, y2;
     //Omega String
     private String menu[] = {"Start", "Instructions", "Settings", "Sound FX Volume", "Voice Volume", "Ambiance & Music",
-            "Vibration Level", "Reset Volume Values", "New Game", "Continue", "Yes", "No"};
+            "Vibration Level", "Reset Volume", "New Game", "Continue", "Tutorial Levels", "Yes", "No", "Awareness", "Echolocate",
+            "Left Indications","Right Indications", "Intersection", "Practice", "Keys and Doors", "Keys and Doors Two",
+            "Start with Tutorial","Start W/O Tutorial"};
     private int menuVoice[] = {R.raw.start, R.raw.hel, R.raw.settings, R.raw.soundfx, R.raw.voicefx, R.raw.amfx,
-            R.raw.vibration, R.raw.reset, R.raw.newgame, R.raw.continuegame, R.raw.yes, R.raw.no};
-    private int menuSize[] = {3, 5, 2, 2};
+            R.raw.vibration, R.raw.reset, R.raw.newgame, R.raw.continuegame, R.raw.tutoriallevels, R.raw.yes, R.raw.no,  R.raw.awareness
+    , R.raw.echotutorial, R.raw.leftin, R.raw.rightind, R.raw.intersect, R.raw.practice, R.raw.kad, R.raw.kadtwo, R.raw.swt, R.raw.swot}; // 1st. Tutorial, REST, YEAH, Last two SWT, SWOT
+    private int menuSize[] = {3, 5, 3, 2, 8, 2};
     private int loc;
 
     @Override
@@ -57,7 +60,7 @@ public class MainActivity extends AppCompatActivity {
         playSoundScape(R.raw.intro, (volumeControl.voiceFX * 100) / 200, (volumeControl.voiceFX * 100) / 200);
         /*IMPORTANT*/
         beat = MediaPlayer.create(MainActivity.this, R.raw.beatingitup); //We needed this song in our app
-        beat.setVolume((volumeControl.ambianceFX * 100) / 400, (volumeControl.ambianceFX * 100) / 400);
+        beat.setVolume((volumeControl.ambianceFX * 100) / 800, (volumeControl.ambianceFX * 100) / 800);
         beat.setLooping(true);
         beat.start();
         super.onCreate(savedInstanceState);
@@ -99,7 +102,7 @@ public class MainActivity extends AppCompatActivity {
             volumeControl.vibrationIntensity = 0.6f;
         }
         beat = MediaPlayer.create(MainActivity.this, R.raw.beatingitup); //We needed this song in our app
-        beat.setVolume((volumeControl.ambianceFX * 100) / 400, (volumeControl.ambianceFX * 100) / 400);
+        beat.setVolume((volumeControl.ambianceFX * 100) / 800, (volumeControl.ambianceFX * 100) / 800);
         beat.setLooping(true);
         beat.start();
         currentMenuContext = 0;
@@ -164,7 +167,16 @@ public class MainActivity extends AppCompatActivity {
                          * Case 3 is the confirmation menu, it takes you back to the
                          * game selection screen.
                          */
+                        /**
+                         * Case 4 is the tutorials selections, it takes you back to the
+                         * game selection screen.
+                         */
+                        /**
+                         * Case 5 is the new game selection with or without tutorials
+                         */
                         case 3:
+                        case 4:
+                        case 5:
                             playSoundScape(R.raw.change, volumeControl.soundFX, volumeControl.soundFX);
                             currentMenuContext = 2;
                             currentSelect = 0;
@@ -225,7 +237,7 @@ public class MainActivity extends AppCompatActivity {
                                 volumeControl.ambianceFX = 0.3f;
                             }
                             playSoundScape(R.raw.amfx, volumeControl.ambianceFX, volumeControl.ambianceFX);
-                            beat.setVolume((volumeControl.ambianceFX * 100) / 400, (volumeControl.ambianceFX * 100) / 400);
+                            beat.setVolume((volumeControl.ambianceFX * 100) / 800, (volumeControl.ambianceFX * 100) / 800);
                             beat.start();
                             break;
                         case 6:
@@ -243,16 +255,16 @@ public class MainActivity extends AppCompatActivity {
                             volumeControl.voiceFX = 1.0f;
                             volumeControl.ambianceFX = 0.3f;
                             volumeControl.vibrationIntensity = 0.6f;
-                            beat.setVolume((volumeControl.ambianceFX * 100) / 400, (volumeControl.ambianceFX * 100) / 400);
+                            beat.setVolume((volumeControl.ambianceFX * 100) / 800, (volumeControl.ambianceFX * 100) / 800);
                             beat.start();
                             playSoundScape(R.raw.reset, volumeControl.voiceFX, volumeControl.voiceFX);
                             break;
                         case 8:
-                            playSoundScape(R.raw.yes, volumeControl.voiceFX, volumeControl.voiceFX);
-                            currentMenuContext = 3;
+                            playSoundScape(R.raw.swt, volumeControl.voiceFX, volumeControl.voiceFX);
+                            currentMenuContext = 5;
                             currentSelect = 0;
                             contextSelect = 0;
-                            menuText.setText((String) menu[10]);
+                            menuText.setText((String) menu[21]);
                             gameState = true;
                             break;
                         case 9:
@@ -262,27 +274,91 @@ public class MainActivity extends AppCompatActivity {
                                 currentMenuContext = 3;
                                 contextSelect = 0;
                                 currentSelect = 0;
-                                menuText.setText((String) menu[10]);
+                                menuText.setText((String) menu[11]);
                                 gameState = false;
                             } catch (Exception e) {
                                 playSoundScape(R.raw.continueerror, volumeControl.voiceFX, volumeControl.voiceFX);
                             }
                             break;
                         case 10:
-                            playSoundScape(R.raw.change, volumeControl.soundFX, volumeControl.soundFX);
+                            playSoundScape(R.raw.awareness, volumeControl.voiceFX, volumeControl.voiceFX);
+                            currentMenuContext = 4;
+                            contextSelect = 0;
+                            currentSelect = 0;
+                            menuText.setText((String) menu[13]);
+                            break;
+                        case 11:
                             if (gameState) {
+                                gameplayActivity.putExtra("tutorialStatus", "no");
                                 gameplayActivity.putExtra("gameState", "yes");
                             } else {
+                                gameplayActivity.putExtra("tutorialStatus", "no");
                                 gameplayActivity.putExtra("gameState", "no");
                             }
                             startActivity(gameplayActivity);
                             break;
-                        case 11:
+                        case 12:
                             playSoundScape(R.raw.newgame, volumeControl.voiceFX, volumeControl.voiceFX);
                             currentMenuContext = 2;
                             currentSelect = 0;
                             contextSelect = 0;
                             menuText.setText((String) menu[8]);
+                            break;
+                        case 13:
+                            gameplayActivity.putExtra("tutorialStatus", "yes");
+                            gameplayActivity.putExtra("gameState", "0");
+                            startActivity(gameplayActivity);
+                            break;
+                        case 14:
+                            gameplayActivity.putExtra("tutorialStatus", "yes");
+                            gameplayActivity.putExtra("gameState", "1");
+                            startActivity(gameplayActivity);
+                            break;
+                        case 15:
+                            gameplayActivity.putExtra("tutorialStatus", "yes");
+                            gameplayActivity.putExtra("gameState", "2");
+                            startActivity(gameplayActivity);
+                            break;
+                        case 16:
+                            gameplayActivity.putExtra("tutorialStatus", "yes");
+                            gameplayActivity.putExtra("gameState", "3");
+                            startActivity(gameplayActivity);
+                            break;
+                        case 17:
+                            gameplayActivity.putExtra("tutorialStatus", "yes");
+                            gameplayActivity.putExtra("gameState", "4");
+                            startActivity(gameplayActivity);
+                            break;
+                        case 18:
+                            gameplayActivity.putExtra("tutorialStatus", "yes");
+                            gameplayActivity.putExtra("gameState", "5");
+                            startActivity(gameplayActivity);
+                            break;
+                        case 19:
+                            gameplayActivity.putExtra("tutorialStatus", "yes");
+                            gameplayActivity.putExtra("gameState", "6");
+                            startActivity(gameplayActivity);
+                            break;
+                        case 20:
+                            gameplayActivity.putExtra("tutorialStatus", "yes");
+                            gameplayActivity.putExtra("gameState", "7");
+                            startActivity(gameplayActivity);
+                            break;
+                        case 21:
+                            playSoundScape(R.raw.yes, volumeControl.voiceFX, volumeControl.voiceFX);
+                            currentMenuContext = 3;
+                            contextSelect = 0;
+                            currentSelect = 0;
+                            menuText.setText((String) menu[11]);
+                            gameplayActivity.putExtra("withTutorial", "yes");
+                            break;
+                        case 22:
+                            playSoundScape(R.raw.yes, volumeControl.voiceFX, volumeControl.voiceFX);
+                            currentMenuContext = 3;
+                            contextSelect = 0;
+                            currentSelect = 0;
+                            menuText.setText((String) menu[11]);
+                            gameplayActivity.putExtra("withTutorial", "no");
                             break;
                     }
                     new Thread(new Runnable() {

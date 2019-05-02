@@ -44,6 +44,7 @@ public class GameplayActivity extends AppCompatActivity {
    private int deathState;
    public ChopstickMan Nick;
    Toast toast;
+   private boolean tutorialLevel;
 
    private int flags[] = {0,0,0,0,0,0,0,0,0,0,0};
     String primer = ("android.resource://" + "com.example.echo.echo_v_1_0_2" + "/raw/");
@@ -140,12 +141,24 @@ public class GameplayActivity extends AppCompatActivity {
         keyJingle = MediaPlayer.create(GameplayActivity.this, R.raw.none);
         player = new Player(this);
         String newGameState = getIntent().getExtras().getString("gameState");
-        if(newGameState.equals("yes")){
-            generateLevelFromConfigFile( levelManager.getLevel(0), false);
-       // generateLevelFromConfigFile( "level7.txt", false);
+        String tutorial = getIntent().getExtras().getString("tutorialStatus");
+        if(tutorial.equals("no")) {
+            tutorialLevel = false;
+            if (newGameState.equals("yes")) {
+                if(getIntent().getExtras().getString("withTutorial").equals("yes")) {
+                    generateLevelFromConfigFile(levelManager.getLevel(0), false);
+                }
+                else{
+                    generateLevelFromConfigFile(levelManager.getLevel(8), false);
+                }
+                // generateLevelFromConfigFile( "level7.txt", false);
+            } else if (newGameState.equals("no")) {
+                generateLevelFromConfigFile("saveGame", true);
+            }
         }
-        else if(newGameState.equals("no")){
-            generateLevelFromConfigFile("saveGame", true);
+        else{
+            tutorialLevel = true;
+            startTutorialLevel(newGameState);
         }
         player.setOrientation(levelManager.getPlayerSpawnOrientation());
         player.setPosition(levelManager.getPlayerSpawnPosition());
@@ -154,7 +167,9 @@ public class GameplayActivity extends AppCompatActivity {
 
     @Override
     protected void onPause(){
-        this.saveGame();
+        if(!tutorialLevel) {
+            this.saveGame();
+        }
         this.saveItems();
         ambiance.stop();
         ambiance.release();
@@ -194,7 +209,12 @@ public class GameplayActivity extends AppCompatActivity {
         if (requestCode == 1234 && resultCode == RESULT_OK && data != null) {
             boolean test = data.getBooleanExtra("resetLevel", false);
             if(test){
-                this.resetLevel();
+                if(tutorialLevel){
+                    startTutorialLevel(Integer.toString(levelManager.getCurrentLevel() - 1));
+                }
+                else {
+                    this.resetLevel();
+                }
             }
             test = data.getBooleanExtra("ShutOffState", false);
             if(test){
@@ -438,7 +458,6 @@ public class GameplayActivity extends AppCompatActivity {
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            playDoorHitDeathLogic();
                             findViewById(R.id.oof).setVisibility(View.INVISIBLE);
                         }
                     });
@@ -465,32 +484,6 @@ public class GameplayActivity extends AppCompatActivity {
         }
     }
 
-    private void playDoorHitDeathLogic() {
-        switch (deathState){
-            case 3:
-                toast = Toast.makeText(this,"This is a locked door. You need a key.",Toast.LENGTH_SHORT);
-                toast.show();
-                deathState = 2;
-                break;
-            case 2:
-                toast = Toast.makeText(this,"A door is here. So is your head. You need a key.",Toast.LENGTH_SHORT);
-                toast.show();
-                deathState = 1;
-                break;
-            case 1:
-                toast = Toast.makeText(this,"You don't feel like you can take another headbang on this door. You need a key.",Toast.LENGTH_SHORT);
-                toast.show();
-                deathState = 0;
-                break;
-            case 0:
-                toast = Toast.makeText(this,"You pass out trying to walk into a door.",Toast.LENGTH_SHORT);
-                toast.show();
-                //TODO DEATH NOISE
-                resetLevel();
-                break;
-        }
-    }
-
     private void hitWallDeathLogic() {
         switch (deathState){
             case 3:
@@ -512,7 +505,11 @@ public class GameplayActivity extends AppCompatActivity {
                 toast = Toast.makeText(this,"You pass out. Humpty Dumpty.",Toast.LENGTH_SHORT);
                 toast.show();
                 //TODO DEATH NOISE
-                resetLevel();
+                if(tutorialLevel){
+                 startTutorialLevel(Integer.toString(levelManager.getCurrentLevel() - 1));
+                }else {
+                    resetLevel();
+                }
                 break;
         }
     }
@@ -554,9 +551,9 @@ public class GameplayActivity extends AppCompatActivity {
         saveGame();
     }
 
-    public void startTutorialLevel(){ // SOME CONDITIONS HERE
+    public void startTutorialLevel(String newGameState){ // SOME CONDITIONS HERE
         deathState = 3;
-        //generateLevelFromConfigFile(levelManager.getLevel(levelManager.getCurrentLevel()), false); STUB
+        generateLevelFromConfigFile((newGameState + ".txt"), false);
         player.setOrientation(levelManager.getPlayerSpawnOrientation());
         player.setPosition(levelManager.getPlayerSpawnPosition());
     }
@@ -1142,24 +1139,29 @@ public class GameplayActivity extends AppCompatActivity {
         ending.reset();
         // LOGIC FOR TUTORIAL
         playTutorialLogicForEnd();
-        levelChange.start();
-        try {
-            Thread.sleep(6000);
-        } catch (InterruptedException ex) {
-            Thread.currentThread().interrupt();
-        }
-        levelChange.stop();
-        try {
-            Thread.sleep(2000);
-        } catch (InterruptedException ex) {
-            Thread.currentThread().interrupt();
-        }
-        levelChange = MediaPlayer.create(this, R.raw.levelchange);
-        levelChange.setVolume(volumeControl.soundFX, volumeControl.soundFX);
+        if(!tutorialLevel){
+            levelChange.start();
+            try {
+                Thread.sleep(6000);
+            } catch (InterruptedException ex) {
+                Thread.currentThread().interrupt();
+            }
+            levelChange.stop();
+            try {
+                Thread.sleep(2000);
+            } catch (InterruptedException ex) {
+                Thread.currentThread().interrupt();
+            }
+            levelChange = MediaPlayer.create(this, R.raw.levelchange);
+            levelChange.setVolume(volumeControl.soundFX, volumeControl.soundFX);
 
-        ending = MediaPlayer.create(GameplayActivity.this, R.raw.beatingitup);
-        ending.setVolume((volumeControl.soundFX*100)/200, (volumeControl.soundFX*100)/200);
-        this.nextLevel();
+            ending = MediaPlayer.create(GameplayActivity.this, R.raw.beatingitup);
+            ending.setVolume((volumeControl.soundFX * 100) / 200, (volumeControl.soundFX * 100) / 200);
+            this.nextLevel();
+        }
+        else{
+            finish();
+        }
     }
 
     private void playTutorialLogicForEnd() {
