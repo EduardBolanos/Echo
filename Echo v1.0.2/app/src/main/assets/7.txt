@@ -12,6 +12,6 @@ wwwwPwwww#
 wwwwwwwww#
 wwwwwwwww#
 0#
-none#
+tuteightbegin#
 2#Ain't no Rusty Key#notrusty#none#0#
 3#Rusty Key#rustykey#none#0#

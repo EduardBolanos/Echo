@@ -1,7 +1,5 @@
 6#
 9 9#
-
-
 wwwwwwwww#
 wwwwewwww#
 wwwwd(2)wwww#
@@ -12,6 +10,6 @@ wwwwPwwww#
 wwwwwwwww#
 wwwwwwwww#
 0#
-none#
+tuteightbegin#
 2#Ain't no Rusty Key#notrusty#none#0#
 3#Rusty Key#rustykey#none#0#

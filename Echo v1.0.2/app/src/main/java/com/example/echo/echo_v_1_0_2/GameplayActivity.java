@@ -252,6 +252,9 @@ public class GameplayActivity extends AppCompatActivity {
                                 switch (levelManager.getCurrentLevel()) {
                                     case 1:
                                     case 2:
+                                    case 3:
+                                    case 7:
+                                    case 8:
                                         doTutorialCommands();
                                         break;
                                     /**
@@ -282,62 +285,131 @@ public class GameplayActivity extends AppCompatActivity {
     }
 
     public void doTutorialCommands() {
-        switch(levelManager.getCurrentLevel()) {
+        switch (levelManager.getCurrentLevel()) {
             case 1:
-            if ((initialInputCoordinate_Y > finalInputCoordinate_Y) && (Math.abs(initialInputCoordinate_Y - finalInputCoordinate_Y) > 400)) {
-                attemptMoveForward();
-                switch (flags[0]){
-                    case 0:
-                        narrator.release();
-                        narrator = MediaPlayer.create(GameplayActivity.this, R.raw.tutonepartone);
-                        narrator.start();
-                        flags[0] = 1;
-                        break;
-                    case 1:
-                        narrator.release();
-                        narrator = MediaPlayer.create(GameplayActivity.this, R.raw.tutoneparttwo);
-                        narrator.start();
-                        flags[0] = 2;
-                        break;
-                    case 2:
-                        narrator.release();
-                        narrator = MediaPlayer.create(GameplayActivity.this, R.raw.tutonepartthree);
-                        narrator.start();
-                        flags[0] = 3;
-                        break;
+                if ((initialInputCoordinate_Y > finalInputCoordinate_Y) && (Math.abs(initialInputCoordinate_Y - finalInputCoordinate_Y) > 400)) {
+                    attemptMoveForward();
+                    switch (flags[0]) {
+                        case 0:
+                            narrator.release();
+                            narrator = MediaPlayer.create(GameplayActivity.this, R.raw.tutonepartone);
+                            narrator.start();
+                            flags[0] = 1;
+                            break;
+                        case 1:
+                            narrator.release();
+                            narrator = MediaPlayer.create(GameplayActivity.this, R.raw.tutoneparttwo);
+                            narrator.start();
+                            flags[0] = 2;
+                            break;
+                        case 2:
+                            narrator.release();
+                            narrator = MediaPlayer.create(GameplayActivity.this, R.raw.tutonepartthree);
+                            narrator.start();
+                            flags[0] = 3;
+                            break;
+                    }
                 }
-            }
-            break;
+                break;
 
             case 2:
-            if ((initialInputCoordinate_Y > finalInputCoordinate_Y) && (Math.abs(initialInputCoordinate_Y - finalInputCoordinate_Y) > 400)) {
-                if (flags[1] == 3) {
+                if ((initialInputCoordinate_Y > finalInputCoordinate_Y) && (Math.abs(initialInputCoordinate_Y - finalInputCoordinate_Y) > 400)) {
+                    if (flags[1] == 3) {
+                        attemptMoveForward();
+                    }
+                } else if (((Math.abs(initialInputCoordinate_X - finalInputCoordinate_X) < 50) && (Math.abs(initialInputCoordinate_Y - finalInputCoordinate_Y) < 50))) {
+                    echolocate();
+                    switch (flags[1]) {
+                        case 0:
+                            narrator.release();
+                            narrator = MediaPlayer.create(GameplayActivity.this, R.raw.tuttwopartone);
+                            narrator.start();
+                            flags[1] = 1;
+                            break;
+                        case 1:
+                            narrator.release();
+                            narrator = MediaPlayer.create(GameplayActivity.this, R.raw.tuttwoparttwo);
+                            narrator.start();
+                            flags[1] = 2;
+                            break;
+                        case 2:
+                            narrator.release();
+                            narrator = MediaPlayer.create(GameplayActivity.this, R.raw.tuttwopartthree);
+                            narrator.start();
+                            flags[1] = 3;
+                            break;
+                    }
+                }
+                break;
+            case 3:
+                if ((initialInputCoordinate_Y > finalInputCoordinate_Y) && (Math.abs(initialInputCoordinate_Y - finalInputCoordinate_Y) > 400)) {
                     attemptMoveForward();
+                    flags[2]++;
+                    if (flags[2] > 3 && flags[3] == 0) {
+                        narrator.release();
+                        narrator = MediaPlayer.create(GameplayActivity.this, R.raw.swipe);
+                        narrator.start();
+                        flags[3] = 1;
+                    }
+                } else if ((finalInputCoordinate_X > initialInputCoordinate_X) && (Math.abs(finalInputCoordinate_X - initialInputCoordinate_X) > 400)) {
+                    if (flags[3] == 1) {
+                        turnRight();
+                    }
+                } else if ((initialInputCoordinate_X > finalInputCoordinate_X) && (Math.abs(initialInputCoordinate_X - finalInputCoordinate_X) > 400)) {
+                    if (flags[3] == 1) {
+                        turnLeft();
+                    }
+                } else if (((Math.abs(initialInputCoordinate_X - finalInputCoordinate_X) < 50) && (Math.abs(initialInputCoordinate_Y - finalInputCoordinate_Y) < 50))) {
+                    echolocate();
+                }
+                break;
+        case 7:
+            if ((initialInputCoordinate_Y > finalInputCoordinate_Y) && (Math.abs(initialInputCoordinate_Y - finalInputCoordinate_Y) > 400)) {
+                if (flags[4] == 1) {
+                    attemptMoveForward();
+                }
+            } else if ((finalInputCoordinate_X > initialInputCoordinate_X) && (Math.abs(finalInputCoordinate_X - initialInputCoordinate_X) > 400)) {
+                if (flags[4] == 1) {
+                    turnRight();
+                }
+            } else if ((initialInputCoordinate_X > finalInputCoordinate_X) && (Math.abs(initialInputCoordinate_X - finalInputCoordinate_X) > 400)) {
+                if (flags[4] == 1) {
+                    turnLeft();
                 }
             } else if (((Math.abs(initialInputCoordinate_X - finalInputCoordinate_X) < 50) && (Math.abs(initialInputCoordinate_Y - finalInputCoordinate_Y) < 50))) {
                 echolocate();
-                switch (flags[1]) {
-                    case 0:
-                        narrator.release();
-                        narrator = MediaPlayer.create(GameplayActivity.this, R.raw.tuttwopartone);
-                        narrator.start();
-                        flags[1] = 1;
-                        break;
-                    case 1:
-                        narrator.release();
-                        narrator = MediaPlayer.create(GameplayActivity.this, R.raw.tuttwoparttwo);
-                        narrator.start();
-                        flags[1] = 2;
-                        break;
-                    case 2:
-                        narrator.release();
-                        narrator = MediaPlayer.create(GameplayActivity.this, R.raw.tuttwopartthree);
-                        narrator.start();
-                        flags[1] = 3;
-                        break;
+                if(flags[4] == 0){
+                    narrator.release();
+                    narrator = MediaPlayer.create(GameplayActivity.this, R.raw.tutsevenone);
+                    narrator.start();
                 }
+                flags[4] = 1;
             }
+        break;
+        case 8:
+            if ((initialInputCoordinate_Y > finalInputCoordinate_Y) && (Math.abs(initialInputCoordinate_Y - finalInputCoordinate_Y) > 400)) {
+                if (flags[5] == 1) {
+                    attemptMoveForward();
+                }
+            } else if ((finalInputCoordinate_X > initialInputCoordinate_X) && (Math.abs(finalInputCoordinate_X - initialInputCoordinate_X) > 400)) {
+                if (flags[5] == 1) {
+                    turnRight();
+                }
+            } else if ((initialInputCoordinate_X > finalInputCoordinate_X) && (Math.abs(initialInputCoordinate_X - finalInputCoordinate_X) > 400)) {
+                if (flags[5] == 1) {
+                    turnLeft();
+                }
+            } else if (((Math.abs(initialInputCoordinate_X - finalInputCoordinate_X) < 50) && (Math.abs(initialInputCoordinate_Y - finalInputCoordinate_Y) < 50))) {
+                echolocate();
+                if(flags[5] == 0){
+                    narrator.release();
+                    narrator = MediaPlayer.create(GameplayActivity.this, R.raw.tuteightone);
+                    narrator.start();
+                }
+                flags[5] = 1;
             }
+        break;
+    }
         }
 
 
@@ -446,6 +518,18 @@ public class GameplayActivity extends AppCompatActivity {
                     doorUnlocking.start();
                     player.setPosition(newPosition);
                     moveForward.start();
+                    switch (levelManager.getCurrentLevel()) {
+                        case 7:
+                            try {
+                                Thread.sleep(2000);
+                            } catch (InterruptedException ex) {
+                                Thread.currentThread().interrupt();
+                            }
+                            narrator.release();
+                            narrator = MediaPlayer.create(GameplayActivity.this, R.raw.tutseventhree);
+                            narrator.start();
+                            break;
+                    }
                 }
                 else {
                     runOnUiThread(new Runnable() {
@@ -478,6 +562,18 @@ public class GameplayActivity extends AppCompatActivity {
                 keyJingle.release();
                 keyJingle = MediaPlayer.create(GameplayActivity.this, hammer);
                 keyJingle.start();
+                switch (levelManager.getCurrentLevel()) {
+                    case 7:
+                        try {
+                            Thread.sleep(2000);
+                        } catch (InterruptedException ex) {
+                            Thread.currentThread().interrupt();
+                        }
+                        narrator.release();
+                        narrator = MediaPlayer.create(GameplayActivity.this, R.raw.tutseventwo);
+                        narrator.start();
+                        break;
+                }
             }
             //other then that, you have already picked it up
             moveForward.setVolume(volumeControl.soundFX, volumeControl.soundFX);
@@ -1189,6 +1285,33 @@ public class GameplayActivity extends AppCompatActivity {
                     Thread.currentThread().interrupt();
                 }
                 narrator.stop();
+                break;
+            case 8:
+                try {
+                    Thread.sleep(2000);
+                } catch (InterruptedException ex) {
+                    Thread.currentThread().interrupt();
+                }
+                narrator.release();
+                narrator = MediaPlayer.create(GameplayActivity.this, R.raw.tuteightendone);
+                narrator.start();
+                try {
+                    Thread.sleep(2000);
+                } catch (InterruptedException ex) {
+                    Thread.currentThread().interrupt();
+                }
+                narrator.release();
+                narrator = MediaPlayer.create(GameplayActivity.this, R.raw.none);
+                //TODO MONSTER SOUND NOISE
+                narrator.start();
+                try {
+                    Thread.sleep(2000);
+                } catch (InterruptedException ex) {
+                    Thread.currentThread().interrupt();
+                }
+                narrator.release();
+                narrator = MediaPlayer.create(GameplayActivity.this, R.raw.tuteightendtwo);
+                narrator.start();
                 break;
         }
     }

@@ -13,5 +13,5 @@ wwwwwfwwwwww#
 wwwwwPwwwwww#
 wwwwwwwwwwww#
 0#
-none#
+tutsevenbegin#
 1#Wooden Key#woodkey#none#0#
