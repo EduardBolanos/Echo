@@ -600,6 +600,14 @@ public class GameplayActivity extends AppCompatActivity {
             case 0:
                 toast = Toast.makeText(this,"You pass out. Humpty Dumpty.",Toast.LENGTH_SHORT);
                 toast.show();
+                flags[0] = 0;
+                flags[1] = 0;
+                flags[2] = 0;
+                flags[3] = 0;
+                flags[4] = 0;
+                flags[5] = 0;
+                flags[6] = 0;
+                flags[7] = 0;
                 //TODO DEATH NOISE
                 if(tutorialLevel){
                  startTutorialLevel(Integer.toString(levelManager.getCurrentLevel() - 1));
