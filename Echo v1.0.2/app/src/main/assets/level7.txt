@@ -1,0 +1,17 @@
+7#
+12 12#
+wwwwwwwwwwww#
+wwwwwwwwwwww#
+wwwwwewwwwww#
+wwwwwd(1)wwwwww#
+wwwwwfwwwwww#
+wwwwwfwwwwww#
+wwwwwk(1)wwwww#
+wwwwwfwwwwww#
+wwwwwfwwwwww#
+wwwwwfwwwwww#
+wwwwwPwwwwww#
+wwwwwwwwwwww#
+0#
+none#
+1#Wooden Key#woodkey#none#0#

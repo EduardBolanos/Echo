@@ -1,0 +1,16 @@
+5#
+10 10#
+wwwwwwwwww#
+wwwwwwwwww#
+wwwwewwwww#
+wwwwfwwwww#
+wwwwd(1)wwwww#
+wffd(2)k(1)wwwww#
+wk(2)wwwwwwww#
+wfwwwwwwww#
+wPwwwwwwww#
+wwwwwwwwww#
+0#
+none#
+1#Ain't no Rusty Key#notrusty#none#0#
+2#Wooden Key#woodkey#none#0#
