@@ -18,10 +18,10 @@ import java.io.FileOutputStream;
 public class MainActivity extends AppCompatActivity {
     TextView menuText;
     private SoundSettings volumeControl;
-    private int currentSelect; //Counter
-    private int currentMenuContext; //Selected Menu
-    int contextSelect; //Location in arrays
-    boolean gameState = true; //new and continue
+    private int currentSelect;
+    private int currentMenuContext;
+    int contextSelect;
+    boolean gameState = true;
     Intent gameplayActivity;
     private MediaPlayer beat;
     RippleBackground rippleBackground;
@@ -125,7 +125,6 @@ public class MainActivity extends AppCompatActivity {
             case MotionEvent.ACTION_UP:
                 x2 = event.getX();
                 y2 = event.getY();
-                //OMEGA CODE BLOCK
                 loc = 0;
                 for (int x = 0; x < currentMenuContext; x++) {
                     loc = (loc + menuSize[x]);

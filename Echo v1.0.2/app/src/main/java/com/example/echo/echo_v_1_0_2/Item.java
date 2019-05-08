@@ -9,7 +9,7 @@ public class Item {
     private int mTactileIdNonVibrate;
     private String mAuditoryId;
     private String mPassCode;
-    private int mStatus; // 0 is ground, 1 is picked up.
+    private int mStatus; // 0 is ground, 1 is picked up, 2 is used
     private int mType; // 0 is key
     private int[] mLocation;
 

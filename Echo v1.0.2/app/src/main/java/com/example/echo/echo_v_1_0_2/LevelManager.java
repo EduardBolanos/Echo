@@ -161,6 +161,21 @@ public class LevelManager {
         return mLevels.get(cronologicalOrder);
     }
 
+    public int[] checkOutOfBounds(int[] position){
+        if(position[0] <= -1){ // Just incase, should be wall anyway
+            position[0] = 0;
+        }
+        else if(position[0] >= getSizeX()){
+            position[0] = (getSizeX() - 1);
+        }
+        if(position[1] <= -1){
+            position[1] = 0;
+        }
+        else if(position[1] >= getSizeY()){
+            position[1] = (getSizeY() - 1);
+        }
+        return position;
+    }
     public Door getDoorAtPosition(int[] position){
         Door theDoor = null;
         for(int i = 0; i < mDoors.size(); i++){

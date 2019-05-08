@@ -453,7 +453,7 @@ public class GameplayActivity extends AppCompatActivity {
         // logic from player.attemptMoveForward() should be transferred to here
         int[] newPosition;
         int[] position = player.getPosition();
-        newPosition = moveFromPosition(player.getOrientation(),position);
+        newPosition = player.moveFromPosition(player.getOrientation(),position);
         if(levelManager.isLegal(newPosition))
         {
             //play footstep
@@ -466,14 +466,14 @@ public class GameplayActivity extends AppCompatActivity {
             } else {
                 leftOrientation = player.getOrientation() - 1;
             }
-            int[] leftPosition = moveFromPosition(leftOrientation, newPosition);
+            int[] leftPosition = player.moveFromPosition(leftOrientation, newPosition);
             int rightOrientation;
             if (player.getOrientation() == 3) {
                 rightOrientation = 0;
             } else {
                 rightOrientation = player.getOrientation() + 1;
             }
-            int[] rightPosition = moveFromPosition(rightOrientation, newPosition);
+            int[] rightPosition = player.moveFromPosition(rightOrientation, newPosition);
             if(levelManager.getTileAtCoord(newPosition).getType() == 'e')
             {
               playEndingLogic();
@@ -677,7 +677,7 @@ public class GameplayActivity extends AppCompatActivity {
         int[] backPosition;
         int[] position = player.getPosition();
         int orientation = player.getOrientation();
-        newPosition = moveFromPosition(orientation, position);
+        newPosition = player.moveFromPosition(orientation, position);
         //TODO ENEMIES and TELEPORT LOOK FOR play methods and follow their names
         int leftOrientation;
 
@@ -686,60 +686,27 @@ public class GameplayActivity extends AppCompatActivity {
         } else {
             leftOrientation = orientation - 1;
         }
-        leftPosition = moveFromPosition(leftOrientation, position);
+        leftPosition = player.moveFromPosition(leftOrientation, position);
         int rightOrientation;
         if (orientation == 3) {
             rightOrientation = 0;
         } else {
             rightOrientation = orientation + 1;
         }
-        rightPosition = moveFromPosition(rightOrientation, position);
+        rightPosition = player.moveFromPosition(rightOrientation, position);
         int backOrientation;
         if (rightOrientation == 3) {
             backOrientation = 0;
         } else {
             backOrientation = orientation + 1;
         }
-        backPosition = moveFromPosition(backOrientation, position);
-        if(backPosition[0] <= -1){ // Just incase, should be wall anyway
-            backPosition[0] = 0;
-        }
-        else if(backPosition[0] >= levelManager.getSizeX()){
-            backPosition[0] = (levelManager.getSizeX() - 1);
-        }
-        if(backPosition[1] <= -1){
-            backPosition[1] = 0;
-        }
-        else if(backPosition[1] >= levelManager.getSizeY()){
-            backPosition[1] = (levelManager.getSizeY() - 1);
-        }
+        backPosition = player.moveFromPosition(backOrientation, position);
+        backPosition = levelManager.checkOutOfBounds(backPosition);
         leftTile = levelManager.getTileAtCoord(leftPosition).getType(); // What is near player's left side?
-        if(leftPosition[0] <= -1){ // Just incase, should be wall anyway
-            leftPosition[0] = 0;
-        }
-        else if(leftPosition[0] >= levelManager.getSizeX()){
-            leftPosition[0] = (levelManager.getSizeX() - 1);
-        }
-        if(leftPosition[1] <= -1){
-            leftPosition[1] = 0;
-        }
-        else if(leftPosition[1] >= levelManager.getSizeY()){
-            leftPosition[1] = (levelManager.getSizeY() - 1);
-        }
+        leftPosition = levelManager.checkOutOfBounds(leftPosition);
         playLeftofPlayer(leftTile, leftPosition);
         rightTile = levelManager.getTileAtCoord(rightPosition).getType(); // What is near the players' right side?
-        if(rightPosition[0] <= -1){ // Just incase, should be wall anyway
-            rightPosition[0] = 0;
-        }
-        else if(rightPosition[0] >= levelManager.getSizeX()){
-            rightPosition[0] = (levelManager.getSizeX() - 1);
-        }
-        if(rightPosition[1] <= -1){
-            rightPosition[1] = 0;
-        }
-        else if(rightPosition[1] >= levelManager.getSizeY()){
-            rightPosition[1] = (levelManager.getSizeY() - 1);
-        }
+        rightPosition = levelManager.checkOutOfBounds(rightPosition);
         playRightofPlayer(rightTile, rightPosition);
         char backTile = levelManager.getTileAtCoord(backPosition).getType(); // what is near the player's back?
         playBehindPlayer(backTile, backPosition);
@@ -779,7 +746,7 @@ public class GameplayActivity extends AppCompatActivity {
                 Thread.currentThread().interrupt();
             }
             playPassingSounds(newPosition);
-            newPosition = moveFromPosition(orientation, newPosition);
+            newPosition = player.moveFromPosition(orientation, newPosition);
         }
         runOnUiThread(new Runnable() {
             @Override
@@ -794,37 +761,15 @@ public class GameplayActivity extends AppCompatActivity {
         playEndForwardTile(backTile);
             if(playOnce == 1) {
                 //go back to legal space
-                newPosition = moveFromPosition(backOrientation, newPosition);
+                newPosition = player.moveFromPosition(backOrientation, newPosition);
                 //play sounds to identify left
-                leftPosition = moveFromPosition(leftOrientation, newPosition);
-                if(leftPosition[0] <= -1){ // Just incase, should be wall anyway
-                    leftPosition[0] = 0;
-                }
-                else if(leftPosition[0] >= levelManager.getSizeX()){
-                    leftPosition[0] = (levelManager.getSizeX() - 1);
-                }
-                if(leftPosition[1] <= -1){
-                    leftPosition[1] = 0;
-                }
-                else if(leftPosition[1] >= levelManager.getSizeY()){
-                    leftPosition[1] = (levelManager.getSizeY() - 1);
-                }
+                leftPosition = player.moveFromPosition(leftOrientation, newPosition);
+                leftPosition = levelManager.checkOutOfBounds(leftPosition);
                 leftTile = levelManager.getTileAtCoord(leftPosition).getType();
                 playEndLeftTile(leftTile, leftPosition, volumePower);
                 //play sounds to identify right
-                rightPosition = moveFromPosition(rightOrientation, newPosition);
-                if(rightPosition[0] <= -1){ // Just incase, should be wall anyway
-                    rightPosition[0] = 0;
-                }
-                else if(rightPosition[0] >= levelManager.getSizeX()){
-                    rightPosition[0] = (levelManager.getSizeX() - 1);
-                }
-                if(rightPosition[1] <= -1){
-                    rightPosition[1] = 0;
-                }
-                else if(rightPosition[1] >= levelManager.getSizeY()){
-                    rightPosition[1] = (levelManager.getSizeY() - 1);
-                }
+                rightPosition = player.moveFromPosition(rightOrientation, newPosition);
+                rightPosition = levelManager.checkOutOfBounds(rightPosition);
                 rightTile = levelManager.getTileAtCoord(rightPosition).getType();
                 playEndRightTile(rightTile, rightPosition, volumePower);
             }
@@ -1259,29 +1204,6 @@ public class GameplayActivity extends AppCompatActivity {
                 Thread.currentThread().interrupt();
             }
         }
-    }
-
-    public int[] moveFromPosition(int orientation, int[] position){
-        int[] newPosition = new int[2];
-        switch (orientation) {
-            case 0:
-                newPosition[0] = position[0];
-                newPosition[1] = position[1] + 1;
-                break;
-            case 1:
-                newPosition[0] = position[0] + 1;
-                newPosition[1] = position[1];
-                break;
-            case 2:
-                newPosition[0] = position[0];
-                newPosition[1] = position[1] - 1;
-                break;
-            case 3:
-                newPosition[0] = position[0] - 1;
-                newPosition[1] = position[1];
-                break;
-        }
-        return newPosition;
     }
 
     private void playEndingLogic() {

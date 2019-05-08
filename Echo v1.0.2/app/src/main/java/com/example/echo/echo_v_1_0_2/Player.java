@@ -29,6 +29,29 @@ public class Player
         return orientation;
     }
 
+    public int[] moveFromPosition(int orientation, int[] position){
+        int[] newPosition = new int[2];
+        switch (orientation) {
+            case 0:
+                newPosition[0] = position[0];
+                newPosition[1] = position[1] + 1;
+                break;
+            case 1:
+                newPosition[0] = position[0] + 1;
+                newPosition[1] = position[1];
+                break;
+            case 2:
+                newPosition[0] = position[0];
+                newPosition[1] = position[1] - 1;
+                break;
+            case 3:
+                newPosition[0] = position[0] - 1;
+                newPosition[1] = position[1];
+                break;
+        }
+        return newPosition;
+    }
+
 
 }
 
