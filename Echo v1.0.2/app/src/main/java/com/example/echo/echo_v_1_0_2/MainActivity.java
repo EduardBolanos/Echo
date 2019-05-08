@@ -29,14 +29,13 @@ public class MainActivity extends AppCompatActivity {
 
 
     float x1, x2, y1, y2;
-    //Omega String
     private String menu[] = {"Start", "Instructions", "Settings", "Sound FX Volume", "Voice Volume", "Ambiance & Music",
             "Vibration Level", "Reset Volume", "New Game", "Continue", "Tutorial Levels", "Yes", "No", "Awareness", "Echolocate",
             "Left Indications","Right Indications", "Intersection", "Practice", "Keys and Doors", "Keys and Doors Two",
             "Start with Tutorial","Start W/O Tutorial"};
     private int menuVoice[] = {R.raw.start, R.raw.hel, R.raw.settings, R.raw.soundfx, R.raw.voicefx, R.raw.amfx,
             R.raw.vibration, R.raw.reset, R.raw.newgame, R.raw.continuegame, R.raw.tutoriallevels, R.raw.yes, R.raw.no,  R.raw.awareness
-    , R.raw.echotutorial, R.raw.leftin, R.raw.rightind, R.raw.intersect, R.raw.practice, R.raw.kad, R.raw.kadtwo, R.raw.swt, R.raw.swot}; // 1st. Tutorial, REST, YEAH, Last two SWT, SWOT
+    , R.raw.echotutorial, R.raw.leftin, R.raw.rightind, R.raw.intersect, R.raw.practice, R.raw.kad, R.raw.kadtwo, R.raw.swt, R.raw.swot};
     private int menuSize[] = {3, 5, 3, 2, 8, 2};
     private int loc;
 
@@ -59,17 +58,15 @@ public class MainActivity extends AppCompatActivity {
         gameplayActivity = new Intent(this, GameplayActivity.class);
         playSoundScape(R.raw.intro, (volumeControl.voiceFX * 100) / 200, (volumeControl.voiceFX * 100) / 200);
         /*IMPORTANT*/
-        beat = MediaPlayer.create(MainActivity.this, R.raw.beatingitup); //We needed this song in our app
+        beat = MediaPlayer.create(MainActivity.this, R.raw.beatingitup);
         beat.setVolume((volumeControl.ambianceFX * 100) / 800, (volumeControl.ambianceFX * 100) / 800);
         beat.setLooping(true);
         beat.start();
         super.onCreate(savedInstanceState);
-        /*IMPORTANT*/
         setContentView(R.layout.activity_main);
         Runtime r = Runtime.getRuntime();
         r.gc();
 
-        //gives memes
         menuText = (TextView) findViewById(R.id.textView);
         currentSelect = 0;
         currentMenuContext = 0;
@@ -101,7 +98,7 @@ public class MainActivity extends AppCompatActivity {
             volumeControl.ambianceFX = 0.3f;
             volumeControl.vibrationIntensity = 0.6f;
         }
-        beat = MediaPlayer.create(MainActivity.this, R.raw.beatingitup); //We needed this song in our app
+        beat = MediaPlayer.create(MainActivity.this, R.raw.beatingitup);
         beat.setVolume((volumeControl.ambianceFX * 100) / 800, (volumeControl.ambianceFX * 100) / 800);
         beat.setLooping(true);
         beat.start();

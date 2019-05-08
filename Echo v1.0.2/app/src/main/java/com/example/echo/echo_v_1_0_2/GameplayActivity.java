@@ -108,7 +108,7 @@ public class GameplayActivity extends AppCompatActivity {
 
         deathState = 3;
 
-        echo = new MediaPlayer[3]; // forward echo
+        echo = new MediaPlayer[3];
         echo[0] = new MediaPlayer();
         echo[1] = new MediaPlayer();
         echo[2] = new MediaPlayer();
@@ -151,7 +151,6 @@ public class GameplayActivity extends AppCompatActivity {
                 else{
                     generateLevelFromConfigFile(levelManager.getLevel(8), false);
                 }
-                // generateLevelFromConfigFile( "level7.txt", false);
             } else if (newGameState.equals("no")) {
                 generateLevelFromConfigFile("saveGame", true);
             }
@@ -176,14 +175,14 @@ public class GameplayActivity extends AppCompatActivity {
         narrator.release();
         super.onPause();
 
-        // WE SHOULD HAVE SOME TEXT TO SPEECH NARRATION THAT INFORMS THE PLAYER THE APP IS PAUSING
+        // TODO WE SHOULD HAVE SOME TEXT TO SPEECH NARRATION THAT INFORMS THE PLAYER THE APP IS PAUSING
 
     }
     @Override
     protected void onResume() {
         super.onResume();
 
-        // WE SHOULD HAVE SOME TEXT TO SPEECH NARRATION THAT INFORMS THE PLAYER THE APP IS RESUMING
+        // TODO WE SHOULD HAVE SOME TEXT TO SPEECH NARRATION THAT INFORMS THE PLAYER THE APP IS RESUMING
         // AND ALSO REMIND THE PLAYER WHERE IN THE APPLICATION THEY CURRENTLY ARE
     }
 
@@ -248,7 +247,6 @@ public class GameplayActivity extends AppCompatActivity {
                                 /**
                                  * The echolocate capability as explained in the SRS documentation
                                  */
-                                // TODO LOGIC for TUTORIAL
                                 switch (levelManager.getCurrentLevel()) {
                                     case 1:
                                     case 2:
@@ -414,7 +412,7 @@ public class GameplayActivity extends AppCompatActivity {
 
 
     public void turnLeft()
-    { // player turns left
+    {
         if(player.getOrientation() == 0)
         {
             player.setOrientation(3);
@@ -423,7 +421,6 @@ public class GameplayActivity extends AppCompatActivity {
         {
             player.setOrientation((player.getOrientation())-1);
         }
-        //play turn
         turn.release();
         turn = MediaPlayer.create(this, R.raw.swooshleft);
         turn.setVolume(volumeControl.soundFX, 0);
@@ -432,7 +429,6 @@ public class GameplayActivity extends AppCompatActivity {
 
     public void turnRight()
     {
-        // logic from player.turnRight() should be transferred to here
         if(player.getOrientation() == 3)
         {
             player.setOrientation(0);
@@ -441,7 +437,6 @@ public class GameplayActivity extends AppCompatActivity {
         {
             player.setOrientation((player.getOrientation())+1);
         }
-        //play turn
         turn.release();
         turn = MediaPlayer.create(this, R.raw.swooshright);
         turn.setVolume(0, volumeControl.soundFX);
@@ -450,13 +445,11 @@ public class GameplayActivity extends AppCompatActivity {
 
     public void attemptMoveForward()
     {
-        // logic from player.attemptMoveForward() should be transferred to here
         int[] newPosition;
         int[] position = player.getPosition();
         newPosition = player.moveFromPosition(player.getOrientation(),position);
         if(levelManager.isLegal(newPosition))
         {
-            //play footstep
             moveForward.start();
             player.setPosition(newPosition);
             //TODO TELEPORT newPosition
@@ -479,15 +472,14 @@ public class GameplayActivity extends AppCompatActivity {
               playEndingLogic();
             }
             else{
-                char leftTile = levelManager.getTileAtCoord(leftPosition).getType(); // checks left area
+                char leftTile = levelManager.getTileAtCoord(leftPosition).getType();
                 playWalkingForwardLeftNoise(leftTile, leftPosition);
-                char rightTile = levelManager.getTileAtCoord(rightPosition).getType(); // checks right area
+
+                char rightTile = levelManager.getTileAtCoord(rightPosition).getType();
                 playWalkingForwardRightNoise(rightTile, rightPosition);
             }
-            //if tile is item get item, if tile is end play end
         }
         else {
-            //play wall hit
             if(levelManager.getTileAtCoord(newPosition).getType() == 'w')
             {
                 runOnUiThread(new Runnable() {
@@ -548,7 +540,6 @@ public class GameplayActivity extends AppCompatActivity {
                     });
                 }
             }
-            //if(Map.isLegal(newPosition)) == false  dont move forward play tileSound
         }
         //TODO ENEMIES, CHECK HERE
         //TODO ENEMIES, THEN ENEMIES TURN TO MOVE
@@ -578,7 +569,6 @@ public class GameplayActivity extends AppCompatActivity {
                         break;
                 }
             }
-            //other then that, you have already picked it up
             moveForward.setVolume(volumeControl.soundFX, volumeControl.soundFX);
         }
     }
@@ -658,7 +648,7 @@ public class GameplayActivity extends AppCompatActivity {
         saveGame();
     }
 
-    public void startTutorialLevel(String newGameState){ // SOME CONDITIONS HERE
+    public void startTutorialLevel(String newGameState){
         deathState = 3;
         generateLevelFromConfigFile((newGameState + ".txt"), false);
         player.setOrientation(levelManager.getPlayerSpawnOrientation());
@@ -667,7 +657,6 @@ public class GameplayActivity extends AppCompatActivity {
 
     public void echolocate() { // Reason why this is so big is because sounds need to be differentated, AKA
         // places adj to player location sounds are different from echolocate pings far in the distance.
-        // logic from player.echolocate() should be transferred to here
         char leftTile;
         char rightTile;
         int echoTurnState = 0;
@@ -702,19 +691,21 @@ public class GameplayActivity extends AppCompatActivity {
         }
         backPosition = player.moveFromPosition(backOrientation, position);
         backPosition = levelManager.checkOutOfBounds(backPosition);
-        leftTile = levelManager.getTileAtCoord(leftPosition).getType(); // What is near player's left side?
+
+        leftTile = levelManager.getTileAtCoord(leftPosition).getType();
         leftPosition = levelManager.checkOutOfBounds(leftPosition);
         playLeftofPlayer(leftTile, leftPosition);
-        rightTile = levelManager.getTileAtCoord(rightPosition).getType(); // What is near the players' right side?
+
+        rightTile = levelManager.getTileAtCoord(rightPosition).getType();
         rightPosition = levelManager.checkOutOfBounds(rightPosition);
         playRightofPlayer(rightTile, rightPosition);
-        char backTile = levelManager.getTileAtCoord(backPosition).getType(); // what is near the player's back?
+
+        char backTile = levelManager.getTileAtCoord(backPosition).getType();
         playBehindPlayer(backTile, backPosition);
+
         int playOnce = 0;
         int volumePower = 100;
-        echo[0].setVolume(volumeControl.soundFX, volumeControl.soundFX); // volume defaults
-        echo[1].setVolume(volumeControl.soundFX, volumeControl.soundFX);
-        echo[2].setVolume(volumeControl.soundFX, volumeControl.soundFX);
+
         if(levelManager.isLegal(newPosition)) {
             runOnUiThread(new Runnable() {
                 @Override
@@ -724,29 +715,28 @@ public class GameplayActivity extends AppCompatActivity {
                 }
             });
         }
-        while (levelManager.isLegal(newPosition)) //is legal?
+
+        while (levelManager.isLegal(newPosition))
         {
-            playOnce = 1;
-            //play distance ping(tile sound)
-//            echo.stop();
-            if (echoTurnState == 3) { // cycles ping sound
+            if (echoTurnState == 3) {
                 echoTurnState = 0;
             }
-            echo[echoTurnState].start();
-            if (volumePower > 25) { //reduce volume
+            if (volumePower > 25 && playOnce == 1) {
                 volumePower = volumePower - 15;
-                echo[0].setVolume((volumeControl.soundFX * volumePower) / 100, (volumeControl.soundFX * volumePower) / 100);
-                echo[1].setVolume((volumeControl.soundFX * volumePower) / 100, (volumeControl.soundFX * volumePower) / 100);
-                echo[2].setVolume((volumeControl.soundFX * volumePower) / 100, (volumeControl.soundFX * volumePower) / 100);
             }
+            echo[echoTurnState].setVolume((volumeControl.soundFX * volumePower) / 100, (volumeControl.soundFX * volumePower) / 100);
+            echo[echoTurnState].start();
             echoTurnState++;
+
             try {
                 Thread.sleep(600);
             } catch (InterruptedException ex) {
                 Thread.currentThread().interrupt();
             }
+
             playPassingSounds(newPosition);
             newPosition = player.moveFromPosition(orientation, newPosition);
+            playOnce = 1;
         }
         runOnUiThread(new Runnable() {
             @Override
@@ -760,14 +750,11 @@ public class GameplayActivity extends AppCompatActivity {
         backTile = levelManager.getTileAtCoord(newPosition).getType(); // using backtile as forwardtile,
         playEndForwardTile(backTile);
             if(playOnce == 1) {
-                //go back to legal space
                 newPosition = player.moveFromPosition(backOrientation, newPosition);
-                //play sounds to identify left
                 leftPosition = player.moveFromPosition(leftOrientation, newPosition);
                 leftPosition = levelManager.checkOutOfBounds(leftPosition);
                 leftTile = levelManager.getTileAtCoord(leftPosition).getType();
                 playEndLeftTile(leftTile, leftPosition, volumePower);
-                //play sounds to identify right
                 rightPosition = player.moveFromPosition(rightOrientation, newPosition);
                 rightPosition = levelManager.checkOutOfBounds(rightPosition);
                 rightTile = levelManager.getTileAtCoord(rightPosition).getType();
@@ -857,7 +844,6 @@ public class GameplayActivity extends AppCompatActivity {
                 break;
             case 'f':
                 emptySpaceLeft.start();
-                //stop playing leftSound
                 try {
                     Thread.sleep(500);
                 } catch (InterruptedException ex) {
@@ -911,7 +897,6 @@ public class GameplayActivity extends AppCompatActivity {
             break;
             case 'f':
             emptySpaceLeft.start();
-            //stop playing leftSound
             try {
                 Thread.sleep(500);
             } catch (InterruptedException ex) {
@@ -1049,7 +1034,6 @@ public class GameplayActivity extends AppCompatActivity {
 
     private void playPassingSounds(int[] newPosition) {
         if (levelManager.getTileAtCoord(newPosition).getType() == 'e') {
-//                echo.stop();
             passing.setVolume(volumeControl.soundFX, volumeControl.soundFX);
             passing.start();
             try {
@@ -1074,10 +1058,8 @@ public class GameplayActivity extends AppCompatActivity {
     private void playEndForwardTile(char forwardTile) {
         switch (forwardTile) {
             case 'w':
-                //play wall
                 hitWall = MediaPlayer.create(GameplayActivity.this, R.raw.wall_collision);
                 hitWall.setVolume((volumeControl.soundFX * 100) / 200, (volumeControl.soundFX * 100) / 200);
-                // 1/2 volume for forward wall
                 hitWall.start();
                 try {
                     Thread.sleep(100);
@@ -1121,7 +1103,6 @@ public class GameplayActivity extends AppCompatActivity {
              case 'f':
                 emptySpaceLeft.setVolume(volumeControl.soundFX, 0);
                 emptySpaceLeft.start();
-                //stop playing leftSound
                 try {
                     Thread.sleep(300);
                 } catch (InterruptedException ex) {
@@ -1215,7 +1196,6 @@ public class GameplayActivity extends AppCompatActivity {
         }
         ending.stop();
         ending.reset();
-        // LOGIC FOR TUTORIAL
         playTutorialLogicForEnd();
         if(!tutorialLevel){
             levelChange.start();
@@ -1299,8 +1279,6 @@ public class GameplayActivity extends AppCompatActivity {
     }
 
     public void generateLevelFromConfigFile(String levelName, boolean saveGameStatus) {
-        // logic from level.loadLevel() should be transferred here.
-        // save determines if in asset or file
         InputStream asset = null;
         FileInputStream assetTwo = null;
         levelManager.nullLevelManager();
@@ -1319,7 +1297,7 @@ public class GameplayActivity extends AppCompatActivity {
         }
         String narration = levelManager.loadLevel(asset, assetTwo, saveGameStatus);
         if(narration != null) {
-            hammer = Uri.parse(primer + narration); // intro lines
+            hammer = Uri.parse(primer + narration);
             narrator.release();
             narrator = MediaPlayer.create(this, hammer);
             narrator.setVolume(volumeControl.voiceFX, volumeControl.voiceFX);
@@ -1371,10 +1349,6 @@ public class GameplayActivity extends AppCompatActivity {
              int checker[]= new int[2];
              for(int y = levelManager.sizeY - 1; y >= 0 ; y--){
                 for(int x = 0; x < levelManager.sizeX; x++){
-                    // if(mEndPoint[0] == x && mEndPoint[1] == y){
-                    //     saveGame.write(levelManager.end.getType());
-                   //  }
-                     //else
                     checker[0] = x; checker[1] = y;
 
                      if(levelManager.hasKey(checker)){

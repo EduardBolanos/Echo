@@ -14,13 +14,13 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 
 public class InGameMenu extends AppCompatActivity {
-    private int currentSelectIG; //Counter
-    private int currentMenuContextIG; //Selected Menu
-    private int contextSelectIG; //Location in arrays, ex
-    //Omega String
+    private int currentSelectIG;
+    private int currentMenuContextIG;
+    private int contextSelectIG;
+
     private String menu[] = {"Inventory", "Settings and Navigation", "Sound FX Volume", "Voice Volume", "Ambiance & Music",
             "Vibration Level", "Reset Volume", "Reset Level",  "Return to Menu", "Instructions"};
-    // create these voice files
+
     private int menuVoice[] = {R.raw.inventory, R.raw.explain, R.raw.soundfx, R.raw.voicefx, R.raw.amfx,
             R.raw.vibration, R.raw.reset, R.raw.resetlevel , R.raw.returntomenu , R.raw.help};
     private int menuSize[] = {2, 8};
@@ -35,16 +35,12 @@ public class InGameMenu extends AppCompatActivity {
     private ItemNode currentNode;
     float x1, x2, y1, y2;
     TextView menuText;
-    SoundSettings volumeControl; // Dunno
+    SoundSettings volumeControl;
     RippleBackground rippleBackground;
-    /**
-     * TEST: Use this code for only as a last resort
-     */
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        setContentView(R.layout.ingamemenu); // CHANGE MENU ACTIVITY TO NEW ONE , BLACK BACKGROUND, WHITE TEXT /*IMPORTANT*/
-
-        //gives memes /*IMPORTANT*/
+        setContentView(R.layout.ingamemenu);
         nodeSize = 0;
         volumeControl = new SoundSettings();
         resetLevel = false;
@@ -61,7 +57,7 @@ public class InGameMenu extends AppCompatActivity {
             volumeControl.vibrationIntensity = 0.6f;
         }
         playSoundScape(R.raw.inventory,volumeControl.voiceFX, volumeControl.voiceFX);
-        menuText = (TextView) findViewById(R.id.textView); // Make sure to change this to new activity counterpart, unless same
+        menuText = (TextView) findViewById(R.id.textView);
         currentSelectIG = 0;
         currentMenuContextIG = 0;
         contextSelectIG = 0;
@@ -156,7 +152,7 @@ public class InGameMenu extends AppCompatActivity {
             case MotionEvent.ACTION_UP:
                 x2 = event.getX();
                 y2 = event.getY();
-                //OMEGA CODE BLOCK
+
                 loc = 0;
                 for(int x = 0; x < currentMenuContextIG; x++){
                     loc = (loc + menuSize[x]);
@@ -250,7 +246,8 @@ public class InGameMenu extends AppCompatActivity {
                     rippleBackground = (RippleBackground)findViewById(R.id.content3);
                     rippleBackground.startRippleAnimation();
                     if (currentMenuContextIG == 3){
-                       // goto previous and send back data if needed for the item
+                       // TODO goto previous and send back data if needed for the item
+                        // Currently no item does this
                     }
                     else{
                         playSoundScape(R.raw.change, volumeControl.soundFX, volumeControl.soundFX);
@@ -332,7 +329,6 @@ public class InGameMenu extends AppCompatActivity {
                                 playSoundScape(R.raw.resetlevel, volumeControl.voiceFX, volumeControl.voiceFX);
                                 break;
                             case 8:
-                                // invokes save state in game, invokes finish state in game to go back to main menu
                                 Intent output = new Intent();
                                 output.putExtra("ShutOffState", true);
                                 output.putExtra("resetLevel", resetLevel);

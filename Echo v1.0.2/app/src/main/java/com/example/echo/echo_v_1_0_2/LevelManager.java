@@ -103,7 +103,6 @@ public class LevelManager {
     }
 
     public boolean openDoor(int[] position){
-        // checks and compare keys to door found at location
         Door theDoor = null;
         for(int i = 0; i < mDoors.size(); i++){
             theDoor = mDoors.get(i);
@@ -372,7 +371,7 @@ public class LevelManager {
                             concatinator = concatinator + ((char) data);
                             setPlayerSpawnOrientation(Integer.parseInt(concatinator));
                             concatinator = "";
-                            if (!saveGameStatus) {// plays a new level intro
+                            if (!saveGameStatus) {
                                 try {
                                     data = asset.read();
                                 } catch (java.io.IOException e) {
@@ -405,7 +404,7 @@ public class LevelManager {
                             state = 0;
                             keyLoc = 0;
                             int end = 1;
-                            for (int x = 0; x < refer.size(); x++) { // adding items
+                            for (int x = 0; x < refer.size(); x++) {
                                 end = 1;
                                 while (end == 1) {
                                     if (!saveGameStatus) {
