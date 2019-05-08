@@ -459,6 +459,7 @@ public class GameplayActivity extends AppCompatActivity {
             //play footstep
             moveForward.start();
             player.setPosition(newPosition);
+            //TODO TELEPORT newPosition
             int leftOrientation;
             if (player.getOrientation() == 0) {
                 leftOrientation = 3;
@@ -549,6 +550,8 @@ public class GameplayActivity extends AppCompatActivity {
             }
             //if(Map.isLegal(newPosition)) == false  dont move forward play tileSound
         }
+        //TODO ENEMIES, CHECK HERE
+        //TODO ENEMIES, THEN ENEMIES TURN TO MOVE
         if(levelManager.hasKey(newPosition)){
             if(levelManager.pickUpKey(newPosition)) {
                 pickup.setVolume(volumeControl.soundFX,volumeControl.soundFX);
@@ -675,6 +678,7 @@ public class GameplayActivity extends AppCompatActivity {
         int[] position = player.getPosition();
         int orientation = player.getOrientation();
         newPosition = moveFromPosition(orientation, position);
+        //TODO ENEMIES and TELEPORT LOOK FOR play methods and follow their names
         int leftOrientation;
 
         if (orientation == 0) {
@@ -697,9 +701,45 @@ public class GameplayActivity extends AppCompatActivity {
             backOrientation = orientation + 1;
         }
         backPosition = moveFromPosition(backOrientation, position);
+        if(backPosition[0] <= -1){ // Just incase, should be wall anyway
+            backPosition[0] = 0;
+        }
+        else if(backPosition[0] >= levelManager.getSizeX()){
+            backPosition[0] = (levelManager.getSizeX() - 1);
+        }
+        if(backPosition[1] <= -1){
+            backPosition[1] = 0;
+        }
+        else if(backPosition[1] >= levelManager.getSizeY()){
+            backPosition[1] = (levelManager.getSizeY() - 1);
+        }
         leftTile = levelManager.getTileAtCoord(leftPosition).getType(); // What is near player's left side?
+        if(leftPosition[0] <= -1){ // Just incase, should be wall anyway
+            leftPosition[0] = 0;
+        }
+        else if(leftPosition[0] >= levelManager.getSizeX()){
+            leftPosition[0] = (levelManager.getSizeX() - 1);
+        }
+        if(leftPosition[1] <= -1){
+            leftPosition[1] = 0;
+        }
+        else if(leftPosition[1] >= levelManager.getSizeY()){
+            leftPosition[1] = (levelManager.getSizeY() - 1);
+        }
         playLeftofPlayer(leftTile, leftPosition);
         rightTile = levelManager.getTileAtCoord(rightPosition).getType(); // What is near the players' right side?
+        if(rightPosition[0] <= -1){ // Just incase, should be wall anyway
+            rightPosition[0] = 0;
+        }
+        else if(rightPosition[0] >= levelManager.getSizeX()){
+            rightPosition[0] = (levelManager.getSizeX() - 1);
+        }
+        if(rightPosition[1] <= -1){
+            rightPosition[1] = 0;
+        }
+        else if(rightPosition[1] >= levelManager.getSizeY()){
+            rightPosition[1] = (levelManager.getSizeY() - 1);
+        }
         playRightofPlayer(rightTile, rightPosition);
         char backTile = levelManager.getTileAtCoord(backPosition).getType(); // what is near the player's back?
         playBehindPlayer(backTile, backPosition);
@@ -757,21 +797,33 @@ public class GameplayActivity extends AppCompatActivity {
                 newPosition = moveFromPosition(backOrientation, newPosition);
                 //play sounds to identify left
                 leftPosition = moveFromPosition(leftOrientation, newPosition);
-                if(leftPosition[0] == -1){ // Just incase, should be wall anyway
+                if(leftPosition[0] <= -1){ // Just incase, should be wall anyway
                     leftPosition[0] = 0;
                 }
-                if(leftPosition[1] == -1){
+                else if(leftPosition[0] >= levelManager.getSizeX()){
+                    leftPosition[0] = (levelManager.getSizeX() - 1);
+                }
+                if(leftPosition[1] <= -1){
                     leftPosition[1] = 0;
+                }
+                else if(leftPosition[1] >= levelManager.getSizeY()){
+                    leftPosition[1] = (levelManager.getSizeY() - 1);
                 }
                 leftTile = levelManager.getTileAtCoord(leftPosition).getType();
                 playEndLeftTile(leftTile, leftPosition, volumePower);
                 //play sounds to identify right
                 rightPosition = moveFromPosition(rightOrientation, newPosition);
-                if(rightPosition[0] == -1){ // Just incase, should be wall anyway
+                if(rightPosition[0] <= -1){ // Just incase, should be wall anyway
                     rightPosition[0] = 0;
                 }
-                if(rightPosition[1] == -1){
+                else if(rightPosition[0] >= levelManager.getSizeX()){
+                    rightPosition[0] = (levelManager.getSizeX() - 1);
+                }
+                if(rightPosition[1] <= -1){
                     rightPosition[1] = 0;
+                }
+                else if(rightPosition[1] >= levelManager.getSizeY()){
+                    rightPosition[1] = (levelManager.getSizeY() - 1);
                 }
                 rightTile = levelManager.getTileAtCoord(rightPosition).getType();
                 playEndRightTile(rightTile, rightPosition, volumePower);
@@ -1422,6 +1474,7 @@ public class GameplayActivity extends AppCompatActivity {
                         }
                          if(mPlayerSpawnPoint[0] == x && mPlayerSpawnPoint[1] == y){
                              saveGame.write('P');}
+                             // TODO ENEMIES add enemy inside encapsulation, they are ontop of key
                         saveGame.write(')');
                     } else if(mPlayerSpawnPoint[0] == x && mPlayerSpawnPoint[1] == y){
                         saveGame.write('P');
@@ -1445,6 +1498,9 @@ public class GameplayActivity extends AppCompatActivity {
                         }
                         saveGame.write(')');
                     }
+                    // TODO TELEPORT add something similar to key,
+                     //MAKE SURE TO CHECK FOR ENEMIES AND PLAYER and encapsulate them, AKA they teleport and save
+                     // or enemy is ontop of teleport
                      else {
                          saveGame.write(mMap[x][y].getType());
                      }

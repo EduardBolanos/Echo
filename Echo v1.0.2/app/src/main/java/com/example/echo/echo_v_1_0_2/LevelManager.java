@@ -95,7 +95,12 @@ public class LevelManager {
     public void setPlayerSpawnOrientation(int playerSpawnOrientation) {
         mPlayerSpawnOrientation = playerSpawnOrientation;
     }
-
+    public int getSizeX(){
+        return sizeX;
+    }
+    public int getSizeY(){
+        return sizeY;
+    }
 
     public boolean openDoor(int[] position){
         // checks and compare keys to door found at location
@@ -206,6 +211,8 @@ public class LevelManager {
         int bypass = 0;
         ArrayList<Item> refer = new ArrayList<Item>();
         ArrayList<Door> someDoors = new ArrayList<Door>();
+        //TODO MAKE ENEMY ARRAY
+        //TODO MAKE TELEPORTER ARRAY
         int keyLoc;
         Tile map[][] = null;
         ArrayList<Integer> passCodes = new ArrayList<Integer>();
@@ -256,6 +263,9 @@ public class LevelManager {
                             break;
                         case 2:
                             if (data != 35) {
+                                //TODO ENEMIES CHECK FOR ENEMY, ADD TO ARRAY, SET POS, ORIENTATION(If needed/wanted)
+                                //TODO TELEPORT CHECK FOR TELEPORT, ADD TO ARRAY, WRITE ON MAP, SET POS, SET ID
+                                //TODO BOTH, CHECK FOR PLAYER AND ENEMIES, set their POS from keys and teleport.
                                 switch (data) {
                                     case 'f': // a walkable floor
                                         map[locX][locY] = floor;
@@ -436,6 +446,7 @@ public class LevelManager {
                             }
                             mItemsToSpawn = refer;
                             mDoors = someDoors;
+                            //TODO ENEMIES/TELEPORTER Make and set class level Arrays
                             return narrator;
                     }
                 }
@@ -443,5 +454,9 @@ public class LevelManager {
         }
         return null;
     }
+//TODO ENEMIES, ON TURN, DO SHIT
 
+    //TODO TELEPORTERS, CHECK newPosition if equal to any teleporter,
+    // then find teleporter with same ID not equal to newPosition
+    // send back newPosition and set Player position, SIMILAR TO OPEN DOOR
 }
