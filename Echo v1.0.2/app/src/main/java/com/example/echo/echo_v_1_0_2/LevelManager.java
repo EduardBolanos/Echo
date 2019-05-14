@@ -13,8 +13,10 @@ public class LevelManager {
 
     private ArrayList<String> mLevels;
     private ArrayList<Door> mDoors;
+    public ArrayList<Enemy> mEnemies;// Array of enemies
     private int mCurrentLevel;
     private int mAmbientSFX;
+    private Context mContext;
 
     private Tile mMapBuffer[][];
     private Tile mMap[][];
@@ -39,6 +41,7 @@ public class LevelManager {
         floor = new Tile('f');
         end = new Tile('e');
         door = new Tile('d');
+        mContext = context;
 
     }
 
@@ -128,6 +131,18 @@ public class LevelManager {
             }
         }
         return false;
+    }
+
+    public boolean enemiesExist()
+    {
+        if (mEnemies.isEmpty())
+        {
+            return false;
+        }
+        else
+        {
+            return true;
+        }
     }
 
     public boolean pickUpKey(int[] position) {
@@ -225,7 +240,8 @@ public class LevelManager {
         int bypass = 0;
         ArrayList<Item> refer = new ArrayList<Item>();
         ArrayList<Door> someDoors = new ArrayList<Door>();
-        //TODO MAKE ENEMY ARRAY
+        ArrayList<Enemy> someEnemies = new ArrayList<Enemy>();
+        //TODO MAKE ENEMY ARRAY |
         //TODO MAKE TELEPORTER ARRAY
         int keyLoc;
         Tile map[][] = null;
@@ -277,7 +293,7 @@ public class LevelManager {
                             break;
                         case 2:
                             if (data != 35) {
-                                //TODO ENEMIES CHECK FOR ENEMY, ADD TO ARRAY, SET POS, ORIENTATION(If needed/wanted)
+                                //TODO ENEMIES CHECK FOR ENEMY, ADD TO ARRAY, SET POS, ORIENTATION(If needed/wanted) |
                                 //TODO TELEPORT CHECK FOR TELEPORT, ADD TO ARRAY, WRITE ON MAP, SET POS, SET ID
                                 //TODO BOTH, CHECK FOR PLAYER AND ENEMIES, set their POS from keys and teleport.
                                 switch (data) {
@@ -354,7 +370,27 @@ public class LevelManager {
                                             }
                                         }
                                         break;
-
+                                    case 'b':
+                                        map[locx][locy] = floor;
+                                        while (data != ')') {
+                                            if (!saveGameStatus) {
+                                                try {
+                                                    data = asset.read();
+                                                } catch (java.io.IOException e) {
+                                                }
+                                            } else {
+                                                try {
+                                                    data = assetTwo.read();
+                                                } catch (java.io.IOException e) {
+                                                }
+                                            }
+                                            if (data != '(' && data != ')') {
+                                                int orientation = Integer.parseInt(String.valueOf(((int) data)));
+                                            } else if (data != '(') {
+                                                orienation = 0;
+                                            }
+                                        Enemy enemy = new Enemy(mContextontext, locx, locy, orientation);
+                                        mEnemies.add(enemy);
                                 }
                                 locX++;
                             } else {

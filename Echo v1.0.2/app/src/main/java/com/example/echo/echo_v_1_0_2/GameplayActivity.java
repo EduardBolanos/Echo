@@ -41,6 +41,7 @@ public class GameplayActivity extends AppCompatActivity {
    private MediaPlayer keyJingle;
    private MediaPlayer pickup;
    private MediaPlayer echoDoor;
+   private MediaPlayer PlayerDeath;
    private int deathState;
    public ChopstickMan Nick;
    Toast toast;
@@ -541,8 +542,18 @@ public class GameplayActivity extends AppCompatActivity {
                 }
             }
         }
-        //TODO ENEMIES, CHECK HERE
-        //TODO ENEMIES, THEN ENEMIES TURN TO MOVE
+        //TODO ENEMIES, CHECK HERE|
+        //TODO ENEMIES, THEN ENEMIES TURN TO MOVE|
+        if(levelManager.enemiesExist)
+        {
+            int i = 0;
+            while(mEnemies.get(i) != NULL)
+            {
+                mEnemies.get(i).enemyTurn();
+                i++;
+            }
+        }
+
         if(levelManager.hasKey(newPosition)){
             if(levelManager.pickUpKey(newPosition)) {
                 pickup.setVolume(volumeControl.soundFX,volumeControl.soundFX);
@@ -569,9 +580,11 @@ public class GameplayActivity extends AppCompatActivity {
                         break;
                 }
             }
+
             moveForward.setVolume(volumeControl.soundFX, volumeControl.soundFX);
         }
     }
+
 
     private void hitWallDeathLogic() {
         switch (deathState){
@@ -591,23 +604,34 @@ public class GameplayActivity extends AppCompatActivity {
                 deathState = 0;
                 break;
             case 0:
-                toast = Toast.makeText(this,"You pass out. Humpty Dumpty.",Toast.LENGTH_SHORT);
-                toast.show();
-                flags[0] = 0;
-                flags[1] = 0;
-                flags[2] = 0;
-                flags[3] = 0;
-                flags[4] = 0;
-                flags[5] = 0;
-                flags[6] = 0;
-                flags[7] = 0;
-                //TODO DEATH NOISE
-                if(tutorialLevel){
-                 startTutorialLevel(Integer.toString(levelManager.getCurrentLevel() - 1));
-                }else {
-                    resetLevel();
-                }
+                PlayerDeath();
                 break;
+        }
+    }
+
+    public void PlayerDeath() {
+        toast = Toast.makeText(this,"You pass out. Humpty Dumpty.",Toast.LENGTH_SHORT);
+        toast.show();
+        flags[0] = 0;
+        flags[1] = 0;
+        flags[2] = 0;
+        flags[3] = 0;
+        flags[4] = 0;
+        flags[5] = 0;
+        flags[6] = 0;
+        flags[7] = 0;
+        //TODO DEATH NOISE
+        PlayerDeath = MediaPlayer.create(GameplayActivity.this, R.raw.Death);
+        PlayerDeath.start();
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException ex) {
+            Thread.currentThread().interrupt();
+        }
+        if(tutorialLevel){
+            startTutorialLevel(Integer.toString(levelManager.getCurrentLevel() - 1));
+        }else {
+            resetLevel();
         }
     }
 
