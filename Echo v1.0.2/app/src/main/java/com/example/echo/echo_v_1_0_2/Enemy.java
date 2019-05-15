@@ -2,11 +2,6 @@ package com.example.echo.echo_v_1_0_2;
 
 import android.content.Context;
 import android.media.MediaPlayer;
-import android.net.Uri;
-import android.os.VibrationEffect;
-
-import java.io.FileInputStream;
-import java.io.InputStream;
 import java.util.ArrayList;
 
 
@@ -27,6 +22,7 @@ public class Enemy
         enemyRoar = MediaPlayer.create(context, R.raw.EnemyRoar);
         enemyStep = MediaPlayer.create(context, R.raw.EnemyStep);
     }
+
     public void turnLeft() {
         orientation++;
         if(orientation == 4)
