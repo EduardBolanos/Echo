@@ -2,13 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="bb2f0f69-5539-4706-b6da-fa4755f1013f" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/Echo v1.0.2/app/src/main/assets/Level10" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Echo v1.0.2/app/src/main/java/com/example/echo/echo_v_1_0_2/Enemy.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Echo v1.0.2/app/src/main/res/raw/Death.mp3" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Echo v1.0.2/app/src/main/res/raw/EnemyRoar.mp3" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Echo v1.0.2/app/src/main/res/raw/EnemyStep.mp3" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Echo v1.0.2/app/src/main/java/com/example/echo/echo_v_1_0_2/GameplayActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/Echo v1.0.2/app/src/main/java/com/example/echo/echo_v_1_0_2/GameplayActivity.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Echo v1.0.2/app/src/main/java/com/example/echo/echo_v_1_0_2/LevelManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/Echo v1.0.2/app/src/main/java/com/example/echo/echo_v_1_0_2/LevelManager.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Echo v1.0.2/app/src/main/java/com/example/echo/echo_v_1_0_2/Enemy.java" beforeDir="false" afterPath="$PROJECT_DIR$/Echo v1.0.2/app/src/main/java/com/example/echo/echo_v_1_0_2/Enemy.java" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -30,8 +25,11 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/Echo v1.0.2/app/src/main/java/com/example/echo/echo_v_1_0_2/LevelManager.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="405">
-              <caret line="392" column="60" selection-start-line="392" selection-start-column="60" selection-end-line="392" selection-end-column="60" />
+            <state relative-caret-position="34">
+              <caret line="2" selection-start-line="2" selection-end-line="10" />
+              <folding>
+                <element signature="imports" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -39,8 +37,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/Echo v1.0.2/app/src/main/java/com/example/echo/echo_v_1_0_2/GameplayActivity.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1007">
-              <caret line="629" column="9" selection-start-line="629" selection-start-column="9" selection-end-line="629" selection-end-column="9" />
+            <state relative-caret-position="153">
+              <caret line="9" column="25" lean-forward="true" selection-start-line="9" selection-start-column="25" selection-end-line="9" selection-end-column="25" />
             </state>
           </provider>
         </entry>
@@ -48,8 +46,11 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/Echo v1.0.2/app/src/main/java/com/example/echo/echo_v_1_0_2/Enemy.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-1496">
-              <caret line="53" column="4" selection-start-line="53" selection-start-column="4" selection-end-line="53" selection-end-column="4" />
+            <state relative-caret-position="34">
+              <caret line="2" selection-start-line="2" selection-end-line="2" />
+              <folding>
+                <element signature="imports" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -104,7 +105,7 @@
       </list>
     </option>
   </component>
-  <component name="ProjectFrameBounds" extendedState="7">
+  <component name="ProjectFrameBounds" extendedState="6">
     <option name="x" value="25" />
     <option name="y" value="10" />
     <option name="width" value="1905" />
@@ -299,9 +300,9 @@
       <window_info id="Favorites" order="7" side_tool="true" />
       <window_info anchor="bottom" id="Find" order="0" />
       <window_info anchor="bottom" id="Version Control" order="1" />
-      <window_info active="true" anchor="bottom" id="TODO" order="2" sideWeight="0.4976867" visible="true" weight="0.25737265" />
+      <window_info active="true" anchor="bottom" id="TODO" order="2" sideWeight="0.4970258" visible="true" weight="0.25737265" />
       <window_info anchor="bottom" id="Terminal" order="3" />
-      <window_info anchor="bottom" id="Event Log" order="4" sideWeight="0.50231326" side_tool="true" visible="true" weight="0.25737265" />
+      <window_info anchor="bottom" id="Event Log" order="4" sideWeight="0.5029742" side_tool="true" visible="true" weight="0.25737265" />
       <window_info anchor="right" id="Capture Analysis" order="0" />
       <window_info anchor="right" id="Theme Preview" order="1" />
       <window_info anchor="right" id="Palette&#9;" order="2" />
@@ -320,9 +321,7 @@
     </breakpoint-manager>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/EchoPrototype/app/.gitignore">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
+    <entry file="file://$PROJECT_DIR$/EchoPrototype/app/.gitignore" />
     <entry file="file://$PROJECT_DIR$/Echo v1.0.2/app/src/main/java/com/example/echo/echo_v_1_0_2/Door.java">
       <provider selected="true" editor-type-id="text-editor">
         <state>
@@ -367,16 +366,11 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Echo v1.0.2/app/src/main/res/raw/garbageenemysteps.mp3.url">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
+    <entry file="file://$PROJECT_DIR$/Echo v1.0.2/app/src/main/res/raw/garbageenemysteps.mp3.url" />
     <entry file="file://$PROJECT_DIR$/Echo v1.0.2/app/src/main/assets/0.txt">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
     <entry file="file://$PROJECT_DIR$/Echo v1.0.2/app/src/main/assets/level7.txt">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Echo v1.0.2/app/src/main/assets/level6.txt">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
     <entry file="file://$PROJECT_DIR$/Echo v1.0.2/app/src/main/assets/level5.txt">
@@ -394,20 +388,6 @@
     <entry file="file://$PROJECT_DIR$/Echo v1.0.2/app/src/main/assets/level1.txt">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
-    <entry file="file://$PROJECT_DIR$/Echo v1.0.2/app/src/main/assets/level8.txt">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="170">
-          <caret line="10" selection-start-line="10" selection-end-line="11" selection-end-column="2" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Echo v1.0.2/app/src/main/java/com/example/echo/echo_v_1_0_2/LevelManager.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="405">
-          <caret line="392" column="60" selection-start-line="392" selection-start-column="60" selection-end-line="392" selection-end-column="60" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/Echo v1.0.2/app/src/main/assets/Level10">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="136">
@@ -415,17 +395,40 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/Echo v1.0.2/app/src/main/assets/level6.txt">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Echo v1.0.2/app/src/main/java/com/example/echo/echo_v_1_0_2/LevelManager.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="34">
+          <caret line="2" selection-start-line="2" selection-end-line="10" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/Echo v1.0.2/app/src/main/java/com/example/echo/echo_v_1_0_2/GameplayActivity.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1007">
-          <caret line="629" column="9" selection-start-line="629" selection-start-column="9" selection-end-line="629" selection-end-column="9" />
+        <state relative-caret-position="153">
+          <caret line="9" column="25" lean-forward="true" selection-start-line="9" selection-start-column="25" selection-end-line="9" selection-end-column="25" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Echo v1.0.2/app/src/main/assets/level8.txt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="170">
+          <caret line="10" selection-start-line="10" selection-end-line="11" selection-end-column="2" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/Echo v1.0.2/app/src/main/java/com/example/echo/echo_v_1_0_2/Enemy.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-1496">
-          <caret line="53" column="4" selection-start-line="53" selection-start-column="4" selection-end-line="53" selection-end-column="4" />
+        <state relative-caret-position="34">
+          <caret line="2" selection-start-line="2" selection-end-line="2" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>

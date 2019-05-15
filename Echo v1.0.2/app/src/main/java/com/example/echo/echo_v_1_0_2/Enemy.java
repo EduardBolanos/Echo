@@ -1,5 +1,15 @@
 package com.example.echo.echo_v_1_0_2;
 
+import android.content.Context;
+import android.media.MediaPlayer;
+import android.net.Uri;
+import android.os.VibrationEffect;
+
+import java.io.FileInputStream;
+import java.io.InputStream;
+import java.util.ArrayList;
+
+
 public class Enemy
 {
     public int[] position = new int[2];
@@ -9,7 +19,7 @@ public class Enemy
 
     Context context;
 
-    public Enemy(Context context, locx, locy, int orientation) {
+    public Enemy(Context context, int locx, int locy, int orientation) {
         context = context;
         position[0] = locx;
         position[1] = locy;
