@@ -1,0 +1,26 @@
+10#
+20 20#
+wwwwwwwwwwwwwwwwwwww#
+wwwffffffffffffk(2)wwww#
+wwwwwwwwfwwwwwwwwwww#
+wwwwwwwwfwwwwwwwwwww#
+wwwwwwwwfwwwwwwwwwww#
+wwwwwwwwfwwwwwwwwwww#
+wwwfffffffffffffwwww#
+wwffwwwwfwwwwwwwwwww#
+wwfwwwwwfwwwwwwwwwww#
+wwd(2)wwwwwfwwwwwwwwwww#
+wwffwwwwfwwwwwwwwwww#
+wwwfffffPfffffffwwww#
+wwwwwwwwfwwwwwwwwwww#
+wwwwwwwwfwwwwwwwwwww#
+wwwwwwwwfwwwwwwwwwww#
+wwwwwwwwfwwwwwwwwwww#
+wwwwwwwwfwwwwwwwwwww#
+wwwfffffffffffffwwww#
+wwwwwwwwewwwwwwwwwww#
+wwwwwwwwwwwwwwwwwwww#
+0#
+none#
+2#Ain't no Rusty Key#notrusty#none#0#
+3#Rusty Key#rustykey#none#0#
