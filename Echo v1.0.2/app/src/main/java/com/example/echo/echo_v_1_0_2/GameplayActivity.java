@@ -45,6 +45,7 @@ public class GameplayActivity extends AppCompatActivity {
    public ChopstickMan Nick;
    Toast toast;
    private boolean tutorialLevel;
+   private MediaPlayer oof;
 
    private int flags[] = {0,0,0,0,0,0,0,0,0,0,0};
     String primer = ("android.resource://" + "com.example.echo.echo_v_1_0_2" + "/raw/");
@@ -105,6 +106,9 @@ public class GameplayActivity extends AppCompatActivity {
 
         echoDoor = MediaPlayer.create(GameplayActivity.this, R.raw.neardoor);
         echoDoor.setVolume(volumeControl.soundFX,volumeControl.soundFX);
+
+        oof = MediaPlayer.create(GameplayActivity.this, R.raw.death);
+        oof.setVolume(volumeControl.soundFX, volumeControl.soundFX);
 
         deathState = 3;
 
@@ -601,7 +605,12 @@ public class GameplayActivity extends AppCompatActivity {
                 flags[5] = 0;
                 flags[6] = 0;
                 flags[7] = 0;
-                //TODO DEATH NOISE
+                oof.start();
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException ex) {
+                    Thread.currentThread().interrupt();
+                }
                 if(tutorialLevel){
                  startTutorialLevel(Integer.toString(levelManager.getCurrentLevel() - 1));
                 }else {
