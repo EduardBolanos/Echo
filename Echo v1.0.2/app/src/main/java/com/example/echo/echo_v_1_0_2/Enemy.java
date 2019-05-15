@@ -11,7 +11,6 @@ public class Enemy
     public int orientation;//0 North, 1 East, 2 South, 3 West
     MediaPlayer EnemyRoar;
     MediaPlayer EnemyStep;
-
     Context context;
 
     public Enemy(Context context, int locx, int locy, int orientation) {
@@ -39,25 +38,6 @@ public class Enemy
         }
     }
 
-    public void enemyTurn(LevelManager levelManager, Player player)
-    {
-        int[] playerPosition = player.getPosition();
-        for(int i = 0; i < levelManager.mEnemies.size(); i++)
-        {
-            //handle death if player walked into an enemy
-            if (levelManager.get(i).position[0] == playerPosition[0] && levelManager.get(i).position[1] == playerPosition[1])
-            {
-                PlayerDeath();
-            }
-            sentryMovement();
-            //handle death if enemy walked into a player
-            if (levelManager.get(i).position[0] == player.getPosition[0] && levelManager.get(i).position[1] == player.getPosition[1])
-            {
-                PlayerDeath();
-            }
-        }
-    }
-    
     public void step(LevelManager levelManager, Player player){
         switch (orientation) {
             case 0:

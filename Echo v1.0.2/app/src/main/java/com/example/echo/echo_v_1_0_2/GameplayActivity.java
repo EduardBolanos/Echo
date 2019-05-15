@@ -549,7 +549,7 @@ public class GameplayActivity extends AppCompatActivity {
             int i = 0;
             while(mEnemies.get(i) != NULL)
             {
-                mEnemies.get(i).enemyTurn();
+                enemyTurn(mEnemies.get(i));
                 i++;
             }
         }
@@ -582,6 +582,25 @@ public class GameplayActivity extends AppCompatActivity {
             }
 
             moveForward.setVolume(volumeControl.soundFX, volumeControl.soundFX);
+        }
+    }
+
+    public void enemyTurn(Enemy enemy)
+    {
+        int[] playerPosition = player.getPosition();
+        for(int i = 0; i < levelManager.mEnemies.size(); i++)
+        {
+            //handle death if player walked into an enemy
+            if (levelManager.get(i).position[0] == playerPosition[0] && levelManager.get(i).position[1] == playerPosition[1])
+            {
+                PlayerDeath();
+            }
+            enemy.sentryMovement();
+            //handle death if enemy walked into a player
+            if (levelManager.get(i).position[0] == player.getPosition[0] && levelManager.get(i).position[1] == player.getPosition[1])
+            {
+                PlayerDeath();
+            }
         }
     }
 
