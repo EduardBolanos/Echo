@@ -1,14 +1,16 @@
 9#
-9 9#
-wwwwwwwww#
-wffffffk(3)w#
-wfwwwwwww#
-wfwwwwwww#
-wPfffd(2)few#
-wfwwwwwww#
-wfwwwwwww#
-wfffd(3)ffk(2)w#
-1#
+10 10#
+wwwwwwwwww#
+wwwwwwwwww#
+wwwwwwwwww#
+wwwwwwwwww#
+wk(2)wwewwwww#
+wfwwfwwwww#
+wd(1)wwd(2)wwk(1)ww#
+wfwwfwwfww#
+wfffPfffww#
+wwwwwwwwww#
+0#
 none#
-2#Ain't no Rusty Key#notrusty#none#0#
-3#Rusty Key#rustykey#none#0#
+1#Ain't no Rusty Key#notrusty#none#0#
+2#Rusty Key#rustykey#none#0#
