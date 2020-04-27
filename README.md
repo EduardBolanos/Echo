@@ -1,8 +1,8 @@
 # Echo
-The github repository for Echo, the audio based game.
+The github repository for Echo, the audio based game made for Android devices
 
-## Versioning
-Versioning will be placed within folders.
+[Trello](https://trello.com/b/WgKV5QVZ/echo-audio-game)
+[Documents]()
 
 ## Authors
 * **Eduard Bolanos** - *Developer*
